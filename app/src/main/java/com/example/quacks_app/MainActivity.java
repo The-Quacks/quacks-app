@@ -1,6 +1,7 @@
 package com.example.quacks_app;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,18 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        CRUD<User> crud = new CRUD<>(User.class);
+        User phil = new User("ub23bh3", "Phil");
+        crud.create(phil);
+        crud.read(phil.getId(), (User data) -> {
+            TextView textView = findViewById(R.id.text_sample);
+            if (data != null) {
+                textView.setText(data.getUserName());
+            } else {
+                textView.setText("Failed");
+            }
         });
     }
 }
