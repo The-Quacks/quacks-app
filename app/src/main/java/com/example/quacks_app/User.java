@@ -1,14 +1,19 @@
 package com.example.quacks_app;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 public class User extends RepoModel {
     private String deviceId;
-    private String userName;
+    private Set<Role> roles; // Note: Firebase does not like enum sets
+    private String userProfileId;
+    // Location
 
     public User() {}
 
-    public User(String deviceId, String userName) {
+    public User(String deviceId) {
         this.deviceId = deviceId;
-        this.userName = userName;
+//        roles = EnumSet.noneOf(Role.class);
     }
 
     public String getDeviceId() {
@@ -19,11 +24,23 @@ public class User extends RepoModel {
         this.deviceId = deviceId;
     }
 
-    public String getUserName() {
-        return userName;
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void removeRole(Role role) {
+        roles.remove(role);
+    }
+
+    public Set<Role> getRoles() {
+        return this.roles;
+    }
+
+    public UserProfile getUserProfile(ReadCallback readCallback) {
+        return new UserProfile(); // placeholder
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfileId = userProfile.getId();
     }
 }
