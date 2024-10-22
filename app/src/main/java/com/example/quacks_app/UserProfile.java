@@ -2,7 +2,7 @@ package com.example.quacks_app;
 
 import android.media.Image;
 
-public class UserProfile extends RepoModel {
+public class UserProfile {
     private String userName;
     private Image profilePicture;
     private String email;
