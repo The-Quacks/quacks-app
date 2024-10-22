@@ -1,11 +1,16 @@
 package com.example.quacks_app;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class User extends RepoModel {
     private String deviceId;
-    private Set<Role> roles; // Note: Firebase does not like enum sets
+    @Exclude
+    private EnumSet<Role> roles; // Note: Firebase does not like enum sets
     private String userProfileId;
     // Location
 
@@ -13,7 +18,7 @@ public class User extends RepoModel {
 
     public User(String deviceId) {
         this.deviceId = deviceId;
-//        roles = EnumSet.noneOf(Role.class);
+        roles = EnumSet.noneOf(Role.class);
     }
 
     public String getDeviceId() {
@@ -32,7 +37,8 @@ public class User extends RepoModel {
         roles.remove(role);
     }
 
-    public Set<Role> getRoles() {
+    @Exclude
+    public EnumSet<Role> getRoles() {
         return this.roles;
     }
 
@@ -42,5 +48,16 @@ public class User extends RepoModel {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfileId = userProfile.getId();
+    }
+
+    @PropertyName("roles")
+    public List<String> getRolesFirestore() {
+        return roles.stream().map(Role::name).collect(Collectors.toList());
+    }
+
+    @PropertyName("roles")
+    public void setRolesFirestore(List<String> roleStrings) {
+        this.roles = roleStrings.stream().map(Role::valueOf)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Role.class)));
     }
 }
