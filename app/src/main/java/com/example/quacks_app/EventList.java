@@ -27,7 +27,7 @@ public class EventList extends RepoModel {
         this.eventIds.add(eventId);
     }
 
-    public void removeEvent(User event) {
+    public void removeEvent(Event event) {
         this.eventIds.remove(event.getId());
     }
 
