@@ -18,13 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.admin_home);
-
-        ImageButton Profile = findViewById(R.id.profilesButton);
-
-        Profile.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "PROFILE!", Toast.LENGTH_SHORT).show();
-        });
+        setContentView(R.layout.activity_main);
 
 
     }
