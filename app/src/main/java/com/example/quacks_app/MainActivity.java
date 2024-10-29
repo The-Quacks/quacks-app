@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         CRUD<User> crud = new CRUD<>(User.class);
         User phil = new User("ub23bh3");
         crud.create(phil);
-        crud.read(phil.getId(), (User data) -> {
+        crud.readStatic(phil.getId(), (User data) -> {
             TextView textView = findViewById(R.id.text_sample);
             if (data != null) {
                 textView.setText(data.getId());

@@ -3,7 +3,11 @@ package com.example.quacks_app;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class CRUD<T extends RepoModel> {
     private Database database;
@@ -22,7 +26,7 @@ public class CRUD<T extends RepoModel> {
         model.setId(id);
     }
 
-    public void read(String id, ReadCallback<T> callback) {
+    public void readStatic(String id, ReadCallback<T> callback) {
         colRef.document(id)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -31,6 +35,28 @@ public class CRUD<T extends RepoModel> {
                         callback.onDataRead(model);
                     }
                 });
+    }
+
+    public ListenerRegistration readLive(String id, ReadCallback<T> callback) {
+        DocumentReference docRef = colRef.document(id);
+        return docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot snapshot,
+                                FirebaseFirestoreException e) {
+                if (e != null) {
+                    // Handle error
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    T model = snapshot.toObject(classType);
+                    callback.onDataRead(model);
+                } else {
+                    // Data is null
+                }
+            }
+        });
+
     }
 
 }
