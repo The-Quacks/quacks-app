@@ -16,11 +16,40 @@ public class AdminHome extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         ImageButton Profile = findViewById(R.id.profilesButton);
+        ImageButton Events = findViewById(R.id.eventsButton);
+        ImageButton Images = findViewById(R.id.imagesButton);
+        ImageButton Facilities = findViewById(R.id.facilitiesButton);
+
+        Bundle bundle = new Bundle();
 
         Profile.setOnClickListener(view -> {
             Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            bundle.putString("viewType", "Profile");
+            myIntent.putExtras(bundle);
             startActivity(myIntent);
         });
+
+        Events.setOnClickListener(view -> {
+            Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            bundle.putString("viewType", "Events");
+            myIntent.putExtras(bundle);
+            startActivity(myIntent);
+        });
+
+        Images.setOnClickListener(view -> {
+            Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            bundle.putString("viewType", "Images");
+            myIntent.putExtras(bundle);
+            startActivity(myIntent);
+        });
+
+        Facilities.setOnClickListener(view -> {
+            Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            bundle.putString("viewType", "Facilities");
+            myIntent.putExtras(bundle);
+            startActivity(myIntent);
+        });
+
 
 
     }
