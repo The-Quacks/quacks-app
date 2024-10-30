@@ -4,6 +4,7 @@ package com.example.quacks_app;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 public class CRUD<T extends RepoModel> {
     private Database database;
@@ -32,5 +33,20 @@ public class CRUD<T extends RepoModel> {
                     }
                 });
     }
+
+    // Update method
+    public void update(String id, T model, UpdateCallback callback) {
+        colRef.document(id).set(model, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
+                .addOnFailureListener(e -> callback.onUpdateFailure(e));
+    }
+
+    // Delete method
+    public void delete(String id, DeleteCallback callback) {
+        colRef.document(id).delete()
+                .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
+                .addOnFailureListener(callback::onDeleteFailure);
+    }
+
 
 }
