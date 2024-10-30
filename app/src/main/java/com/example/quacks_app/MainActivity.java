@@ -51,42 +51,19 @@ public class MainActivity extends AppCompatActivity {
 
                 //Get database references ** this will probably need to be modified once I know the firebase structure
 
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference usernameReference =  databaseReference.child("Users");
-                DatabaseReference idReference = usernameReference.child("Id");
-
-                idReference.child(android_id).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){//then they are in the database
-
-                            //If the organizer has a profile: Goes to the create facility page
-                            Intent intent = new Intent(MainActivity.this, CreateFacility.class);
-                            startActivity(intent);
-
-                        }
-                        else{
-
-                            //If the organizer does not have a profile: make a profile
-                            Intent intent = new Intent(MainActivity.this, MakeOrganizerProfile.class);
-                            startActivity(intent.putExtra("android_id", android_id));
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast toast = Toast.makeText(context.getApplicationContext(), "Identification Failed", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
+                //If the organizer has a profile: Goes to the create facility page
+                Intent intent = new Intent(MainActivity.this, CreateFacility.class);
+                startActivity(intent);
 
 
+                //If the organizer does not have a profile: make a profile
+                //Intent intent = new Intent(MainActivity.this, MakeOrganizerProfile.class);
+                //startActivity(intent.putExtra("android_id", android_id));
 
+
+                Toast toast = Toast.makeText(context.getApplicationContext(), "Identification Failed", Toast.LENGTH_SHORT);
+                toast.show();
             }
 
-        });
-
-    }
-}
+        }
+;}
