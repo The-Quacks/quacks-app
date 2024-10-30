@@ -1,5 +1,8 @@
 package com.example.quacks_app;
 
+import android.provider.Settings;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 public class User extends RepoModel {

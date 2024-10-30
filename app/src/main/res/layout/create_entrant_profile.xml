@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Enter name"
+        android:hint="Enter name"
         android:textColor="@color/text"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Enter email:"
+        android:hint="Enter email:"
         android:textColor="@color/text"
         app:layout_constraintStart_toStartOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -72,12 +72,12 @@
         app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/phoneInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="phone"
-        android:text="Enter phone number:"
+        android:hint="Enter phone number:"
         android:textColor="@color/text"
         app:layout_constraintStart_toStartOf="@+id/phoneNumber"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
@@ -135,8 +135,8 @@
         android:layout_marginTop="32dp"
         android:text="Profile picture:"
         android:textColor="@color/text"
-        app:layout_constraintStart_toStartOf="@+id/editTextPhone"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+        app:layout_constraintStart_toStartOf="@+id/phoneInput"
+        app:layout_constraintTop_toBottomOf="@+id/phoneInput" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
