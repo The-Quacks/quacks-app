@@ -1,14 +1,22 @@
 package com.example.quacks_app;
 
 
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+
+import java.util.ArrayList;
 
 public class CRUD<T extends RepoModel> {
     private Database database;
@@ -36,6 +44,44 @@ public class CRUD<T extends RepoModel> {
                         callback.onDataRead(model);
                     }
                 });
+    }
+
+    public void readAllStatic(ReadAllCallback<T> callback) {
+        colRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<T> dataList = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                T model = document.toObject(classType);
+                                dataList.add(model);
+                            }
+                            callback.onDataRead(dataList);
+                        } else {
+                            // Error
+                        }
+                    }
+                });
+    }
+
+    public ListenerRegistration readAllLive(ReadAllCallback<T> callback) {
+        return colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot value,
+                                FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+
+                ArrayList<T> dataList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : value) {
+                    T model = document.toObject(classType);
+                    dataList.add(model);
+                }
+                callback.onDataRead(dataList);
+            }
+        });
     }
 
     // Update method
