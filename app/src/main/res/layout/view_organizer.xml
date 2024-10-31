@@ -1,0 +1,136 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:foregroundTint="#D5B4B4"
+    android:visibility="visible"
+    tools:context=".ViewOrganizer">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="View Organizer Profile"
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id = "@+id/ellipse"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/text_box"
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:layout_height= "200dp"
+        android:paddingTop="10dp"
+        android:background = "@color/background"
+        android:src = "@drawable/ellipse_30" />
+
+    <ImageView
+        android:id = "@+id/person_fig"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_marginTop="75dp"
+        android:layout_width="match_parent"
+        android:layout_height= "100dp"
+        android:paddingTop="10dp"
+        android:src = "@drawable/image_193" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id = "@+id/text_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@id/ellipse"
+        android:background = "@color/base"
+        >
+
+        <EditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType = "text"
+            android:text="Name" />
+        <EditText
+            android:id = "@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType = "text"
+            android:text ="Location"/>
+        <EditText
+            android:id = "@+id/contact_info"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType = "text"
+            android:text ="Contact Information"/>
+        <EditText
+            android:id = "@+id/facility_datails"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType = "text"
+            android:text ="Facility Details"/>
+        <EditText
+            android:id = "@+id/accessibility"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType = "text"
+            android:text ="Accessbility Status"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="150dp"
+        android:layout_height="79dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:backgroundTint="@color/button"
+        android:fadingEdge="horizontal"
+        android:text="EDIT"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+
+        app:layout_constraintBottom_toBottomOf = "parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="25dp"
+        />
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="150dp"
+        android:layout_height="79dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="120dp"
+        android:backgroundTint="@color/button"
+        android:fadingEdge="horizontal"
+        android:text="BACK"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom= "100dp"
+        android:layout_marginLeft = "25dp"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
