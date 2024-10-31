@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ public class AdminListView extends AppCompatActivity {
     ListView genList;
     CustomAdapter genAdapter;
     ArrayList<Listable> dataList;
+    Listable selected = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,11 @@ public class AdminListView extends AppCompatActivity {
 
         genAdapter = new CustomAdapter(this, R.layout.admin_profile_content, dataList);
         genList.setAdapter(genAdapter);
+
+        genList.setOnItemClickListener((adapterView, view, i, l) ->{
+            selected = dataList.get(i);
+            Toast.makeText(this, selected.getDisplay(), Toast.LENGTH_LONG).show();
+        });
 
     }
 }
