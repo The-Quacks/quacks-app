@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DummyScanActivity" />
+        <activity android:name=".ScanQRCodeActivity" />
+        <activity android:name=".DummyJoinEventActivity" />
     </application>
 
 </manifest>
