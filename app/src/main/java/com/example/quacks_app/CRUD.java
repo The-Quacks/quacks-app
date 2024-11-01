@@ -12,11 +12,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CRUD<T extends RepoModel> {
     private Database database;
@@ -61,6 +63,53 @@ public class CRUD<T extends RepoModel> {
                         } else {
                             // Error
                         }
+                    }
+                });
+    }
+
+    public void readQueryStatic(Map<String, String> map, ReadAllCallback<T> callback) {
+        Query query = colRef;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            query = query.whereEqualTo(entry.getKey(), entry.getValue());
+        }
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<T> dataList = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                T model = document.toObject(classType);
+                                dataList.add(model);
+                            }
+                            callback.onDataRead(dataList);
+                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public ListenerRegistration readQueryLive(Map<String, String> map, ReadAllCallback<T> callback) {
+        Query query = colRef;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            query = query.whereEqualTo(entry.getKey(), entry.getValue());
+        }
+        return query
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot value,
+                                        FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        ArrayList<T> dataList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : value) {
+                            T model = document.toObject(classType);
+                            dataList.add(model);
+                        }
+                        callback.onDataRead(dataList);
                     }
                 });
     }
