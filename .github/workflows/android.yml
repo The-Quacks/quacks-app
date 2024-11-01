@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Add key file
+      - name: Add key file 
         run: echo "${{ secrets.FIREBASE_KEY }}" | jq '.' > app/google-services.json
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
