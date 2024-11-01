@@ -21,7 +21,7 @@ jobs:
           cache: gradle
 
       - name: Add key file
-        run: echo "${{ secrets.FIREBASE_KEY }}" | jq '.' > app/google-services.json
+        run: echo "${{ secrets.FIREBASE_KEY }}" | base64 --decode > app/google-services.json
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
