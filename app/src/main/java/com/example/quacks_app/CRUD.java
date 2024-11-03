@@ -1,5 +1,6 @@
 package com.example.quacks_app;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -18,9 +19,8 @@ import java.util.Map;
  * @param <T> the type of elements used for CRUD operations
  */
 public class CRUD<T extends RepoModel> {
-    private Database database;
-    private CollectionReference colRef;
-    private Class<T> classType;
+    private final CollectionReference colRef;
+    private final Class<T> classType;
 
 
     /**
@@ -29,8 +29,7 @@ public class CRUD<T extends RepoModel> {
      * @param model the class type of the elements used for CRUD operations
      */
     public CRUD(Class<T> model) {
-        database = new Database();
-        colRef = database.getDb().collection(model.getSimpleName());
+        colRef = FirebaseFirestore.getInstance().collection(model.getSimpleName());
         classType = model;
     }
 
