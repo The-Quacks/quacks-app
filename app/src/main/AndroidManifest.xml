@@ -16,6 +16,9 @@
             android:name=".AdminListView"
             android:exported="true"/>
         <activity
+            android:name=".AdminViewOrganizer"
+            android:exported="true"/>
+        <activity
             android:name=".AdminHome"
             android:exported="true">
             <intent-filter>

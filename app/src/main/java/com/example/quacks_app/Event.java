@@ -2,9 +2,11 @@ package com.example.quacks_app;
 
 import android.media.Image;
 
+import androidx.appcompat.app.AppLocalesMetadataHolderService;
+
 import java.util.Date;
 
-public class Event extends RepoModel {
+public class Event extends RepoModel{
     private Date dateTime;
     private String description;
     private Image QRCode;
@@ -12,7 +14,7 @@ public class Event extends RepoModel {
     private Facility facility;
     private String organizerId;
 
-    public Event() {}
+    public Event(Date dateTime, String description, ApplicantList applicantList, Facility facility, String organizerId) {}
 
     public Date getDateTime() {
         return dateTime;
@@ -60,5 +62,13 @@ public class Event extends RepoModel {
 
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
+    }
+
+    public String getDisplay() {
+        return "";
+    }
+
+    public String getSubDisplay() {
+        return "";
     }
 }
