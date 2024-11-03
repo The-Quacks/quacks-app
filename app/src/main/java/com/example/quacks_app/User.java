@@ -1,15 +1,15 @@
 package com.example.quacks_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User extends RepoModel{
+public class User extends RepoModel implements Serializable {
     private String deviceId;
     private ArrayList<Role> roles; // Note: Firebase does not like enum sets
     private UserProfile userProfile;
     // Location
 
     public User(){
-
     }
 
     public User(String deviceId, ArrayList<Role> roles, UserProfile userProfile) {

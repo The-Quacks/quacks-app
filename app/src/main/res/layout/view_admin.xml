@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
-        android:text="View Organizer Profile"
+        android:text="View Event"
         android:textColor="@color/text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,6 +58,22 @@
             android:text="Name" />
 
         <EditText
+            android:id="@+id/capacity"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType="text"
+            android:text="Capacity" />
+
+        <EditText
+            android:id="@+id/availability"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="30"
+            android:inputType="text"
+            android:text="Seats Available" />
+
+        <EditText
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -66,28 +82,12 @@
             android:text="Location" />
 
         <EditText
-            android:id="@+id/contact_info"
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
             android:inputType="text"
-            android:text="Contact Information" />
-
-        <EditText
-            android:id="@+id/facility_datails"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:ems="30"
-            android:inputType="text"
-            android:text="Facility Details" />
-
-        <EditText
-            android:id="@+id/accessibility"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:ems="30"
-            android:inputType="text"
-            android:text="Accessbility Status" />
+            android:text="Description" />
     </LinearLayout>
 
     <Button
@@ -122,7 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_box" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"

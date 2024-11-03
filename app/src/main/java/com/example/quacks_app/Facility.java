@@ -1,6 +1,18 @@
 package com.example.quacks_app;
 
-public class Facility extends RepoModel{
+import java.io.Serializable;
+
+public class Facility extends RepoModel implements Serializable {
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    private String location;
 
     public Facility() {}
 
@@ -11,4 +23,6 @@ public class Facility extends RepoModel{
     public String getSubDisplay() {
         return "";
     }
+
+
 }

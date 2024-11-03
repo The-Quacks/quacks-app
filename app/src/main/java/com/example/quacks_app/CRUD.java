@@ -6,18 +6,19 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 public class CRUD<T extends RepoModel> {
-    private Database database;
+    private FirebaseFirestore database;
     private CollectionReference colRef;
     private Class<T> classType;
 
     public CRUD(Class<T> model) {
-        database = new Database();
-        colRef = database.getDb().collection(model.getSimpleName());
+        database = FirebaseFirestore.getInstance();
+        colRef = database.collection(model.getSimpleName());
         classType = model;
     }
 
