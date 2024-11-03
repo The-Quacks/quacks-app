@@ -130,11 +130,10 @@
 
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background = "@color/base"
-        android:orientation = "horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
@@ -144,19 +143,17 @@
             android:src = "@drawable/image_163"
             android:contentDescription="Button"
             android:background="@color/base"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft = "10dp"
+            android:layout_alignParentLeft="true"
             />
 
         <ImageButton
-            android:id = "@+id/search"
-            android:layout_width="48dp"
+            android:id="@+id/search"
+            android:layout_width="54dp"
             android:layout_height="48dp"
-            android:src = "@drawable/image_164"
-            android:contentDescription="Button"
             android:background="@color/base"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft = "125dp"
+            android:contentDescription="Button"
+            android:src="@drawable/image_164"
+            android:layout_centerHorizontal="true"
             />
 
         <ImageButton
@@ -164,12 +161,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@color/base"
-            android:alpha = ".5"
             android:contentDescription="Button"
             android:src = "@drawable/image_165"
-            android:layout_gravity = "end"
-            android:layout_marginLeft="120dp"
-            />
-    </LinearLayout>
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

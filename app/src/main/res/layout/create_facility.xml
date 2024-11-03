@@ -132,5 +132,40 @@
         android:layout_marginLeft = "25dp"
 
         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background = "@color/base"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id = "@+id/house"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src = "@drawable/image_163"
+            android:contentDescription="Button"
+            android:background="@color/base"
+            android:layout_alignParentLeft="true"
+            />
+
+        <ImageButton
+            android:id="@+id/search"
+            android:layout_width="54dp"
+            android:layout_height="48dp"
+            android:background="@color/base"
+            android:contentDescription="Button"
+            android:src="@drawable/image_164"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageButton
+            android:id = "@+id/person"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/base"
+            android:contentDescription="Button"
+            android:src = "@drawable/image_165"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
