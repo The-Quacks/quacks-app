@@ -14,12 +14,20 @@ import java.util.Map;
  * The {@code CRUD} class provides functionality for interfacing with the firestore
  * database. It allows creating, reading, updating, and deleting models extending the
  * {@code RepoModel} class.
+ *
+ * @param <T> the type of elements used for CRUD operations
  */
 public class CRUD<T extends RepoModel> {
     private Database database;
     private CollectionReference colRef;
     private Class<T> classType;
 
+
+    /**
+     * Constructs a new {@code CRUD} class of the specified model type.
+     *
+     * @param model the class type of the elements used for CRUD operations
+     */
     public CRUD(Class<T> model) {
         database = new Database();
         colRef = database.getDb().collection(model.getSimpleName());
