@@ -15,22 +15,136 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:layout_marginLeft = "100dp"
+        android:layout_marginRight = "15dp"
         android:fontFamily="sans-serif-medium"
         android:text="Welcome To The Organizer Homepage!"
         android:textColor="@color/text"
-        android:textSize="20sp"
+
+        android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf = "parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="100dp"
-        android:layout_marginRight="25dp"
+    <Button
+        android:id="@+id/organizer_profile_button"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
 
-        />
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="75dp"
+        android:backgroundTint="@color/button"
+        android:drawableTop = "@drawable/image_193"
+        android:fadingEdge="horizontal"
+        android:text="Organizer Profile"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+        android:layout_marginLeft = "15dp"
+        app:layout_constraintTop_toBottomOf = "@id/title"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/view_events"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="75dp"
+        android:backgroundTint="@color/button"
+        android:drawableTop = "@drawable/event"
+        android:fadingEdge="horizontal"
+        android:text="View Events"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+        android:layout_marginRight = "15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf = "@id/title"
+         />
+    <Button
+        android:id="@+id/create_event"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="75dp"
+        android:backgroundTint="@color/button"
+        android:drawableTop = "@drawable/create"
+        android:fadingEdge="horizontal"
+        android:text="Create Event"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+        android:layout_marginLeft = "15dp"
+        app:layout_constraintTop_toBottomOf = "@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/map"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="75dp"
+        android:backgroundTint="@color/button"
+        android:drawableTop = "@drawable/map"
+        androd
+        android:fadingEdge="horizontal"
+        android:text="Entrant Map"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf = "@id/title"
+        android:layout_marginRight = "15dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background = "@color/base"
+        android:orientation = "horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src = "@drawable/image_163"
+            android:content_description = "Button"
+            android:background="@color/base"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft = "10dp"
+            />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src = "@drawable/image_164"
+            android:background="@color/base"
+            android:content_description = "Button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft = "125dp"
+            />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/base"
+            android:content_description = "Button"
+            android:src = "@drawable/image_165"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft = "100dp"
+            />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
