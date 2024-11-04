@@ -2,7 +2,6 @@ package com.example.quacks_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,24 +18,21 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan_qrcode_activity_layout);
 
         GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
-                .setBarcodeFormats(
-                        Barcode.FORMAT_QR_CODE,
-                        Barcode.FORMAT_AZTEC)
+                .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
                 .build();
 
         GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this, options);
         scanner.startScan()
-                .addOnSuccessListener(
-                        barcode -> {
-                            String rawValue = barcode.getRawValue();
-                            Intent switchActivityIntent = new Intent(getApplicationContext(), DummyJoinEventActivity.class);
-                            switchActivityIntent.putExtra("id", rawValue);
-                            startActivity(switchActivityIntent);
-                        })
+                .addOnSuccessListener(barcode -> {
+                    String id = barcode.getRawValue();
+                    Intent switchActivityIntent = new Intent(getApplicationContext(),
+                            DummyJoinEventActivity.class);
+                    switchActivityIntent.putExtra("id", id);
+                    startActivity(switchActivityIntent);
+                })
                 .addOnCanceledListener(this::finish)
-                .addOnFailureListener(
-                        e -> {
-                        });
+                .addOnFailureListener(e -> {
+                });
     }
 
 }

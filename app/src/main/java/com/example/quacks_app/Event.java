@@ -1,16 +1,17 @@
 package com.example.quacks_app;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 
 import java.util.Date;
 
 public class Event extends RepoModel {
     private Date dateTime;
     private String description;
-    private Image QRCode;
-    private ApplicantList applicantList;
+    private Bitmap QRCode;
+    private String applicantList;
     private Facility facility;
     private String organizerId;
+    private String QRCodeHash;
 
     public Event() {}
 
@@ -30,19 +31,19 @@ public class Event extends RepoModel {
         this.description = description;
     }
 
-    public Image getQRCode() {
+    public Bitmap getQRCode() {
         return QRCode;
     }
 
-    public void setQRCode(Image QRCode) {
+    public void setQRCode(Bitmap QRCode) {
         this.QRCode = QRCode;
     }
 
-    public ApplicantList getApplicantList() {
+    public String getApplicantList() {
         return applicantList;
     }
 
-    public void setApplicantList(ApplicantList applicantList) {
+    public void setApplicantList(String applicantList) {
         this.applicantList = applicantList;
     }
 
@@ -60,5 +61,13 @@ public class Event extends RepoModel {
 
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
+    }
+
+    public String getQRCodeHash() {
+        return QRCodeHash;
+    }
+
+    public void setQRCodeHash(String QRCodeHash) {
+        this.QRCodeHash = QRCodeHash;
     }
 }

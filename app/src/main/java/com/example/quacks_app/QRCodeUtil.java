@@ -15,9 +15,21 @@ import com.google.zxing.qrcode.QRCodeReader;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 
+/**
+ * The {@code QRCodeUtil} class provides functionality for encoding, decoding, and
+ * and hashing QR codes.
+ */
+public class QRCodeUtil {
 
-public class QRCodeGenerator {
-
+    /**
+     * Encodes a string into a QR code
+     *
+     * @param id the id string to be encoded
+     * @param width the width of the resulting QR code
+     * @param height the height of the resulting QR code
+     * @return a {@code Bitmap} of the QR code. Returns {@code null} on failure
+     *
+     */
     public static Bitmap encode(String id, int width, int height) {
         try {
             BitMatrix matrix = new MultiFormatWriter().encode(id, BarcodeFormat.QR_CODE, width, height);
@@ -37,6 +49,13 @@ public class QRCodeGenerator {
         }
     }
 
+    /**
+     * Decodes a string from a QR code
+     *
+     * @param bitmap the QR code bitmap to be decoded
+     * @return a {@code string} decoded from the QR code. Returns {@code null} on failure
+     *
+     */
     public static String decode(Bitmap bitmap) {
         try {
             int width = bitmap.getWidth();
@@ -53,6 +72,13 @@ public class QRCodeGenerator {
         }
     }
 
+    /**
+     * Hashes a QR code
+     *
+     * @param bitmap the QR code bitmap to be hashed
+     * @return a {@code string} hash of the QR code. Returns {@code null} on failure
+     *
+     */
     public static String hash(Bitmap bitmap) {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
