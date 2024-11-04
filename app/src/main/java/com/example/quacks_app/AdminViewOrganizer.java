@@ -22,6 +22,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/*
+This is the individual edit and delete screen to view events, can be multipurposed for not just admin
+ */
+
 public class AdminViewOrganizer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

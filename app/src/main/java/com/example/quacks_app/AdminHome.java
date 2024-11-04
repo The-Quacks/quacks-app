@@ -8,6 +8,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+/*
+This is the home screen for Admin, containing the buttons that allow you to navigate
+to different lists. Profiles, Events, Images, Facilities, and QR codes
+ */
+
 public class AdminHome extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
