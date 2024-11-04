@@ -2,9 +2,13 @@ package com.example.quacks_app;
 
 import android.graphics.Bitmap;
 
+import androidx.appcompat.app.AppLocalesMetadataHolderService;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class Event extends RepoModel {
+public class Event extends RepoModel implements Serializable {
     private Date dateTime;
     private String description;
     private Bitmap QRCode;
@@ -13,7 +17,11 @@ public class Event extends RepoModel {
     private String organizerId;
     private String QRCodeHash;
 
-    public Event() {}
+    public Event(Date dateTime, String description, ApplicantList applicantList, Facility facility, String organizerId) {}
+
+    public Event(){
+
+    }
 
     public Date getDateTime() {
         return dateTime;
@@ -69,5 +77,12 @@ public class Event extends RepoModel {
 
     public void setQRCodeHash(String QRCodeHash) {
         this.QRCodeHash = QRCodeHash;
+      
+    public String getDisplay() {
+        return description;
+    }
+
+    public String getSubDisplay() {
+        return "";
     }
 }
