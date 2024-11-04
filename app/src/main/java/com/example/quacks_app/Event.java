@@ -77,6 +77,7 @@ public class Event extends RepoModel implements Serializable {
 
     public void setQRCodeHash(String QRCodeHash) {
         this.QRCodeHash = QRCodeHash;
+    }
       
     public String getDisplay() {
         return description;
