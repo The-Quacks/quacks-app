@@ -19,9 +19,9 @@ import java.util.Map;
  * @param <T> the type of elements used for CRUD operations
  */
 public class CRUD<T extends RepoModel> {
+
     private final CollectionReference colRef;
     private final Class<T> classType;
-
 
     /**
      * Constructs a new {@code CRUD} class of the specified model type.
@@ -29,6 +29,7 @@ public class CRUD<T extends RepoModel> {
      * @param model the class type of the elements used for CRUD operations
      */
     public CRUD(Class<T> model) {
+
         colRef = FirebaseFirestore.getInstance().collection(model.getSimpleName());
         classType = model;
     }
