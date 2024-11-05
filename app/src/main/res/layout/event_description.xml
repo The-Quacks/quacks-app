@@ -2,64 +2,79 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E4D0D0">
 
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Name"
-        android:textColor="@color/text"
         android:layout_marginTop="16dp"
+        android:text="Yoga for Beginners"
+        android:textColor="@color/text"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/eventPoster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTitle"
-        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
-
-    <Button
-        android:id="@+id/joinWaitlistButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join Waitlist"
-        android:layout_marginBottom="32dp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/eventDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@color/text"
+        android:background="#F5EBEB"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:lineSpacingExtra="8sp"
+        android:text="Event Name: Yoga for Beginners\n
+Capacity: 50\n
+Registration: DD/MM/YYYY\n
+Class Duration: DD/MM/YYYY - DD/MM/YYYY\n
+Assigned Instructor: Chris Hemsworth\n
+Geo-location Requirement: Enabled\n
+(Temporarily hardcoded)
+"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/joinWaitlistButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventPoster" />
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
-<!--    Temporary, will use back icon for button-->
+
+    <FrameLayout
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#F5EBEB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </FrameLayout>
+
     <Button
+        android:id="@+id/joinWaitlistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#F5EBEB"
+        android:text="Join Waitlist"
+        android:textColor="#867070"
+        app:cornerRadius="10dip"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/button"
         android:layout_marginTop="16dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="Back button"
+        android:scaleX="0.75"
+        android:scaleY="0.75"
+        android:src="@drawable/back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/eventTitle"
         app:layout_constraintTop_toTopOf="parent" />
