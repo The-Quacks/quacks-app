@@ -49,28 +49,28 @@
             android:layout_height="48dp"
             android:ems="30"
             android:inputType = "text"
-            android:hint ="Class Capacity"/>
+            android:hint ="Class Capacity (53)"/>
         <EditText
             android:id = "@+id/waitlist_capacity"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
             android:inputType = "text"
-            android:hint ="Waitlist Capacity"/>
+            android:hint ="Waitlist Capacity (#)"/>
         <EditText
             android:id = "@+id/registration_start"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
             android:inputType = "text"
-            android:hint ="Beginning Registration Date(2024-03-19)"/>
+            android:hint ="Beginning Registration Date(dd-MM-yyyy)"/>
         <EditText
             android:id = "@+id/registration_end"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
             android:inputType = "text"
-            android:hint ="Closing Registration Date (2024-03-19)"/>
+            android:hint ="Closing Registration Date (dd-MM-yyyy)"/>
         <EditText
             android:id = "@+id/instructor"
             android:layout_width="match_parent"

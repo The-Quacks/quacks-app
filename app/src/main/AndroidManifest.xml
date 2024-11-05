@@ -17,10 +17,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".CreateFacility" />
+        <activity android:name=".OrganizerHomepage"/>
+        <activity android:name=".ViewOrganizer"/>
+        <activity android:name=".MakeOrganizerProfile"/>
+        <activity android:name=".CreateEvent"/>
     </application>
 
 </manifest>

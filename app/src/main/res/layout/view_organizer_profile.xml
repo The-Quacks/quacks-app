@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
-        android:text="@string/create_an_organizer_profile"
+        android:text="View Organizer Profile"
         android:textColor="@color/text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +34,7 @@
         android:paddingTop="10dp"
         android:background = "@color/background"
         android:src = "@drawable/ellipse_30" />
-    
+
     <ImageView
         android:id = "@+id/person_fig"
         android:contentDescription="@string/todo"
@@ -44,61 +44,56 @@
         android:layout_height= "100dp"
         android:paddingTop="10dp"
         android:src = "@drawable/image_193" />
-    
+
     <LinearLayout
         android:orientation="vertical"
         android:id = "@+id/text_box"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@id/ellipse"
         android:background = "@color/base"
         >
 
-        <EditText
+        <TextView
             android:id="@+id/Name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:ems="30"
+            android:textSize = "20sp"
             android:autofillHints="yes"
-            android:inputType = "text"
-            android:hint ="Business Name" />
-        <EditText
+            android:text ="Business Name" />
+        <TextView
             android:id = "@+id/location"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:ems="30"
+            android:textSize = "20sp"
             android:autofillHints="yes"
-            android:inputType = "text"
-            android:hint ="@string/location"/>
-        <EditText
+            android:text  ="@string/location"/>
+        <TextView
             android:id = "@+id/contact_info"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:ems="30"
+            android:textSize = "20sp"
             android:autofillHints="yes"
-            android:inputType = "text"
-            android:hint ="@string/phone_number_780_289_1234"/>
-        <EditText
+            android:text  ="@string/phone_number_780_289_1234"/>
+        <TextView
             android:id = "@+id/facility_details"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:ems="30"
+            android:textSize = "20sp"
             android:autofillHints="yes"
-            android:inputType = "text"
-            android:hint ="@string/facility_details"/>
-        <EditText
+            android:text  ="@string/facility_details"/>
+        <TextView
             android:id = "@+id/accessibility"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:autofillHints="yes"
-            android:ems="30"
-            android:inputType = "text"
-            android:hint ="@string/accessibilty_status_yes_with_ramps_etc"/>
+            android:textSize = "20sp"
+            android:text ="@string/accessibilty_status_yes_with_ramps_etc"/>
     </LinearLayout>
 
     <Button
-        android:id="@+id/confirm_button"
+        android:id="@+id/edit_button"
         android:layout_width="150dp"
         android:layout_height="79dp"
 
@@ -107,7 +102,7 @@
 
         android:backgroundTint="@color/button"
         android:fadingEdge="horizontal"
-        android:text="@string/confirm"
+        android:text="EDIT"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
@@ -116,7 +111,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="100dp"
         android:layout_marginEnd="25dp"
-         />
+        />
     <Button
         android:id="@+id/back_button"
         android:layout_width="150dp"

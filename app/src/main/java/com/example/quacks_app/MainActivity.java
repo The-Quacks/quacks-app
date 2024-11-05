@@ -1,37 +1,40 @@
 package com.example.quacks_app;
 import android.content.Context;
-import android.provider.Settings.Secure;
 
-
-import static java.security.AccessController.getContext;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
 
+/**
+ * Main Activity: Entrant Page: Identifies ID and redirects to Homepage
+ */
 public class MainActivity extends AppCompatActivity {
-    private Button create_button = findViewById(R.id.CREATE_FACILITY);
+    private Button create_button;
+    private Facilities facilities;
     private Context context;
-    private String android_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+    private String android_id;
+    private boolean ROLE = false;
+    private int created;
+
+    //Firebase implementation VV
+    //private FirebaseFirestore db;
+    //private CollectionReference facilitiesRef;
+    //private User user;
+    //private String deviceId;
+
+
 
     /**
      * On Create Method displays activity main and sets on click listeners
+     *
      * @param savedInstanceState
      */
 
@@ -42,28 +45,52 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //Clicking on create facility button
+        //Firebase implementation when merging
+        facilities = new Facilities();
+        facilities.createNew();
 
+        //Clicking on create facility button
+        create_button = findViewById(R.id.CREATE_FACILITY);
         create_button.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View view) {
-
-                //Get database references ** this will probably need to be modified once I know the firebase structure
-
-                //If the organizer has a profile: Goes to the create facility page
-                Intent intent = new Intent(MainActivity.this, CreateFacility.class);
-                startActivity(intent);
+            public void onClick(View view) {//this is where they click the facility button
+                //Get the user ID, and check if they are in the database
+                //For testing purposes
 
 
-                //If the organizer does not have a profile: make a profile
-                //Intent intent = new Intent(MainActivity.this, MakeOrganizerProfile.class);
-                //startActivity(intent.putExtra("android_id", android_id));
+
+                if (!ROLE) {//while the role of the user id is false it will execute this
+                    //Not in database--creating a facility
+                    Intent intent = new Intent(MainActivity.this, CreateFacility.class);
+                    startActivityForResult(intent, 1);
+
+                } else {
+                    Intent new_intent = new Intent(MainActivity.this, OrganizerHomepage.class);
+                    startActivity(new_intent);
+                }
 
 
-                Toast toast = Toast.makeText(context.getApplicationContext(), "Identification Failed", Toast.LENGTH_SHORT);
-                toast.show();
             }
 
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((requestCode == 1)&&(resultCode == RESULT_OK)&&(data != null)){
+            Facility new_facility = (Facility) data.getSerializableExtra("Facility");
+            if (new_facility!=null){
+                ROLE = true;
+                facilities.updateFacilities(new_facility);
+                Toast.makeText(MainActivity.this, "Facility Created!", Toast.LENGTH_SHORT).show();
+
+                Intent new_intent = new Intent(MainActivity.this, OrganizerHomepage.class);
+                new_intent.putExtra("Facility", new_facility);
+                startActivity(new_intent);
+            }
         }
-;}
+    }
+
+}

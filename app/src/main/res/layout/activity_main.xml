@@ -29,6 +29,7 @@
         android:layout_height="79dp"
 
         android:elevation="10dp"
+        android:focusable="true"
         android:stateListAnimator="@null"
 
         android:layout_marginTop="120dp"
@@ -38,6 +39,7 @@
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
+        android:clickable = "true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Welcome" />
@@ -48,6 +50,7 @@
         android:textSize = "18sp"
         android:layout_height="76dp"
         app:cornerRadius="7dp"
+        android:clickable = "true"
         android:elevation="10dp"
         android:stateListAnimator="@null"
         android:backgroundTint="@color/button"
