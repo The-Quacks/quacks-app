@@ -3,7 +3,6 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +14,9 @@ public class AdminHome extends AppCompatActivity {
         setContentView(R.layout.admin_home);
         EdgeToEdge.enable(this);
 
-        ImageButton Profile = findViewById(R.id.profilesButton);
-        ImageButton Events = findViewById(R.id.eventsButton);
-        ImageButton Images = findViewById(R.id.imagesButton);
+        ImageButton Profile = findViewById(R.id.profileButton);
+        ImageButton Events = findViewById(R.id.waitlistButton);
+        ImageButton Images = findViewById(R.id.notificationsButton);
         ImageButton Facilities = findViewById(R.id.facilitiesButton);
 
         Bundle bundle = new Bundle();

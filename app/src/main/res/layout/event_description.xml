@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E4D0D0">
+    android:background="#E4D0D0"
+    android:fitsSystemWindows="true">
 
     <TextView
         android:id="@+id/eventTitle"
@@ -40,16 +41,28 @@ Geo-location Requirement: Enabled\n
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
-
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="#F5EBEB"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-    </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_home" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/joinWaitlistButton"

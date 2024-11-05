@@ -35,6 +35,18 @@
             android:name=".CreateEntrantProfile"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".EntrantHome"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".WelcomeEntrant"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ScanQRCode"
+            android:exported="true">
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

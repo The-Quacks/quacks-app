@@ -14,7 +14,7 @@ public class CreateEntrantProfile extends AppCompatActivity {
 
         Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EventDescription.class);
+            Intent intent = new Intent(this, EntrantHome.class);
             startActivity(intent);
         });
     }
