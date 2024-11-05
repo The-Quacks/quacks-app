@@ -39,7 +39,7 @@
         android:ems="10"
         android:fontFamily="@font/yaldevi_semibold"
         android:inputType="text"
-        android:text="Enter name"
+        android:hint="Enter name"
         android:textColor="#867070"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -62,7 +62,7 @@
         android:ems="10"
         android:fontFamily="@font/yaldevi_semibold"
         android:inputType="text"
-        android:text="Enter email:"
+        android:hint="Enter email:"
         android:textColor="#867070"
         app:layout_constraintStart_toStartOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -85,7 +85,7 @@
         android:ems="10"
         android:fontFamily="@font/yaldevi_semibold"
         android:inputType="phone"
-        android:text="Enter phone number:"
+        android:hint="Enter phone number:"
         android:textColor="#867070"
         app:layout_constraintStart_toStartOf="@+id/phoneNumber"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
@@ -94,7 +94,7 @@
         android:id="@+id/takePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:backgroundTint="#F5EBEB"
         android:fontFamily="@font/yaldevi_semibold"
         android:text="Take picture"
@@ -112,8 +112,10 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="@+id/uploadPicture"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPicture" />
+        app:layout_constraintTop_toBottomOf="@+id/uploadPicture"
+        app:layout_constraintVertical_bias="0.854" />
 
     <Button
         android:id="@+id/cancel"
@@ -126,7 +128,8 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="@+id/takePicture"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/takePicture" />
+        app:layout_constraintTop_toBottomOf="@+id/takePicture"
+        app:layout_constraintVertical_bias="0.854" />
 
     <Button
         android:id="@+id/uploadPicture"

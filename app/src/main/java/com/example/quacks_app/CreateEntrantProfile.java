@@ -22,10 +22,10 @@ public class CreateEntrantProfile extends AppCompatActivity {
 
         Button save = findViewById(R.id.save);
         save.setOnClickListener(v -> {
-            Intent home = new Intent(this, MainActivity.class); // Temporary until real main activity
+            Intent home = new Intent(this, EntrantHome.class);
             EditText name = findViewById(R.id.nameInput);
             EditText email = findViewById(R.id.emailInput);
-            EditText phoneNumber = findViewById(R.id.phoneInput);
+            EditText phoneNumber = findViewById(R.id.editTextPhone);
 
             UserProfile newProfile = new UserProfile();
             newProfile.setUserName(name.getText().toString());
@@ -33,12 +33,12 @@ public class CreateEntrantProfile extends AppCompatActivity {
             newProfile.setPhoneNumber(phoneNumber.getText().toString());
 
             String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            User newUser = new User(mId);
-            newUser.setUserProfile(newProfile);
-
-            CRUD<User> crud = new CRUD<>(User.class);
-            crud.create(newUser);
-            startActivity(home);
+//            User newUser = new User(mId);
+//            newUser.setUserProfile(newProfile);
+//
+//            CRUD<User> crud = new CRUD<>(User.class);
+//            crud.create(newUser);
+//            startActivity(home);
         });
     }
 }

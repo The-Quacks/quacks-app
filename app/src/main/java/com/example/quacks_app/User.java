@@ -12,7 +12,7 @@ public class User extends RepoModel implements Serializable {
     private UserProfile userProfile;
     // Location
 
-    public User(){
+    public User() {
     }
 
     public User(String deviceId, ArrayList<Role> roles, UserProfile userProfile) {

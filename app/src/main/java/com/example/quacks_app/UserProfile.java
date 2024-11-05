@@ -8,7 +8,7 @@ public class UserProfile {
     private String email;
     private String phoneNumber;
 
-    public UserProfile(){
+    public UserProfile() {
 
     }
 
