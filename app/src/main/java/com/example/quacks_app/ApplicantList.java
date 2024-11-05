@@ -1,8 +1,9 @@
 package com.example.quacks_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ApplicantList extends RepoModel {
+public class ApplicantList extends RepoModel implements Serializable {
     private ArrayList<String> applicantIds;
     private Integer limit;
 
