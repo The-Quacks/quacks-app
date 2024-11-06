@@ -2,6 +2,7 @@ package com.example.quacks_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,6 +26,7 @@ public class OrganizerHomepage extends AppCompatActivity {
     private ImageButton homepage;
     private ImageButton search;
     private ImageButton profile;
+    private User user;
 
 
     @Override
@@ -32,7 +34,7 @@ public class OrganizerHomepage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_homepage);// or the correct XML layout file
 
-
+        //Needs to check if their device ID is in the user data base
 
         //Getting Current Facility
         facility = (Facility) getIntent().getSerializableExtra("Facility");

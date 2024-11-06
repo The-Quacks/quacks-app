@@ -39,7 +39,7 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
             location.setText(facility.getLocation());
             contact_info.setText(facility.getContactInfo());
             facility_deets.setText(facility.getDetails());
-            accessibility.setText(facility.accessibilityStat());
+            accessibility.setText(facility.getAccessible());
         }
 
 

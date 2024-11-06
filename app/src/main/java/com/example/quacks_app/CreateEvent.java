@@ -126,7 +126,7 @@ public class CreateEvent extends AppCompatActivity {
 
                 try {
                     int classes = Integer.parseInt(class_capacity.getText().toString());
-                    event.setClass_capacity(classes);
+                    event.setClass_Capacity(classes);
 
                 } catch(Exception e){
                     wrong = 1;
@@ -195,6 +195,7 @@ public class CreateEvent extends AppCompatActivity {
                     eventList.addEvent(event);
 
                     Toast.makeText(CreateEvent.this, "Event Created!", Toast.LENGTH_SHORT).show();
+                    Intent intent  = new Intent(CreateEvent.this, )
                 }
 
             }

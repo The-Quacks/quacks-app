@@ -21,15 +21,26 @@
         <activity
             android:name=".AdminHome"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <activity
+            android:name=".OrganizerHomepage"
+            android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
         <activity android:name=".DummyScanActivity" />
         <activity android:name=".ScanQRCodeActivity" />
         <activity android:name=".DummyJoinEventActivity" />
+        <activity android:name=".CreateEvent" />
+        <activity android:name=".ViewOrganizer" />
+        <activity android:name=".ViewEvents" />
+        <activity android:name=".MakeOrganizerProfile" />
+        <activity android:name=".CreateFacility"/>
+
     </application>
 
 </manifest>
