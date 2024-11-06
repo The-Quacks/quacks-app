@@ -1,5 +1,7 @@
 package com.example.quacks_app;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -55,6 +57,14 @@ public class User extends RepoModel implements Serializable {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
+    }
+
+    public void uploadProfilePicture(Bitmap newImage) {
+        UpdateProfilePicture.uploadProfilePicture(this.userProfile, newImage);
+    }
+
+    public void removeProfilePicture() {
+        UpdateProfilePicture.removeProfilePicture(this.userProfile);
     }
 
     /*

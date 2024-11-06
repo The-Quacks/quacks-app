@@ -49,8 +49,5 @@ public class AdminHome extends AppCompatActivity {
             myIntent.putExtras(bundle);
             startActivity(myIntent);
         });
-
-
-
     }
 }
