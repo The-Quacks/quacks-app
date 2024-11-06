@@ -3,7 +3,7 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Facility implements Serializable {
+public class Facility extends RepoModel implements Serializable {
 
     private String name;
     private String location;

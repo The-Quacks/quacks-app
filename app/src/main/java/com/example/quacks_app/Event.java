@@ -2,10 +2,11 @@ package com.example.quacks_app;
 
 import android.media.Image;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Event {
-
+public class Event extends RepoModel implements Serializable {
+    private ApplicantList applicantList;
     private String eventName;
     private Date dateTime;
     private String description;
@@ -78,6 +79,13 @@ public class Event {
 
     public String getDescription() {
         return description;
+    }
+    public ApplicantList getApplicantList() {
+        return applicantList;
+    }
+
+    public void setApplicantList(ApplicantList applicantList) {
+        this.applicantList = applicantList;
     }
 
     public void setDescription(String description) {

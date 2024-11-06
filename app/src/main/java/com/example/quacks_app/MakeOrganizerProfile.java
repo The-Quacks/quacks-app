@@ -78,6 +78,8 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
                 startActivity(intent);
             }
         });
+
+
     }
 }
 

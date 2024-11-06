@@ -26,6 +26,15 @@
         <activity android:name=".ViewOrganizer"/>
         <activity android:name=".MakeOrganizerProfile"/>
         <activity android:name=".CreateEvent"/>
+        <activity android:name=".NotifyOptions"/>
+        <activity android:name=".PickApplicants"/>
+        <activity android:name=".SelectAtRandom"/>
+        <activity android:name=".ConfirmAndNotify"/>
+        <activity android:name=".ViewEvents"/>
+        <activity android:name=".EventInfo"/>
+        <activity android:name=".EventList"/>
+
+
     </application>
 
 </manifest>

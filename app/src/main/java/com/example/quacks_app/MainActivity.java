@@ -1,17 +1,29 @@
 package com.example.quacks_app;
 import android.content.Context;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main Activity: Entrant Page: Identifies ID and redirects to Homepage
@@ -23,13 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private String android_id;
     private boolean ROLE = false;
     private int created;
-
-    //Firebase implementation VV
-    //private FirebaseFirestore db;
-    //private CollectionReference facilitiesRef;
-    //private User user;
-    //private String deviceId;
-
+    private User user;
+    private String deviceId;
+    private RepoModel repoModel;
+    private ArrayList<Role> roles;
 
 
     /**
@@ -46,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Firebase implementation when merging
+        FirebaseApp.initializeApp(this);
         facilities = new Facilities();
         facilities.createNew();
+        user = new User();
 
         //Clicking on create facility button
         create_button = findViewById(R.id.CREATE_FACILITY);
@@ -57,24 +68,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {//this is where they click the facility button
                 //Get the user ID, and check if they are in the database
                 //For testing purposes
-
-
-
-                if (!ROLE) {//while the role of the user id is false it will execute this
-                    //Not in database--creating a facility
+                // Proceed with the UI update or next steps after successful read
+                if (!ROLE) {
                     Intent intent = new Intent(MainActivity.this, CreateFacility.class);
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 1); // Pass the data if needed
+                }else {
 
-                } else {
+                    // Log error for debugging
+                    Toast.makeText(MainActivity.this, "Device Id Not Recognized", Toast.LENGTH_SHORT).show();
+
+                    // Provide feedback to user on failure (e.g., navigate to another activity)
                     Intent new_intent = new Intent(MainActivity.this, OrganizerHomepage.class);
                     startActivity(new_intent);
                 }
-
-
             }
-
         });
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){

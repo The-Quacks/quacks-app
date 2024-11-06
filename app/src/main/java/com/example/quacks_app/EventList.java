@@ -5,13 +5,15 @@ import java.util.ArrayList;
 public class EventList {
     private ArrayList<String> eventIds;
 
-    public EventList() {}
+    public EventList() {
+
+    }
 
     public ArrayList<String> getEventIds() {
         return eventIds;
     }
 
-    public ArrayList<Event> getEvent(ReadCallback readCallback) {
+    public ArrayList<String> getEvent(ReadCallback readCallback) {
         return new ArrayList<>(); // placeholder
     }
 
