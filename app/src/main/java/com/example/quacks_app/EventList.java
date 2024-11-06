@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class EventList extends RepoModel {
     private ArrayList<String> eventIds;
 
-    public EventList() {}
+    public EventList() { eventIds = new ArrayList<>();}
 
     public ArrayList<String> getEventIds() {
         return eventIds;

@@ -52,6 +52,10 @@
             android:exported="true">
         </activity>
 
+        <activity android:name=".DummyScanActivity" />
+        <activity android:name=".ScanQRCodeActivity" />
+        <activity android:name=".DummyJoinEventActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
