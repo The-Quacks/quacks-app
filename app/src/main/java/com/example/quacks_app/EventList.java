@@ -2,18 +2,16 @@ package com.example.quacks_app;
 
 import java.util.ArrayList;
 
-public class EventList {
+public class EventList extends RepoModel {
     private ArrayList<String> eventIds;
 
-    public EventList() {
-
-    }
+    public EventList() { eventIds = new ArrayList<>();}
 
     public ArrayList<String> getEventIds() {
         return eventIds;
     }
 
-    public ArrayList<String> getEvent(ReadCallback readCallback) {
+    public ArrayList<Event> getEvent(ReadCallback readCallback) {
         return new ArrayList<>(); // placeholder
     }
 
@@ -22,7 +20,7 @@ public class EventList {
     }
 
     public void addEvent(Event event) {
-        this.eventIds.add(event.getOrganizerId());
+        this.eventIds.add(event.getId());
     }
 
     public void addEvent(String eventId) {
@@ -30,7 +28,7 @@ public class EventList {
     }
 
     public void removeEvent(Event event) {
-        this.eventIds.remove(event.getOrganizerId());
+        this.eventIds.remove(event.getId());
     }
 
     public void removeEvent(String eventId) {
@@ -40,7 +38,7 @@ public class EventList {
     public void setEvents(ArrayList<Event> events) {
         eventIds = new ArrayList<>();
         for (Event event : events) {
-            eventIds.add(event.getOrganizerId());
+            eventIds.add(event.getId());
         }
     }
 }

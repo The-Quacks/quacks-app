@@ -1,6 +1,5 @@
 package com.example.quacks_app;
 
-
 import com.google.firebase.firestore.DocumentId;
 
 public abstract class RepoModel {

@@ -13,28 +13,23 @@
         android:theme="@style/Theme.Quacksapp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".AdminListView"
+            android:exported="true"/>
+        <activity
+            android:name=".AdminViewOrganizer"
+            android:exported="true"/>
+        <activity
+            android:name=".AdminHome"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".CreateFacility" />
-        <activity android:name=".OrganizerHomepage"/>
-        <activity android:name=".ViewOrganizer"/>
-        <activity android:name=".MakeOrganizerProfile"/>
-        <activity android:name=".CreateEvent"/>
-        <activity android:name=".NotifyOptions"/>
-        <activity android:name=".PickApplicants"/>
-        <activity android:name=".SelectAtRandom"/>
-        <activity android:name=".ConfirmAndNotify"/>
-        <activity android:name=".ViewEvents"/>
-        <activity android:name=".EventInfo"/>
-        <activity android:name=".EventList"/>
-
-
+        <activity android:name=".DummyScanActivity" />
+        <activity android:name=".ScanQRCodeActivity" />
+        <activity android:name=".DummyJoinEventActivity" />
     </application>
 
 </manifest>

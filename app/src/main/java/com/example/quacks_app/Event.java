@@ -1,105 +1,59 @@
 package com.example.quacks_app;
 
-import android.media.Image;
+import android.graphics.Bitmap;
+
+import androidx.appcompat.app.AppLocalesMetadataHolderService;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
-    private ApplicantList applicantList;
-    private String eventName;
     private Date dateTime;
     private String description;
-    private Image QRCode;
+    private Bitmap QRCode;
+    private String applicantList;
     private Facility facility;
     private String organizerId;
-    private int waitlist_capacity;
-    private int class_capacity;
-    private String instructor;
-    private String geolocation;
+    private String QRCodeHash;
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
+    public Event(Date dateTime, String description, ApplicantList applicantList, Facility facility, String organizerId) {}
+
+    public Event(){
+
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public String getGeolocation() {
-        return geolocation;
-    }
-
-    public void setGeolocation(String geolocation) {
-        this.geolocation = geolocation;
-    }
-
-    public String getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(String instructor) {
-        this.instructor = instructor;
-    }
-
-
-
-    public void setClass_capacity(int class_capacity) {
-        this.class_capacity = class_capacity;
-    }
-
-    public int getWaitlist_capacity() {
-        return waitlist_capacity;
-    }
-
-    public void setWaitlist_capacity(int waitlist_capacity) {
-        this.waitlist_capacity = waitlist_capacity;
-    }
-
-
-    public int getClass_capacity() {
-        return class_capacity;
-    }
-
-    public Event() {}
-
-    public Date getStartDateTime() {
-        return dateTime;
-    }
-    public Date getEndDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setStartDateTime(Date dateTime) {
-        this.dateTime = dateTime;
-    }
-    public void setEndDateTime(Date dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 
     public String getDescription() {
         return description;
     }
-    public ApplicantList getApplicantList() {
-        return applicantList;
-    }
-
-    public void setApplicantList(ApplicantList applicantList) {
-        this.applicantList = applicantList;
-    }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public Image getQRCode() {
+    public Bitmap getQRCode() {
         return QRCode;
     }
 
-    public void setQRCode(Image QRCode) {
+    public void setQRCode(Bitmap QRCode) {
         this.QRCode = QRCode;
     }
 
+    public String getApplicantList() {
+        return applicantList;
+    }
+
+    public void setApplicantList(String applicantList) {
+        this.applicantList = applicantList;
+    }
 
     public Facility getFacility() {
         return facility;
@@ -115,5 +69,21 @@ public class Event extends RepoModel implements Serializable {
 
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
+    }
+
+    public String getQRCodeHash() {
+        return QRCodeHash;
+    }
+
+    public void setQRCodeHash(String QRCodeHash) {
+        this.QRCodeHash = QRCodeHash;
+    }
+      
+    public String getDisplay() {
+        return description;
+    }
+
+    public String getSubDisplay() {
+        return "";
     }
 }

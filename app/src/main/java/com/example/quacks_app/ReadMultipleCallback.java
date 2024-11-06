@@ -10,6 +10,4 @@ import java.util.ArrayList;
 public interface ReadMultipleCallback<T> {
     void onReadMultipleSuccess(ArrayList<T> data);
     void onReadMultipleFailure(Exception e);
-
-    //void onDataRead(T model);
 }

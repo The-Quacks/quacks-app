@@ -1,8 +1,9 @@
 package com.example.quacks_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ApplicantList extends RepoModel {
+public class ApplicantList extends RepoModel implements Serializable {
     private ArrayList<String> applicantIds;
     private Integer limit;
 
@@ -25,12 +26,12 @@ public class ApplicantList extends RepoModel {
     public void setApplicants(ArrayList<User> applicants) {
         applicantIds = new ArrayList<>();
         for (User user : applicants) {
-            applicantIds.add(user.getDeviceId());
+            applicantIds.add(user.getId());
         }
     }
 
     public void addUser(User user) {
-        this.applicantIds.add(user.getDeviceId());
+        this.applicantIds.add(user.getId());
     }
 
     public void addUser(String userId) {
@@ -38,7 +39,7 @@ public class ApplicantList extends RepoModel {
     }
 
     public void removeUser(User user) {
-        this.applicantIds.remove(user.getDeviceId());
+        this.applicantIds.remove(user.getId());
     }
 
     public void removeUser(String userId) {

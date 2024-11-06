@@ -1,52 +1,28 @@
 package com.example.quacks_app;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Facility extends RepoModel implements Serializable {
 
-    private String name;
-    private String location;
-    private String contactInfo;
-    private String details;
-    private String accessibilityStat;
-
-
-    public void setName(String named){
-        name = named;
-    }
-
-    public void setLocation(String locationed){
-        location = locationed;
-    }
-
-    public void setContactInfo(String contactInfod){
-        contactInfo = contactInfod;
-    }
-
-    public void setDetails(String detailed){
-        details = detailed;
-    }
-
-    public void setaccessibilityStat(String status){
-        accessibilityStat = status;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public String getLocation(){
+    public String getLocation() {
         return location;
     }
-    public String getContactInfo(){
-        return contactInfo;
+
+    public void setLocation(String location) {
+        this.location = location;
     }
-    public String getDetails(){
-        return details;
+
+    private String location;
+
+    public Facility() {}
+
+    public String getDisplay() {
+        return "";
     }
-    public String accessibilityStat(){
-        return accessibilityStat;
+
+    public String getSubDisplay() {
+        return "";
     }
+
 
 }
