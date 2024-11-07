@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,9 +30,7 @@ public class EventDescription extends AppCompatActivity {
             }
             @Override
             public void onReadFailure(Exception e) {
-                TextView eventDescription = findViewById(R.id.eventDescription);
-                eventDescription.setText("This ain't workin");
-                Log.e("EventDescription", "Read failed", e);
+                Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -50,9 +49,16 @@ public class EventDescription extends AppCompatActivity {
         });
 
 
-//        joinWaitlist.setOnClickListener(v -> {
-//            join the waitlist
-//        });
+        joinWaitlist.setOnClickListener(v -> {
+            if (!EntrantHome.hasProfile) {
+                Toast.makeText(this, "Please create a profile", Toast.LENGTH_SHORT).show();
+                Intent createProfile = new Intent(this, CreateEntrantProfile.class);
+                startActivity(createProfile);
+            } else {
+                Toast.makeText(this, "Good", Toast.LENGTH_SHORT).show();
+                // Add entrant to database, show confirmation method, go back home
+            }
+        });
     }
 
 }

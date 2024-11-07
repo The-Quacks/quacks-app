@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EntrantHome extends AppCompatActivity {
+    static boolean hasProfile = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +35,10 @@ public class EntrantHome extends AppCompatActivity {
         ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<User> data) {
-                ImageButton profile = findViewById(R.id.profileButton);
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 for (User user : data) {
                     if (user.getDeviceId().equals(deviceId)) {
-                        profile.setTag("true");
+                        hasProfile = true;
                         break;
                     }
                 }
@@ -55,7 +56,7 @@ public class EntrantHome extends AppCompatActivity {
         crud.readQueryStatic(deviceId, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
-            if (profile.getTag().equals("false")) {
+            if (!hasProfile) {
                 startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
             } else {
                 Toast.makeText(EntrantHome.this, "Go to profile activity", Toast.LENGTH_SHORT).show();
@@ -72,27 +73,22 @@ public class EntrantHome extends AppCompatActivity {
 //        });
 
         scanQRCode.setOnClickListener(view -> {
-            if (profile.getTag().equals("false")) {
-                Toast.makeText(EntrantHome.this, "Please create a profile first", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
-            } else {
-                GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
-                        .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
-                        .build();
+            GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
+                    .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
+                    .build();
 
-                GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this, options);
-                scanner.startScan()
-                        .addOnSuccessListener(barcode -> {
-                            String id = barcode.getRawValue();
-                            Intent switchActivityIntent = new Intent(getApplicationContext(),
-                                    EventDescription.class);
-                            switchActivityIntent.putExtra("id", id);
-                            startActivity(switchActivityIntent);
-                        })
-                        .addOnCanceledListener(this::finish)
-                        .addOnFailureListener(e -> {
-                        });
-            }
+            GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this, options);
+            scanner.startScan()
+                    .addOnSuccessListener(barcode -> {
+                        String id = barcode.getRawValue();
+                        Intent switchActivityIntent = new Intent(getApplicationContext(),
+                                EventDescription.class);
+                        switchActivityIntent.putExtra("id", id);
+                        startActivity(switchActivityIntent);
+                    })
+                    .addOnCanceledListener(this::finish)
+                    .addOnFailureListener(e -> {
+                    });
         });
     }
 }

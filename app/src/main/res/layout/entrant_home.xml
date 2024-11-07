@@ -42,7 +42,6 @@
             android:background="@drawable/round_admin_button"
             android:padding="20dp"
             android:scaleType="fitXY"
-            android:tag="false"
             android:src="@drawable/icon_profile_pic" />
 
         <TextView

@@ -61,7 +61,8 @@ public class CreateEntrantProfile extends AppCompatActivity {
             CreateCallback createCallback = new CreateCallback() {
                 @Override
                 public void onCreateSuccess() {
-                    startActivity(home);
+                    EntrantHome.hasProfile = true;
+                    finish();
                 }
 
                 @Override
