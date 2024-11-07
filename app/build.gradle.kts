@@ -37,11 +37,18 @@ android {
 
 dependencies {
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.zxing:core:3.5.1")
-    implementation("com.google.zxing:javase:3.5.1")
-    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.firestore)
+    implementation(libs.core)
+    implementation(libs.javase)
+    implementation(libs.firebase.storage.v2020)
+    implementation(libs.play.services.code.scanner)
+    implementation("com.google.firebase:firebase-firestore:24.1.0") {
+        exclude(group = "com.google.firebase", module = "firebase-common")
+    }
+
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

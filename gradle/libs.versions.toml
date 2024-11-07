@@ -1,5 +1,9 @@
 [versions]
 agp = "8.6.0"
+core = "3.5.1"
+firebaseBom = "33.5.1"
+firebaseFirestore = "25.1.1"
+firebaseStorageVersion = "20.2.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -10,8 +14,14 @@ constraintlayout = "2.1.4"
 navigationFragment = "2.8.2"
 navigationUi = "2.8.2"
 firebaseStorage = "21.0.1"
+playServicesCodeScanner = "16.1.0"
 
 [libraries]
+core = { module = "com.google.zxing:core", version.ref = "core" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-storage-v2020 = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorageVersion" }
+javase = { module = "com.google.zxing:javase", version.ref = "core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -22,6 +32,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+play-services-code-scanner = { module = "com.google.android.gms:play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
