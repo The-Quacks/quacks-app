@@ -9,6 +9,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +42,7 @@ public class EntrantHome extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onReadMultipleFailure(Exception e) {
                 Toast.makeText(EntrantHome.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
@@ -51,8 +57,7 @@ public class EntrantHome extends AppCompatActivity {
         profile.setOnClickListener(view -> {
             if (profile.getTag().equals("false")) {
                 startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
-            }
-            else {
+            } else {
                 Toast.makeText(EntrantHome.this, "Go to profile activity", Toast.LENGTH_SHORT).show();
 //                startActivity(new Intent(EntrantHome.this, EntrantProfile.class));
             }
@@ -67,7 +72,27 @@ public class EntrantHome extends AppCompatActivity {
 //        });
 
         scanQRCode.setOnClickListener(view -> {
-            startActivity(new Intent(EntrantHome.this, ScanQRCode.class));
+            if (profile.getTag().equals("false")) {
+                Toast.makeText(EntrantHome.this, "Please create a profile first", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
+            } else {
+                GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
+                        .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
+                        .build();
+
+                GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this, options);
+                scanner.startScan()
+                        .addOnSuccessListener(barcode -> {
+                            String id = barcode.getRawValue();
+                            Intent switchActivityIntent = new Intent(getApplicationContext(),
+                                    EventDescription.class);
+                            switchActivityIntent.putExtra("id", id);
+                            startActivity(switchActivityIntent);
+                        })
+                        .addOnCanceledListener(this::finish)
+                        .addOnFailureListener(e -> {
+                        });
+            }
         });
     }
 }

@@ -22,20 +22,13 @@
 
     <TextView
         android:id="@+id/eventDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="256dp"
         android:background="#F5EBEB"
         android:fontFamily="@font/yaldevi_semibold"
         android:lineSpacingExtra="8sp"
-        android:text="Event Name: Yoga for Beginners\n
-Capacity: 50\n
-Registration: DD/MM/YYYY\n
-Class Duration: DD/MM/YYYY - DD/MM/YYYY\n
-Assigned Instructor: Chris Hemsworth\n
-Geo-location Requirement: Enabled\n
-(Temporarily hardcoded)
-"
         android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/joinWaitlistButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
