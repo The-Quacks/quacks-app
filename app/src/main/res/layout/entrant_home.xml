@@ -1,0 +1,181 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0E0E0"
+    android:padding="16dp"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/welcomeTitleEntrant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="Welcome to Quacks!"
+        android:textColor="@color/text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/profileLayout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/scanQRCodeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTitleEntrant">
+
+        <ImageButton
+            android:id="@+id/profileButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_profile_pic" />
+
+        <TextView
+            android:id="@+id/profileButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:clickable="false"
+            android:fontFamily="@font/yaldevi_semibold"
+            android:text="Profile"
+            android:textColor="#000000" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/waitlistLayout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/notificationsLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTitleEntrant">
+
+        <ImageButton
+            android:id="@+id/waitlistButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/waitlist" />
+
+        <TextView
+            android:id="@+id/waitlistButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:clickable="false"
+            android:fontFamily="@font/yaldevi_semibold"
+            android:text="Waitlists"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/notificationsLayout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="219dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/notificationsButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="24dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/notification_center" />
+
+        <TextView
+            android:id="@+id/notificationsButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:clickable="false"
+            android:fontFamily="@font/yaldevi_semibold"
+            android:text="Notification Center"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/scanQRCodeLayout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="219dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/scanQRCodeButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_qr_code" />
+
+        <TextView
+            android:id="@+id/scanQRCodeButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/yaldevi_semibold"
+            android:text="Scan QR Code"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_home" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

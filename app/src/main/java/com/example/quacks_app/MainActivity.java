@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         CRUD<Event> crud = new CRUD<>(Event.class);
         Map<String, String> mapping = new HashMap<>();
-        mapping.put("organizerId", "vjGUWpp8dsHqoTCklNQB");
+        mapping.put("organizerId", "EVhksR-xxD7aObuNKPsO-14");
         crud.readQueryLive(mapping, new ReadMultipleCallback<Event>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Event> data) {

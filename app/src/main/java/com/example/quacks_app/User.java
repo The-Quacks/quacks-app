@@ -1,6 +1,8 @@
 package com.example.quacks_app;
 
 import android.graphics.Bitmap;
+import android.provider.Settings;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,12 +13,12 @@ public class User extends RepoModel implements Serializable {
     private UserProfile userProfile;
     // Location
 
-    public User(){
+    public User() {
     }
 
     public User(String deviceId, ArrayList<Role> roles, UserProfile userProfile) {
         this.deviceId = deviceId;
-        this.roles =roles;
+        this.roles = roles;
         this.userProfile = userProfile;
     }
 
@@ -24,6 +26,7 @@ public class User extends RepoModel implements Serializable {
         this.deviceId = deviceId;
         roles = new ArrayList<>();
     }
+
 
     public String getDeviceId() {
         return deviceId;
@@ -59,6 +62,7 @@ public class User extends RepoModel implements Serializable {
         this.userProfile = userProfile;
     }
 
+
     public void uploadProfilePicture(Bitmap newImage) {
         // Ensure userProfile is not null and deviceId is set
         if (userProfile != null && deviceId != null) {
@@ -74,6 +78,7 @@ public class User extends RepoModel implements Serializable {
         }
     }
 
+}
     /*
     public String getDisplay() {
         return userProfile.getUserName();
@@ -87,4 +92,4 @@ public class User extends RepoModel implements Serializable {
         return roleStr;
     }
      */
-}
+
