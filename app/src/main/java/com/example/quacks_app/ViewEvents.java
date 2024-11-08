@@ -9,10 +9,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
@@ -27,34 +33,67 @@ public class ViewEvents extends AppCompatActivity {
     private CollectionReference eventsRef;
 
 
-    ListView eventList;
-    ArrayList<Event> eventDataList;
-    EventArrayAdapter eventArrayAdapter;
+    private ListView eventList;
+    private ArrayList<Event> eventDataList;
+    private EventArrayAdapter eventArrayAdapter;
+    private ArrayList<Listable> dataList;
+    private EventList evented;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_list);// or the correct XML layout file
+        setContentView(R.layout.event_list);
+
+
+        dataList = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("Event");
+
+        if (getIntent().getSerializableExtra("EventList") == null){
+           finish();
+        }
+        evented = (EventList) getIntent().getSerializableExtra("EventList");
+        if (getIntent().getSerializableExtra("Facility")==null){
+            finish();
+        }
+
         facility = (Facility) getIntent().getSerializableExtra("Facility");
 
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-
         eventList = findViewById(R.id.event_list);
-        eventDataList = new ArrayList<>();
 
+        eventDataList = new ArrayList<>();
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
         eventList.setAdapter(eventArrayAdapter);
 
+        eventsRef.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Toast.makeText(ViewEvents.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            eventDataList.clear();
+            for (DocumentSnapshot document : queryDocumentSnapshots) {
+                Event event = document.toObject(Event.class);
+                eventDataList.add(event);
+            }
+            eventArrayAdapter.notifyDataSetChanged();
+        });
+
+
+
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //when someone clicks on an event it leads them to the event info
-                //page
-                Event clicked = (Event) eventList.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Event clickedEvent = (Event) adapterView.getItemAtPosition(i);
+
                 Intent intent = new Intent(ViewEvents.this, EventInfo.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", clicked);
+                intent.putExtra("Event", clickedEvent);
+                if (evented != null) {
+                    intent.putExtra("EventList", evented);
+                }
+                if (facility != null){
+                    intent.putExtra("Facility", facility);
+                }
                 startActivity(intent);
             }
         });
@@ -69,7 +108,6 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, OrganizerHomepage.class);
-                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });
@@ -78,7 +116,6 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, ViewOrganizer.class);
-                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });

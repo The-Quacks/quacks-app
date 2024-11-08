@@ -8,105 +8,73 @@
     android:background="@color/background"
     android:foregroundTint="#D5B4B4"
     android:visibility="visible"
-    tools:context=".OrganizerHomepage">
+    tools:context=".OpenRegistration">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/Welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart = "100dp"
-        android:layout_marginEnd = "15dp"
+        android:layout_marginTop="92dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Welcome To The Organizer Homepage!"
+        android:text="Enter Amount of Preferred Attendees"
         android:textColor="@color/text"
-
-        android:textSize="35sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/organizer_profile_button"
-        android:layout_width="175dp"
-        android:layout_height="150dp"
-
-        android:elevation="10dp"
-
-
-        android:layout_marginTop="75dp"
-        android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_193"
-        android:fadingEdge="horizontal"
-        android:text="Organizer Profile"
-        android:textSize = "18sp"
-        android:textColor="@color/black"
-        app:cornerRadius="7dp"
-        android:layout_marginStart = "15dp"
-        app:layout_constraintTop_toBottomOf = "@id/title"
-        app:layout_constraintStart_toStartOf="parent" />
+    <EditText
+        android:id="@+id/amount"
+        android:background="@color/button"
+        android:layout_width="match_parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@id/Welcome"
+        android:layout_height="48dp"
+        android:ems="30"
+        android:autofillHints="yes"
+        android:inputType = "text"
+        android:hint ="Eg. 45, 54, 102" />
 
     <Button
-        android:id="@+id/view_events"
-        android:layout_width="175dp"
-        android:layout_height="150dp"
+        android:id="@+id/back_button"
+        android:layout_width="300dp"
+        android:layout_height="79dp"
 
         android:elevation="10dp"
+        android:focusable="true"
         android:stateListAnimator="@null"
 
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="120dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/event"
         android:fadingEdge="horizontal"
-        android:text="View Events"
+        android:text="BACK"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
-        android:layout_marginEnd = "15dp"
+        android:clickable = "true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@id/title"
-         />
-    <Button
-        android:id="@+id/create_event"
-        android:layout_width="175dp"
-        android:layout_height="150dp"
-
-        android:elevation="10dp"
-        android:stateListAnimator="@null"
-
-        android:layout_marginTop="75dp"
-        android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/create"
-        android:fadingEdge="horizontal"
-        android:text="Create Event"
-        android:textSize = "18sp"
-        android:textColor="@color/black"
-        app:cornerRadius="7dp"
-        android:layout_marginStart = "15dp"
-        app:layout_constraintTop_toBottomOf = "@id/title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@id/amount" />
     <Button
-        android:id="@+id/map"
-        android:layout_width="175dp"
-        android:layout_height="150dp"
+        android:id="@+id/confirm_button"
+        android:layout_width="300dp"
+        android:layout_height="79dp"
 
         android:elevation="10dp"
+        android:focusable="true"
         android:stateListAnimator="@null"
 
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/map"
         android:fadingEdge="horizontal"
-        android:text="Entrant Map"
+        android:text="CONFIRM"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
+        android:clickable = "true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@id/title"
-        android:layout_marginEnd = "15dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_button" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -143,5 +111,4 @@
             android:src = "@drawable/image_165"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

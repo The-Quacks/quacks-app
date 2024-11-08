@@ -36,7 +36,7 @@
         android:hint ="Eg. 45, 54, 102" />
 
     <Button
-        android:id="@+id/max_button"
+        android:id="@+id/back_button"
         android:layout_width="300dp"
         android:layout_height="79dp"
 
@@ -47,7 +47,7 @@
         android:layout_marginTop="120dp"
         android:backgroundTint="@color/button"
         android:fadingEdge="horizontal"
-        android:text="Set to Event Max"
+        android:text="BACK"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
@@ -74,7 +74,7 @@
         android:clickable = "true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/max_button" />
+        app:layout_constraintTop_toBottomOf="@id/back_button" />
 
     <RelativeLayout
         android:layout_width="match_parent"

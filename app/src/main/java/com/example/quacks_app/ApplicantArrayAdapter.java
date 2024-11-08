@@ -12,13 +12,13 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class EventArrayAdapter extends ArrayAdapter<Event> {
-    private ArrayList<Event> events;
+public class ApplicantArrayAdapter extends ArrayAdapter<User> {
+    private ArrayList<User> users;
     private Context context;
 
-    public EventArrayAdapter(Context context,ArrayList<Event> events){
-        super(context, 0, events);
-        this.events = events;
+    public ApplicantArrayAdapter(Context context, ArrayList<User> users){
+        super(context,0, users);
+        this.users = users;
         this.context = context;
     }
 
@@ -31,16 +31,18 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
             view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
         }
 
-        Event event = events.get(position);
+        User user = users.get(position);
+        UserProfile profile = user.getUserProfile();
+
 
         TextView eventName = view.findViewById(R.id.event_text);
         TextView date= view.findViewById(R.id.date_text);
         TextView instructor = view.findViewById(R.id.instructor_text);
         //TextView class_capacity = view.findViewById(R.id.class_capacity);
 
-        eventName.setText(event.getDateTime().toString());
-        date.setText(event.getDescription());
-        instructor.setText(event.getFacility().getName());
+        eventName.setText(profile.getUserName());
+        date.setText(profile.getPhoneNumber());
+        instructor.setText(profile.getEmail());
 
         return view;
     }

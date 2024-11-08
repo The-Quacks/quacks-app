@@ -54,7 +54,13 @@
         app:layout_constraintTop_toBottomOf="@id/ellipse"
         android:background = "@color/base"
         >
-
+        <TextView
+            android:id = "@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="yes"
+            android:textSize = "20sp"
+            android:text ="Username"/>
         <TextView
             android:id="@+id/Name"
             android:layout_width="match_parent"
@@ -90,6 +96,14 @@
             android:autofillHints="yes"
             android:textSize = "20sp"
             android:text ="@string/accessibilty_status_yes_with_ramps_etc"/>
+        <TextView
+            android:id = "@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="yes"
+            android:textSize = "20sp"
+            android:text ="Email"/>
+
     </LinearLayout>
 
     <Button
@@ -109,7 +123,7 @@
 
         app:layout_constraintBottom_toBottomOf = "parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="25dp"
         />
     <Button
@@ -130,45 +144,10 @@
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom= "100dp"
+        android:layout_marginBottom= "10dp"
         android:layout_marginStart = "25dp"
 
         tools:ignore="HardcodedText" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background = "@color/base"
-        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
-            android:id = "@+id/house"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src = "@drawable/image_163"
-            android:contentDescription="Button"
-            android:background="@color/base"
-            android:layout_alignParentStart="true"
-            tools:ignore="HardcodedText" />
-
-        <ImageButton
-            android:id="@+id/search"
-            android:layout_width="54dp"
-            android:layout_height="48dp"
-            android:background="@color/base"
-            android:contentDescription="Button"
-            android:src="@drawable/image_164"
-            android:layout_centerHorizontal="true"
-            tools:ignore="HardcodedText" />
-
-        <ImageButton
-            android:id = "@+id/person"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@color/base"
-            android:contentDescription="Button"
-            android:src = "@drawable/image_165"
-            android:layout_alignParentEnd="true"
-            tools:ignore="HardcodedText" />
-    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

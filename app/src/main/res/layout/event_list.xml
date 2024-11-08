@@ -7,6 +7,7 @@
     android:background="@color/background"
     android:foregroundTint="#D5B4B4"
     android:visibility="visible"
+    android:descendantFocusability="blocksDescendants"
     tools:context=".ViewEvents">
 
     <TextView
@@ -27,6 +28,8 @@
         android:layout_width="match_parent"
         android:background="@color/base"
         android:layout_height="635dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintTop_toBottomOf = "@id/title"
         android:layout_marginTop = "100dp"
         android:layout_marginBottom = "35dp"

@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id = "@+id/event_box"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background = "@color/white"
         android:orientation = "vertical"
@@ -34,55 +34,37 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/event_name"
+            android:id="@+id/event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Name" />
+            android:text="Event Date" />
         <TextView
-            android:id = "@+id/class_capacity"
+            android:id="@+id/event_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Class Capacity"/>
+            android:text="Event Description" />
         <TextView
-            android:id = "@+id/waitlist_capacity"
+            android:id="@+id/event_facility"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Waitlist Capacity"/>
+            android:text="Event facility" />
         <TextView
-            android:id = "@+id/registration_start"
+            android:id="@+id/event_organizer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Beginning Registration Date(2024-03-19)"/>
+            android:text="Event Organizer" />
         <TextView
-            android:id = "@+id/registration_end"
+            android:id="@+id/event_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Closing Registration Date (2024-03-19)"/>
-        <TextView
-            android:id = "@+id/instructor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Instructor Name"/>
-        <TextView
-            android:id = "@+id/geolocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="30"
-            android:text ="Geolocation (Enabled/Disabled)"/>
-
-
+            android:text="Event id" />
 
     </LinearLayout>
 
 
 
     <Button
-        android:id="@+id/organizer_profile_button"
+        android:id="@+id/register"
         android:layout_width="175dp"
         android:layout_height="175dp"
         android:elevation="10dp"
@@ -100,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/view_events"
+        android:id="@+id/close"
         android:layout_width="175dp"
         android:layout_height="175dp"
 
@@ -120,7 +102,7 @@
         app:layout_constraintTop_toBottomOf = "@id/event_box"
         />
     <Button
-        android:id="@+id/create_event"
+        android:id="@+id/delete_button"
         android:layout_width="175dp"
         android:layout_height="150dp"
 
@@ -131,7 +113,7 @@
         android:backgroundTint="@color/button"
         android:drawableTop = "@drawable/image_52"
         android:fadingEdge="horizontal"
-        android:text="Create Event"
+        android:text="Delete Event"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"

@@ -40,6 +40,12 @@
         <activity android:name=".ViewEvents" />
         <activity android:name=".MakeOrganizerProfile" />
         <activity android:name=".CreateFacility"/>
+        <activity android:name=".EventInfo" />
+        <activity android:name = ".NotifyOptions"/>
+        <activity android:name = ".PickApplicant"/>
+        <activity android:name = ".SelectAtRandom"/>
+        <activity android:name = ".OpenRegistration"/>
+
 
     </application>
 

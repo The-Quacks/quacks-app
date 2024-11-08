@@ -8,6 +8,7 @@ public class Facility extends RepoModel implements Serializable {
     private String name;
     private String phone;
     private String details;
+    private String deviceId;
 
     public String getLocation() {
         return location;
@@ -20,7 +21,7 @@ public class Facility extends RepoModel implements Serializable {
 
     private String location;
 
-    public Facility() {}
+    public Facility(){}
 
     public String getDisplay() {
         return "";
@@ -64,5 +65,11 @@ public class Facility extends RepoModel implements Serializable {
     }
     public String getPhone(){
         return this.phone;
+    }
+    public String getDiviceId(){
+        return this.deviceId;
+    }
+    public void setDeviceId(String d){
+        this.deviceId = d;
     }
 }
