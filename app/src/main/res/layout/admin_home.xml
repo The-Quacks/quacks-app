@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/welcomeTitleEntrant"
+        android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -23,18 +23,18 @@
 
 
     <RelativeLayout
-        android:id="@+id/profileLayout"
+        android:id="@+id/profilesLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="21dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/scanQRCodeLayout"
+        app:layout_constraintBottom_toTopOf="@+id/qrCodesLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeTitleEntrant">
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText">
 
         <ImageButton
-            android:id="@+id/profileButton"
+            android:id="@+id/profilesButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
@@ -44,7 +44,7 @@
             android:src="@drawable/icon_profile_pic" />
 
         <TextView
-            android:id="@+id/profileButtonText"
+            android:id="@+id/profilesButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -57,18 +57,18 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/waitlistLayout"
+        android:id="@+id/eventsLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/notificationsLayout"
+        app:layout_constraintBottom_toTopOf="@+id/imagesLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeTitleEntrant"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
         app:layout_constraintVertical_bias="0.958">
 
         <ImageButton
-            android:id="@+id/waitlistButton"
+            android:id="@+id/eventsButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
@@ -78,7 +78,7 @@
             android:src="@drawable/icon_events" />
 
         <TextView
-            android:id="@+id/waitlistButtonText"
+            android:id="@+id/eventsButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -90,7 +90,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/notificationsLayout"
+        android:id="@+id/imagesLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginEnd="24dp"
@@ -99,7 +99,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
-            android:id="@+id/notificationsButton"
+            android:id="@+id/imagesButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
@@ -109,7 +109,7 @@
             android:src="@drawable/icon_images" />
 
         <TextView
-            android:id="@+id/notificationsButtonText"
+            android:id="@+id/imagesButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -121,7 +121,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/scanQRCodeLayout"
+        android:id="@+id/qrCodesLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="24dp"
@@ -130,7 +130,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/scanQRCodeButton"
+            android:id="@+id/qrCodesButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
@@ -140,7 +140,7 @@
             android:src="@drawable/icon_qr_code" />
 
         <TextView
-            android:id="@+id/scanWRCodeButtonText"
+            android:id="@+id/qrCodesButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -158,7 +158,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeTitleEntrant">
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText">
 
         <ImageButton
             android:id="@+id/facilitiesButton"

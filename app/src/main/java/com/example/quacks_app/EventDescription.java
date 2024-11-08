@@ -56,7 +56,10 @@ public class EventDescription extends AppCompatActivity {
                 startActivity(createProfile);
             } else {
                 Toast.makeText(this, "Good", Toast.LENGTH_SHORT).show();
-                // Add entrant to database, show confirmation method, go back home
+                // Add entrant to database, show confirmation, go back home
+                // Get applicant list id
+                // Get user id (in firestore)
+                // Add user id to applicant list
             }
         });
     }

@@ -143,7 +143,7 @@
             android:src="@drawable/icon_qr_code" />
 
         <TextView
-            android:id="@+id/scanWRCodeButtonText"
+            android:id="@+id/scanQRCodeButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
