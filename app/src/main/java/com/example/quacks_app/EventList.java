@@ -1,17 +1,20 @@
 package com.example.quacks_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Represents a list of events with functionality to manage and retrieve event information.
  */
-public class EventList extends RepoModel {
+public class EventList extends RepoModel implements Serializable {
     private ArrayList<String> eventIds;
 
     /**
      * Constructs a new EventList.
      */
-    public EventList() {this.eventIds = new ArrayList<>();}
+    public EventList() {
+        eventIds = new ArrayList<>();
+    }
 
     /**
      * Retrieves the list of event IDs.
