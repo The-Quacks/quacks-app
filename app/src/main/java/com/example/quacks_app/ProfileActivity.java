@@ -76,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Load user profile data
         loadUserProfile();
 
+
         // Initialize the ActivityResultLauncher for selecting an image from the gallery
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -98,23 +99,27 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Loads the user profile from the intent and updates the UI fields.
      */
+    private User user;
     private void loadUserProfile() {
-        userProfile = (UserProfile) getIntent().getSerializableExtra("userProfile");
+        user = (User) getIntent().getSerializableExtra("user");
 
-        if (userProfile != null) {
-            userNameInput.setText(userProfile.getUserName());
-            emailInput.setText(userProfile.getEmail());
-            phoneNumberInput.setText(userProfile.getPhoneNumber());
+        if (user != null) {
+            userProfile = user.getUserProfile();
+            if (userProfile != null) {
+                userNameInput.setText(userProfile.getUserName());
+                emailInput.setText(userProfile.getEmail());
+                phoneNumberInput.setText(userProfile.getPhoneNumber());
 
-            // Load the profile picture using Glide
-            if (userProfile.getProfilePictureUrl() != null) {
-                Glide.with(this).load(userProfile.getProfilePictureUrl()).into(profilePicture);
-            } else {
-                Bitmap defaultImage = UpdateProfilePicture.generateDefaultProfilePicture(userProfile.getUserName());
-                profilePicture.setImageBitmap(defaultImage);
+                if (userProfile.getProfilePictureUrl() != null) {
+                    Glide.with(this).load(userProfile.getProfilePictureUrl()).into(profilePicture);
+                } else {
+                    Bitmap defaultImage = UpdateProfilePicture.generateDefaultProfilePicture(userProfile.getUserName());
+                    profilePicture.setImageBitmap(defaultImage);
+                }
             }
         }
     }
+
 
     /**
      * Requests storage permission and opens the gallery if permission is granted.
@@ -164,20 +169,20 @@ public class ProfileActivity extends AppCompatActivity {
      * @param imageUri The URI of the selected image.
      */
     private void uploadImageToFirebase(Uri imageUri) {
-        if (userProfile == null) return;
+        if (user == null || user.getDeviceId() == null) return;
 
-        StorageReference storageRef = storage.getReference().child("profile_pictures/" + userProfile.getUserName() + ".jpg");
+        StorageReference storageRef = storage.getReference().child("profile_pictures/" + user.getDeviceId() + ".jpg");
 
-        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
-                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    userProfile.setProfilePictureUrl(uri.toString());
-                    saveUserProfileToFirestore();
-                    Toast.makeText(this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
-                })
-        ).addOnFailureListener(e ->
-                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
-        );
+        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                userProfile.setProfilePictureUrl(uri.toString());
+                saveUserProfileToFirestore();
+                Glide.with(this).load(uri).into(profilePicture);
+                Toast.makeText(this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show());
     }
+
 
     /**
      * Removes the user's profile picture and updates it with a default image.
@@ -209,9 +214,9 @@ public class ProfileActivity extends AppCompatActivity {
      * Saves the user's profile data to Firestore.
      */
     private void saveUserProfileToFirestore() {
-        if (userProfile != null) {
-            firestore.collection("users").document(userProfile.getUserName())
-                    .set(userProfile)
+        if (user != null) {
+            firestore.collection("users").document(user.getDeviceId())
+                    .set(user)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(this, "Profile saved to Firestore", Toast.LENGTH_SHORT).show();
