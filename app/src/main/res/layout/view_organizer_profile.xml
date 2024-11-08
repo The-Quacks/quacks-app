@@ -1,0 +1,153 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:foregroundTint="#D5B4B4"
+    android:visibility="visible"
+    tools:context=".CreateFacility">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="View Organizer Profile"
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id = "@+id/ellipse"
+        android:contentDescription="@string/todo"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/text_box"
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:layout_height= "200dp"
+        android:paddingTop="10dp"
+        android:background = "@color/background"
+        android:src = "@drawable/ellipse_30" />
+
+    <ImageView
+        android:id = "@+id/person_fig"
+        android:contentDescription="@string/todo"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_marginTop="75dp"
+        android:layout_width="match_parent"
+        android:layout_height= "100dp"
+        android:paddingTop="10dp"
+        android:src = "@drawable/image_193" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id = "@+id/text_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@id/ellipse"
+        android:background = "@color/base"
+        >
+        <TextView
+            android:id = "@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="yes"
+            android:textSize = "20sp"
+            android:text ="Username"/>
+        <TextView
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize = "20sp"
+            android:autofillHints="yes"
+            android:text ="Business Name" />
+        <TextView
+            android:id = "@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize = "20sp"
+            android:autofillHints="yes"
+            android:text  ="@string/location"/>
+        <TextView
+            android:id = "@+id/contact_info"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize = "20sp"
+            android:autofillHints="yes"
+            android:text  ="@string/phone_number_780_289_1234"/>
+        <TextView
+            android:id = "@+id/facility_details"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize = "20sp"
+            android:autofillHints="yes"
+            android:text  ="@string/facility_details"/>
+        <TextView
+            android:id = "@+id/accessibility"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="yes"
+            android:textSize = "20sp"
+            android:text ="@string/accessibilty_status_yes_with_ramps_etc"/>
+        <TextView
+            android:id = "@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="yes"
+            android:textSize = "20sp"
+            android:text ="Email"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="150dp"
+        android:layout_height="79dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:backgroundTint="@color/button"
+        android:fadingEdge="horizontal"
+        android:text="EDIT"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+
+        app:layout_constraintBottom_toBottomOf = "parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="25dp"
+        />
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="150dp"
+        android:layout_height="79dp"
+
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+
+        android:layout_marginTop="120dp"
+        android:backgroundTint="@color/button"
+        android:fadingEdge="horizontal"
+        android:text="BACK"
+        android:textSize = "18sp"
+        android:textColor="@color/black"
+        app:cornerRadius="7dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom= "10dp"
+        android:layout_marginStart = "25dp"
+
+        tools:ignore="HardcodedText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

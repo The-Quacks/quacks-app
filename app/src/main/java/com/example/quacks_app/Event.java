@@ -2,10 +2,7 @@ package com.example.quacks_app;
 
 import android.media.Image;
 
-import androidx.appcompat.app.AppLocalesMetadataHolderService;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
@@ -15,6 +12,7 @@ public class Event extends RepoModel implements Serializable {
     private String applicantList;
     private Facility facility;
     private String organizerId;
+    private String eventId;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, Facility facility, String organizerId) {
         // placeholder
@@ -139,5 +137,13 @@ public class Event extends RepoModel implements Serializable {
 
     public String getSubDisplay() {
         return "";
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getEventId() {
+        return super.getId();
     }
 }
