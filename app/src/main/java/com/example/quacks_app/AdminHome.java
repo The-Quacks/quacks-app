@@ -23,7 +23,7 @@ public class AdminHome extends AppCompatActivity {
         Bundle bundle = new Bundle();
 
         Profile.setOnClickListener(view -> {
-            Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            Intent myIntent = new Intent(AdminHome.this, ProfileActivity.class);
             bundle.putString("viewType", "Profile");
             myIntent.putExtras(bundle);
             startActivity(myIntent);
