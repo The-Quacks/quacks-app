@@ -13,7 +13,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,26 +35,32 @@ android {
 }
 
 dependencies {
+    // Firebase BoM
+    implementation(libs.firebase.bom)
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.zxing:core:3.5.1")
-    implementation("com.google.zxing:javase:3.5.1")
-    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    // Firebase libraries (versions managed by BoM)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+
+    // Google Play Services
+    implementation(libs.play.services.code.scanner)
+    implementation(libs.barcode.scanning.common)
+
+    // AndroidX and Material
+    implementation(libs.core)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.firebase.storage)
-    implementation(libs.barcode.scanning.common)
+
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+
+    // Unit Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 }

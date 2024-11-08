@@ -16,8 +16,6 @@ public class UserProfile implements Serializable {
     private String profilePictureUrl; // New field for storing the profile picture URL
     private Facility facility;
     private ArrayList<Event> successful_events;
-    private Facility facility;
-    private ArrayList<Event> successful_events;
 
     /**
      * Default constructor for creating an empty UserProfile object.
@@ -73,31 +71,6 @@ public class UserProfile implements Serializable {
         this.userName = userName;
         this.email = email;
         this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * Describes the contents of the Parcelable object.
-     *
-     * @return An integer representing the contents.
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * Writes the UserProfile object to a Parcel.
-     *
-     * @param dest  The Parcel to write data to.
-     * @param flags Flags for writing the Parcel.
-     */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userName);
-        dest.writeString(email);
-        dest.writeString(phoneNumber);
-        dest.writeParcelable(profilePicture, flags);
-        dest.writeString(profilePictureUrl);
     }
 
     // Getters and Setters

@@ -123,7 +123,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * Requests storage permission and opens the gallery if permission is granted.
      */
