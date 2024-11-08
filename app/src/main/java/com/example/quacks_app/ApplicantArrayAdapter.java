@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class ApplicantArrayAdapter extends ArrayAdapter<User> {
-    private ArrayList<User> users;
+public class ApplicantArrayAdapter extends ArrayAdapter<Cartable> {
+    private ArrayList<Cartable> users;
     private Context context;
 
-    public ApplicantArrayAdapter(Context context, ArrayList<User> users){
+    public ApplicantArrayAdapter(Context context, ArrayList<Cartable> users){
         super(context,0, users);
         this.users = users;
         this.context = context;
@@ -31,18 +31,14 @@ public class ApplicantArrayAdapter extends ArrayAdapter<User> {
             view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
         }
 
-        User user = users.get(position);
-        UserProfile profile = user.getUserProfile();
-
-
         TextView eventName = view.findViewById(R.id.event_text);
         TextView date= view.findViewById(R.id.date_text);
         TextView instructor = view.findViewById(R.id.instructor_text);
-        //TextView class_capacity = view.findViewById(R.id.class_capacity);
 
-        eventName.setText(profile.getUserName());
-        date.setText(profile.getPhoneNumber());
-        instructor.setText(profile.getEmail());
+        Cartable user = users.get(position);
+            eventName.setText(user.field);
+            date.setText(user.subfield);
+
 
         return view;
     }

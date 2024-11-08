@@ -31,6 +31,10 @@ public class ViewOrganizer extends AppCompatActivity {
     private User current;
     private Facility facility;
 
+    /**
+     * Where you can view the organizer profile but not edit
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

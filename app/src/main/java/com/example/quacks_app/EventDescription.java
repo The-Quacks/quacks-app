@@ -15,6 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code EventDescription} class is used to show important information about a selected event.
+ * It also includes the option to join the waitlist for that event. The information displayed will
+ * be changed in future implementations, when more functionality is completed. Additionally, the
+ * code to join the waitlist will be improved in the future.
+ */
+
 public class EventDescription extends AppCompatActivity {
     private String userId;
     private String applicantListId;

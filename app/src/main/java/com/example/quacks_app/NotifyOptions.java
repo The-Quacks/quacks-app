@@ -13,6 +13,10 @@ public class NotifyOptions extends AppCompatActivity {
     private Button back;
     private Event event;
 
+    /**
+     * Notification Page can see pick by pool or select participants
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
