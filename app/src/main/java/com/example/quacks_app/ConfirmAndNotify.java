@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Page that makes sure you wanted to proceed
+ */
 public class ConfirmAndNotify extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

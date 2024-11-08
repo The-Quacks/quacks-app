@@ -48,11 +48,11 @@ public class ViewEvents extends AppCompatActivity {
         dataList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("Event");
-
-        if (getIntent().getSerializableExtra("EventList") == null){
+        evented = (EventList) getIntent().getSerializableExtra("EventList");
+        if (evented == null){
            finish();
         }
-        evented = (EventList) getIntent().getSerializableExtra("EventList");
+
         if (getIntent().getSerializableExtra("Facility")==null){
             finish();
         }

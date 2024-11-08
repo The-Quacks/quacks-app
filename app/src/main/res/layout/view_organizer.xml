@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
-        android:text="View Organizer Profile"
+        android:text="@string/view_organizer_profile"
         android:textColor="@color/text"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"

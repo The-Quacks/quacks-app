@@ -28,7 +28,9 @@ public class OpenRegistration  extends AppCompatActivity {
     private CollectionReference applicantRef;
     private int flagger = 0;
 
-
+    /*
+    Opens Registration for applicants
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

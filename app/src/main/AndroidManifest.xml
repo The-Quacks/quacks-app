@@ -31,7 +31,24 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
 
+
         </activity>
+
+        <activity android:name = ".CreateEvent"/>
+        <activity android:name = ".ApplicantArrayAdapter"/>
+        <activity android:name = ".CreateFacility"/>
+        <activity android:name = ".EventArrayAdapter"/>
+        <activity android:name = ".EventInfo"/>
+        <activity android:name = ".Facility"/>
+        <activity android:name = ".Facilities"/>
+        <activity android:name = ".NotifyOptions"/>
+        <activity android:name = ".MakeOrganizerProfile"/>
+        <activity android:name = ".PickApplicant"/>
+        <activity android:name = ".SelectAtRandom"/>
+        <activity android:name=".ViewEvents"/>
+        <activity android:name=".ViewOrganizer"/>
+        <activity android:name = ".OpenRegistration"/>
+
         <activity
             android:name=".EventDescription"
             android:exported="true">
