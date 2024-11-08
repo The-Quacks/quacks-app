@@ -37,19 +37,11 @@ android {
 
 dependencies {
 
-    implementation(libs.firebase.bom)
-    implementation(libs.firebase.firestore)
-    implementation(libs.core)
-    implementation(libs.javase)
-    implementation(libs.firebase.storage.v2020)
-    implementation(libs.play.services.code.scanner)
-//    implementation("com.google.firebase:firebase-firestore:24.1.0") {
-//        exclude(group = "com.google.firebase", module = "firebase-common")
-//    }
-    dependencies {
-        implementation(libs.glide)
-        annotationProcessor(libs.compiler)
-    }
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.zxing:core:3.5.1")
+    implementation("com.google.zxing:javase:3.5.1")
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -57,7 +49,13 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.firebase.storage)
+    implementation(libs.barcode.scanning.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 }

@@ -1,23 +1,21 @@
 package com.example.quacks_app;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * The UserProfile class represents a user's profile information.
- * It includes details such as username, profile picture, email, phone number,
- * and a profile picture URL. The class implements the Parcelable interface
- * to allow UserProfile objects to be passed between activities.
- */
-public class UserProfile implements Parcelable {
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    // Fields
+public class UserProfile implements Serializable, Parcelable {
     private String userName;
     private Bitmap profilePicture;
     private String email;
     private String phoneNumber;
     private String profilePictureUrl; // New field for storing the profile picture URL
+    private Facility facility;
+    private ArrayList<Event> successful_events;
 
     /**
      * Default constructor for creating an empty UserProfile object.
@@ -35,7 +33,6 @@ public class UserProfile implements Parcelable {
      */
     public UserProfile(String userName, Bitmap profilePicture, String email, String phoneNumber) {
         this.userName = userName;
-        this.profilePicture = profilePicture;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.profilePictureUrl = null; // Default value for profile picture URL
@@ -58,7 +55,7 @@ public class UserProfile implements Parcelable {
     /**
      * Creator object for Parcelable implementation.
      */
-    public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+    public static final Parcelable.Creator<UserProfile> CREATOR = new Parcelable.Creator<UserProfile>() {
         @Override
         public UserProfile createFromParcel(Parcel in) {
             return new UserProfile(in);
@@ -69,6 +66,12 @@ public class UserProfile implements Parcelable {
             return new UserProfile[size];
         }
     };
+
+    public UserProfile (String userName, String email, String phoneNumber) {
+        this.userName = userName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 
     /**
      * Describes the contents of the Parcelable object.
@@ -186,4 +189,20 @@ public class UserProfile implements Parcelable {
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
+
+    public void setFacility(Facility facility){ this.facility = facility;}
+
+    public Facility getFacility(){return this.facility;}
+
+    public void setNotification(Event eventId){
+        if (eventId != null){
+            successful_events.add(eventId);
+        }
+    }
+
+    public ArrayList<Event> getNotifications(){
+        return this.successful_events;
+    }
+
+
 }

@@ -16,12 +16,13 @@ navigationFragment = "2.8.2"
 navigationUi = "2.8.2"
 firebaseStorage = "21.0.1"
 playServicesCodeScanner = "16.1.0"
+firebaseDatabase = "21.0.0"
+barcodeScanningCommon = "17.0.0"
 
 [libraries]
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 core = { module = "com.google.zxing:core", version.ref = "core" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage-v2020 = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorageVersion" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 javase = { module = "com.google.zxing:javase", version.ref = "core" }
@@ -36,6 +37,9 @@ navigation-fragment = { group = "androidx.navigation", name = "navigation-fragme
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 play-services-code-scanner = { module = "com.google.android.gms:play-services-code-scanner", version.ref = "playServicesCodeScanner" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+barcode-scanning-common = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref = "barcodeScanningCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
