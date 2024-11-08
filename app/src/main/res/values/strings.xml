@@ -11,5 +11,14 @@
     <string name="phone_number_780_289_1234">Phone Number (780-289-1234)</string>
     <string name="accessibilty_status_yes_with_ramps_etc">Accessibilty Status (Yes with ramps, etc)</string>
     <string name="bussiness_name">Bussiness Name</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="user_profile">User Profile</string>
+    <string name="edit_picture">Edit Picture</string>
+    <string name="remove_picture">Remove Picture</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="save">Save</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
     <string name="view_organizer_profile">View Organizer Profile</string>
 </resources>

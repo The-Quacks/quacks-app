@@ -44,6 +44,8 @@
         android:paddingTop="10dp"
         android:src = "@drawable/image_193" />
 
+
+
     <LinearLayout
         android:orientation="vertical"
         android:id = "@+id/text_box"
