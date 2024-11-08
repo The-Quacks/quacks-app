@@ -8,12 +8,14 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserProfile implements Serializable, Parcelable {
+public class UserProfile implements Serializable {
     private String userName;
     private Bitmap profilePicture;
     private String email;
     private String phoneNumber;
     private String profilePictureUrl; // New field for storing the profile picture URL
+    private Facility facility;
+    private ArrayList<Event> successful_events;
     private Facility facility;
     private ArrayList<Event> successful_events;
 
@@ -172,6 +174,24 @@ public class UserProfile implements Serializable, Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
+    public void setFacility(Facility facility){
+        this.facility = facility;
+    }
+
+    public Facility getFacility(){
+        return this.facility;
+    }
+
+    public void setNotification(Event eventId){
+        if (eventId != null){
+            successful_events.add(eventId);
+        }
+    }
+
+    public ArrayList<Event> getNotifications(){
+        return this.successful_events;
+    }
+
     /**
      * Gets the URL of the user's profile picture stored in Firebase.
      *
@@ -189,20 +209,5 @@ public class UserProfile implements Serializable, Parcelable {
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
-
-    public void setFacility(Facility facility){ this.facility = facility;}
-
-    public Facility getFacility(){return this.facility;}
-
-    public void setNotification(Event eventId){
-        if (eventId != null){
-            successful_events.add(eventId);
-        }
-    }
-
-    public ArrayList<Event> getNotifications(){
-        return this.successful_events;
-    }
-
 
 }

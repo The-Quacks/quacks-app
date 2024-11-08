@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.widget.TextView;
 
+import android.provider.Settings;
+import android.widget.TextView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,6 +30,7 @@ public class User extends RepoModel implements Serializable {
         this.deviceId = deviceId;
         roles = new ArrayList<>();
     }
+
 
     public String getDeviceId() {
         return deviceId;
@@ -76,8 +80,7 @@ public class User extends RepoModel implements Serializable {
             UpdateProfilePicture.removeProfilePicture(userProfile, deviceId);
         }
     }
-
-    }
+}
     /*
     public String getDisplay() {
         return userProfile.getUserName();
