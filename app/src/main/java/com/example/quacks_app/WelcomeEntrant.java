@@ -23,8 +23,8 @@ public class WelcomeEntrant extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         Button welcomeHome = findViewById(R.id.welcome_home);
-        ImageButton homeIcon = findViewById(R.id.homeIcon);
         Button createFacility = findViewById(R.id.CREATE_FACILITY);
+        ImageButton homeIcon = findViewById(R.id.homeIcon);
 
         welcomeHome.setOnClickListener(view -> {
             startActivity(new Intent(WelcomeEntrant.this, EntrantHome.class));

@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">quacks-app</string>
+    <string name="create_an_organizer_profile">Create An Organizer Profile</string>
+    <string name="todo">TODO</string>
+    <string name="name">Name</string>
+    <string name="location">Location</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="facility_details">Facility Details</string>
+    <string name="accessbility_status">Accessbility Status</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="phone_number_780_289_1234">Phone Number (780-289-1234)</string>
+    <string name="accessibilty_status_yes_with_ramps_etc">Accessibilty Status (Yes with ramps, etc)</string>
+    <string name="bussiness_name">Bussiness Name</string>
 </resources>

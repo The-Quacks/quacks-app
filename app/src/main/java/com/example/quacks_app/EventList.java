@@ -1,11 +1,15 @@
 package com.example.quacks_app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EventList extends RepoModel {
+public class EventList extends RepoModel implements Serializable {
     private ArrayList<String> eventIds;
 
-    public EventList() { eventIds = new ArrayList<>();}
+
+    public EventList() {
+        eventIds = new ArrayList<>();
+    }
 
     public ArrayList<String> getEventIds() {
         return eventIds;
@@ -41,4 +45,5 @@ public class EventList extends RepoModel {
             eventIds.add(event.getId());
         }
     }
+
 }

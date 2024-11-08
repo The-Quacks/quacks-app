@@ -205,6 +205,7 @@ public class CRUD<T extends RepoModel> {
      * @param callback the callback instance that contains the logic for
      *                 success and failure of updating the data
      */
+
     public void update(String id, T model, UpdateCallback callback) {
         colRef.document(id).set(model, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
@@ -218,6 +219,7 @@ public class CRUD<T extends RepoModel> {
      * @param callback the callback instance that contains the logic for
      *                 success and failure of deleting the data
      */
+
     public void delete(String id, DeleteCallback callback) {
         colRef.document(id).delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
