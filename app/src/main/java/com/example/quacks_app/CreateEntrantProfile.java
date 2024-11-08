@@ -13,6 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code CreateEntrantProfile} class is used by entrants to add their personal information
+ * the first time they use the app. It validates the user's input, and then creates a new User
+ * in the database.
+ */
+
 public class CreateEntrantProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
