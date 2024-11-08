@@ -74,7 +74,6 @@ public class User extends RepoModel implements Serializable {
         }
     }
 
-
     /*
     public String getDisplay() {
         return userProfile.getUserName();

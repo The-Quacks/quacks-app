@@ -22,27 +22,39 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
+/**
+ * ProfileActivity handles the display, editing, and management of the user's profile.
+ * It allows users to update their profile picture, name, email, and phone number.
+ * The data is stored in Firebase Firestore and Firebase Storage.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int STORAGE_PERMISSION_CODE = 101;
 
+    // UI elements
     private ImageView profilePicture;
     private EditText userNameInput, emailInput, phoneNumberInput;
     private Button saveProfileButton, editPictureButton, removePictureButton;
+
+    // UserProfile object to hold the user's information
     private UserProfile userProfile;
 
+    // Firebase instances
     private FirebaseFirestore firestore;
     private FirebaseStorage storage;
 
-    // Define an ActivityResultLauncher for the Photo Picker
+    // ActivityResultLauncher for handling the photo picker
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
+    /**
+     * Initializes the activity and sets up Firebase, UI elements, and event listeners.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Load user profile data
         loadUserProfile();
 
-        // Initialize the ActivityResultLauncher
+        // Initialize the ActivityResultLauncher for selecting an image from the gallery
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -83,6 +95,9 @@ public class ProfileActivity extends AppCompatActivity {
         saveProfileButton.setOnClickListener(v -> saveProfileChanges());
     }
 
+    /**
+     * Loads the user profile from the intent and updates the UI fields.
+     */
     private void loadUserProfile() {
         userProfile = (UserProfile) getIntent().getSerializableExtra("userProfile");
 
@@ -91,6 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
             emailInput.setText(userProfile.getEmail());
             phoneNumberInput.setText(userProfile.getPhoneNumber());
 
+            // Load the profile picture using Glide
             if (userProfile.getProfilePictureUrl() != null) {
                 Glide.with(this).load(userProfile.getProfilePictureUrl()).into(profilePicture);
             } else {
@@ -100,12 +116,13 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Requests storage permission and opens the gallery if permission is granted.
+     */
     private void requestStoragePermissionAndOpenGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // For Android 13 and above, no manual permissions are needed for the photo picker
             openGallery();
         } else {
-            // For Android 12 and below, check for READ_EXTERNAL_STORAGE permission
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
             } else {
@@ -114,11 +131,21 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Opens the gallery to pick an image.
+     */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickImageLauncher.launch(intent);
     }
 
+    /**
+     * Handles the result of the permission request for accessing external storage.
+     *
+     * @param requestCode  The request code passed to requestPermissions().
+     * @param permissions  The requested permissions.
+     * @param grantResults The results for the requested permissions.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -131,22 +158,33 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Uploads the selected image to Firebase Storage and updates the user's profile picture URL.
+     *
+     * @param imageUri The URI of the selected image.
+     */
     private void uploadImageToFirebase(Uri imageUri) {
+        if (userProfile == null) return;
+
         StorageReference storageRef = storage.getReference().child("profile_pictures/" + userProfile.getUserName() + ".jpg");
 
-        // Upload the image
         storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
                 storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     userProfile.setProfilePictureUrl(uri.toString());
                     saveUserProfileToFirestore();
-                    Toast.makeText(ProfileActivity.this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
                 })
         ).addOnFailureListener(e ->
-                Toast.makeText(ProfileActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
         );
     }
 
+    /**
+     * Removes the user's profile picture and updates it with a default image.
+     */
     private void removeProfilePicture() {
+        if (userProfile == null) return;
+
         Bitmap defaultImage = UpdateProfilePicture.generateDefaultProfilePicture(userProfile.getUserName());
         profilePicture.setImageBitmap(defaultImage);
         userProfile.setProfilePictureUrl(null);
@@ -154,6 +192,9 @@ public class ProfileActivity extends AppCompatActivity {
         Toast.makeText(this, "Profile Picture Removed", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Saves the changes made to the user's profile.
+     */
     private void saveProfileChanges() {
         if (userProfile != null) {
             userProfile.setUserName(userNameInput.getText().toString().trim());
@@ -164,15 +205,20 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Saves the user's profile data to Firestore.
+     */
     private void saveUserProfileToFirestore() {
-        firestore.collection("users").document(userProfile.getUserName())
-                .set(userProfile)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ProfileActivity.this, "Profile saved to Firestore", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ProfileActivity.this, "Failed to save profile", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (userProfile != null) {
+            firestore.collection("users").document(userProfile.getUserName())
+                    .set(userProfile)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Profile saved to Firestore", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Failed to save profile", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }
