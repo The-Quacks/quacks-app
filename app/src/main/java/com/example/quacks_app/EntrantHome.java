@@ -18,6 +18,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code EntrantHome} class is used on the home page for entrants. It includes buttons to
+ * go to different parts of the app. Currently, the scan QR code button is implemented, which allows
+ * the user to scan a QR code, see the event information, and join the waitlist. The profile button
+ * also only lets users create a profile if they don't already have one.
+ */
+
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
 
