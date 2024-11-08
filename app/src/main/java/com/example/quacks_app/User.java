@@ -1,5 +1,8 @@
 package com.example.quacks_app;
 
+import android.provider.Settings;
+import android.widget.TextView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,12 +12,12 @@ public class User extends RepoModel implements Serializable {
     private UserProfile userProfile;
     // Location
 
-    public User(){
+    public User() {
     }
 
     public User(String deviceId, ArrayList<Role> roles, UserProfile userProfile) {
         this.deviceId = deviceId;
-        this.roles =roles;
+        this.roles = roles;
         this.userProfile = userProfile;
     }
 

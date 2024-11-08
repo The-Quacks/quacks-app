@@ -31,22 +31,30 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
+        <activity
+            android:name=".EventDescription"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".CreateEntrantProfile"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".EntrantHome"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".WelcomeEntrant"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+        </activity>
 
-        <activity android:name=".DummyScanActivity" />
-        <activity android:name=".ScanQRCodeActivity" />
-        <activity android:name=".DummyJoinEventActivity" />
-        <activity android:name=".CreateEvent" />
-        <activity android:name=".ViewOrganizer" />
-        <activity android:name=".ViewEvents" />
-        <activity android:name=".MakeOrganizerProfile" />
-        <activity android:name=".CreateFacility"/>
-        <activity android:name=".EventInfo" />
-        <activity android:name = ".NotifyOptions"/>
-        <activity android:name = ".PickApplicant"/>
-        <activity android:name = ".SelectAtRandom"/>
-        <activity android:name = ".OpenRegistration"/>
-
-
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

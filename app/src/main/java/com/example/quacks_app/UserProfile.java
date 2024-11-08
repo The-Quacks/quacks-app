@@ -13,7 +13,7 @@ public class UserProfile implements Serializable {
     private Facility facility;
     private ArrayList<Event> successful_events;
 
-    public UserProfile(){
+    public UserProfile() {
 
     }
 
