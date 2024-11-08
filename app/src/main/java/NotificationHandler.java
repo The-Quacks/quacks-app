@@ -1,5 +1,3 @@
-package com.example.quacks_app;
-
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 import android.Manifest;

@@ -1,6 +1,3 @@
-package com.example.quacks_app;
-
-
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
