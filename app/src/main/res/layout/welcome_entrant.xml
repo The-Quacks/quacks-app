@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#E4D0D0"
     android:visibility="visible"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
     <TextView
