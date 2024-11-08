@@ -16,6 +16,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * A dialog fragment for editing user profile information.
+ * It allows the user to update their username, email, and phone number.
+ * The updated information is saved to Firebase Firestore using the device ID.
+ */
 public class EditDialogueFragment extends DialogFragment {
     private EditText usernameEditText, emailEditText, phoneEditText;
     private Button saveButton, cancelButton;
@@ -23,10 +28,24 @@ public class EditDialogueFragment extends DialogFragment {
     private String deviceID;
     private OnProfileUpdatedListener listener;
 
+    /**
+     * Sets the listener for profile updates.
+     * This listener will be notified when the user profile is successfully updated.
+     *
+     * @param listener The listener to notify when the profile is updated.
+     */
     public void setOnProfileUpdatedListener(OnProfileUpdatedListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate views.
+     * @param container          The parent view that this fragment's UI will be attached to.
+     * @param savedInstanceState A Bundle containing data from the previous instance.
+     * @return The root View of the inflated layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +68,10 @@ public class EditDialogueFragment extends DialogFragment {
         return view;
     }
 
+    /**
+     * Loads the user's profile from Firestore based on the device ID.
+     * Populates the EditText fields with existing data if available.
+     */
     private void loadUserProfile() {
         db.collection("User").document(deviceID)
                 .get()
@@ -64,6 +87,10 @@ public class EditDialogueFragment extends DialogFragment {
                 });
     }
 
+    /**
+     * Saves the updated user profile to Firestore using the device ID.
+     * Notifies the listener of the update and dismisses the dialog on success.
+     */
     private void saveUserProfile() {
         String username = usernameEditText.getText().toString();
         String email = emailEditText.getText().toString();
@@ -89,8 +116,15 @@ public class EditDialogueFragment extends DialogFragment {
                 });
     }
 
-
+    /**
+     * Listener interface for notifying when the user profile is updated.
+     */
     public interface OnProfileUpdatedListener {
+        /**
+         * Called when the user profile has been updated successfully.
+         *
+         * @param updatedProfile The updated UserProfile object.
+         */
         void onProfileUpdated(UserProfile updatedProfile);
     }
 

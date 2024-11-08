@@ -169,6 +169,9 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
 
     /**
      * Generates a default profile picture with the user's initials.
+     *
+     * @param userName The user's name to generate initials from.
+     * @return A Bitmap containing the profile picture.
      */
     private Bitmap generateDefaultProfilePicture(String userName) {
         // Create a blank bitmap
@@ -192,7 +195,10 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     }
 
     /**
-     * Extracts initials from a given name.
+     * Extracts initials from the given name.
+     *
+     * @param name The name to extract initials from.
+     * @return A string containing the initials.
      */
     private String getInitials(String name) {
         if (name == null || name.isEmpty()) return "U"; // Default to 'U' for Unknown
@@ -230,7 +236,9 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     }
 
     /**
-     * Uploads the selected image to Firebase Storage and updates the profile picture URL.
+     * Uploads the selected image to Firebase Storage.
+     *
+     * @param imageUri The URI of the image to upload.
      */
     private void uploadImageToFirebase(Uri imageUri) {
         if (user == null || user.getDeviceId() == null) return;
@@ -257,37 +265,24 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     /**
      * Removes the profile picture and sets a default one.
      */
-    /**
-     * Removes the profile picture from Firebase Storage and sets a default one with the user's initials.
-     */
     private void removeProfilePicture() {
-        if (user == null || user.getDeviceId() == null) return;
+        if (userProfile == null || userProfile.getUserName() == null) {
+            Toast.makeText(this, "User profile not loaded", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Reference to the profile picture in Firebase Storage
-        StorageReference storageRef = storage.getReference().child("profile_pictures/" + user.getDeviceId() + ".jpg");
+        // Generate a default profile picture with the user's initials
+        Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
 
-        // Delete the picture from Firebase Storage
-        storageRef.delete().addOnSuccessListener(aVoid -> {
-            // Successfully deleted the image, now update the UI with a default image
-            Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
-            profilePicture.setImageBitmap(defaultImage);
+        // Set the default image in the ImageView
+        profilePicture.setImageBitmap(defaultImage);
 
-            // Update the user profile to remove the profile picture URL
-            userProfile.setProfilePictureUrl(null);
-            saveUserProfileToFirestore();
-
-            Toast.makeText(this, "Profile picture removed", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to remove profile picture", Toast.LENGTH_SHORT).show();
-        });
+        // Show a confirmation message
+        Toast.makeText(this, "Profile picture removed", Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * Saves profile data to Firestore.
-     */
-    /**
-     * Saves the profile picture URL to Firestore.
      */
     private void saveUserProfileToFirestore() {
         if (user != null && user.getDeviceId() != null && userProfile != null) {
@@ -317,13 +312,23 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         }
     }
 
+    /**
+     * Opens the EditDialogueFragment to allow the user to edit their profile details.
+     * Sets the current activity as the listener for the profile update events.
+     * This method displays a dialog fragment where the user can update their profile information.
+     */
     private void openEditProfileDialog() {
         EditDialogueFragment editProfileDialog = new EditDialogueFragment();
         editProfileDialog.setOnProfileUpdatedListener(this);
         editProfileDialog.show(getSupportFragmentManager(), "EditProfileDialog");
     }
 
-
+    /**
+     * Called when the profile is updated from the EditDialogueFragment.
+     * Updates the local UserProfile object and reflects the changes in the UI.
+     *
+     * @param updatedProfile The updated UserProfile object containing the new data.
+     */
     @Override
     public void onProfileUpdated(UserProfile updatedProfile) {
         // Update the userProfile object with the new data
@@ -336,6 +341,5 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
 
         Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
     }
-
 
 }
