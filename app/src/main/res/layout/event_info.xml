@@ -17,7 +17,6 @@
         android:orientation = "vertical"
         app:layout_constraintEnd_toEndOf = "parent"
         app:layout_constraintStart_toStartOf = "parent"
-        app:layout_constraintBottom_toTopOf="@id/organizer_profile_button"
         app:layout_constraintTop_toTopOf = "parent"
         android:layout_marginTop="40dp">
 
