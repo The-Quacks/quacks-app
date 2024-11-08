@@ -20,4 +20,5 @@
     <string name="save">Save</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
+    <string name="view_organizer_profile">View Organizer Profile</string>
 </resources>

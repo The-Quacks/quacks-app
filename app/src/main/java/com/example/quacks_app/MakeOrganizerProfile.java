@@ -44,7 +44,10 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
     private int round_7 = 0;
     private int round_8 = 0;
 
-
+    /**
+     * Otherwise known as the Edit Facility/Organizer profile page
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

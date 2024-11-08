@@ -213,7 +213,7 @@ public class CreateFacility extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(CreateFacility.this, "Error creating user, please try again: check formatting", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
                         }
                     });
 

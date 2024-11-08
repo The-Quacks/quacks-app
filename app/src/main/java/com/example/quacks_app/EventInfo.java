@@ -195,11 +195,7 @@ public class EventInfo extends AppCompatActivity {
                     search.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(EventInfo.this, ViewOrganizer.class);
-                            if (facility != null) {
-                                intent.putExtra("Facility", actual_facility);
-                            }
-                            startActivity(intent);
+                           finish();
                         }
                     });
 

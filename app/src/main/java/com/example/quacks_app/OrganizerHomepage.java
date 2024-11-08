@@ -20,10 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This is the Organizer Homepage: they can choose out of the four options
- * Edit Profile, View Events, Create Events, Entrant Map
- */
+
 public class OrganizerHomepage extends AppCompatActivity {
     private FirebaseFirestore db;
     private Button profile;
@@ -34,6 +31,10 @@ public class OrganizerHomepage extends AppCompatActivity {
     private User current;
     private EventList eventList;
 
+    /**
+     * This is the Organizer Homepage: they can choose out of the four options
+     * Edit Profile, View Events, Create Events, Entrant Map
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +109,14 @@ public class OrganizerHomepage extends AppCompatActivity {
         entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
 
 
-
     }
+
+    /**
+     * This gets the organizer profile back from the create event page.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
