@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -24,32 +28,15 @@
         <activity
             android:name=".AdminHome"
             android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".OrganizerHomepage"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name = ".CreateEvent"/>
-        <activity android:name = ".ApplicantArrayAdapter"/>
-        <activity android:name = ".CreateFacility"/>
-        <activity android:name = ".EventArrayAdapter"/>
-        <activity android:name = ".EventInfo"/>
-        <activity android:name = ".Facility"/>
-        <activity android:name = ".Facilities"/>
-        <activity android:name = ".NotifyOptions"/>
-        <activity android:name = ".MakeOrganizerProfile"/>
-        <activity android:name = ".PickApplicant"/>
-        <activity android:name = ".SelectAtRandom"/>
-        <activity android:name=".ViewEvents"/>
-        <activity android:name=".ViewOrganizer"/>
-        <activity android:name = ".OpenRegistration"/>
-
+        <activity
+            android:name=".OrganizerHomepage"
+            android:exported="true"/>
         <activity
             android:name=".EventDescription"
             android:exported="true" />
@@ -64,8 +51,16 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+
+        <activity android:name=".CreateFacility"
+            android:exported="true" />
+
+        <activity android:name=".CreateEvent"
+            android:exported="true" />
+
+        <activity android:name=".ViewEvents"
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
