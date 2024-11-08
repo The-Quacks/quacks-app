@@ -60,12 +60,20 @@ public class User extends RepoModel implements Serializable {
     }
 
     public void uploadProfilePicture(Bitmap newImage) {
-        UpdateProfilePicture.uploadProfilePicture(this.userProfile, newImage);
+        // Ensure userProfile is not null and deviceId is set
+        if (userProfile != null && deviceId != null) {
+            // Upload the profile picture using deviceId
+            UpdateProfilePicture.uploadProfilePicture(userProfile, newImage, deviceId);
+        }
     }
 
     public void removeProfilePicture() {
-        UpdateProfilePicture.removeProfilePicture(this.userProfile);
+        if (userProfile != null && deviceId != null) {
+            // Remove the profile picture using deviceId
+            UpdateProfilePicture.removeProfilePicture(userProfile, deviceId);
+        }
     }
+
 
     /*
     public String getDisplay() {

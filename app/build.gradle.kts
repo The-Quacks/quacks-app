@@ -43,12 +43,13 @@ dependencies {
     implementation(libs.javase)
     implementation(libs.firebase.storage.v2020)
     implementation(libs.play.services.code.scanner)
-    implementation("com.google.firebase:firebase-firestore:24.1.0") {
-        exclude(group = "com.google.firebase", module = "firebase-common")
+//    implementation("com.google.firebase:firebase-firestore:24.1.0") {
+//        exclude(group = "com.google.firebase", module = "firebase-common")
+//    }
+    dependencies {
+        implementation(libs.glide)
+        annotationProcessor(libs.compiler)
     }
-
-
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
