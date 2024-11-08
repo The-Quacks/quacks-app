@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@LargeTest
 public class AdminHomeTest {
     @Rule
     public ActivityScenarioRule<AdminHome> scenario = new
@@ -31,13 +32,19 @@ public class AdminHomeTest {
 
     @Test
     public void testBtnEvent(){
-        onView(withId(R.id.eventsButton)).perform(click());
-        onView(withId(R.id.eventsButton)).check(doesNotExist());
+    onView(withId(R.id.eventsButton)).perform(click());
+    onView(withId(R.id.eventsButton)).check(doesNotExist());
+
     }
 
+    @Test
     public void testEventList(){
-        ListView genList;
-        CustomAdapter genAdapter;
-
+        onView(withId(R.id.eventsButton)).perform(click());
+        onData(is(anything())).inAdapterView(withId(R.id.gen_list
+        )).atPosition(0).perform(click());
+        onView(withId(R.id.gen_list)).check(doesNotExist());
+        onView(withId(R.id.Name)).check(matches(isDisplayed()));
     }
+
+
 }

@@ -32,7 +32,6 @@ public class AdminViewOrganizer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_admin);
         EdgeToEdge.enable(this);
-
         ApplicantList testSingle;
 
 
@@ -107,7 +106,6 @@ public class AdminViewOrganizer extends AppCompatActivity {
                 }
             }
         });
-
 
 
     }
