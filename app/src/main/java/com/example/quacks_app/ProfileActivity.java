@@ -38,7 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     // UI elements
     private ImageView profilePicture;
     private EditText userNameInput, emailInput, phoneNumberInput;
-    private Button saveProfileButton, editPictureButton, removePictureButton;
+    private Button saveProfileButton, editPictureButton, removePictureButton, backButton;
 
     // UserProfile object to hold the user's information
     private UserProfile userProfile;
@@ -72,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         saveProfileButton = findViewById(R.id.saveProfileButton);
         editPictureButton = findViewById(R.id.editPictureButton);
         removePictureButton = findViewById(R.id.removePictureButton);
+        backButton = findViewById(R.id.back_button);
 
         // Load user profile data
         loadUserProfile();
@@ -94,6 +95,8 @@ public class ProfileActivity extends AppCompatActivity {
         editPictureButton.setOnClickListener(v -> requestStoragePermissionAndOpenGallery());
         removePictureButton.setOnClickListener(v -> removeProfilePicture());
         saveProfileButton.setOnClickListener(v -> saveProfileChanges());
+        backButton.setOnClickListener(v -> {finish();
+        });
     }
 
     /**
