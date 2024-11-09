@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.ext.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     testImplementation("junit:junit:4.13.2")

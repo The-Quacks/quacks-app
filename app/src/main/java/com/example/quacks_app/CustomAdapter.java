@@ -11,6 +11,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/*
+Custom ArrayAdapter so we can assign headings and subheadings, not just a single peice of text
+ */
+
 public class CustomAdapter extends ArrayAdapter<Event> {
     private Context mContext;
     private ArrayList<Event> dataList;

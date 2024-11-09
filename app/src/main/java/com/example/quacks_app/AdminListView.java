@@ -31,10 +31,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/*
+This is a general list screen that displays the entire databases entries depending on what the user
+selected on the home screen. All the buttons from the home screen lead to this tab, but display different
+things depending on what they clicked
+ */
+
 public class AdminListView extends AppCompatActivity {
     ListView genList;
     CustomAdapter genAdapter;
-    ArrayList<Listable> dataList;
     Event selected = null;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,6 @@ public class AdminListView extends AppCompatActivity {
 
         ArrayList<Event> testarr = new ArrayList<>();
         ArrayList<QueryDocumentSnapshot> queryList = new ArrayList<>();
-        dataList = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (viewType.equals("Events")) {
