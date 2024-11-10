@@ -77,8 +77,7 @@ public class OrganizerHomepage extends AppCompatActivity {
 
         Map<String, String> deviceId = new HashMap<>();
         deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        CRUD<User> crud = new CRUD<>(User.class);
-        crud.readQueryStatic(deviceId, readMultipleCallback);
+        CRUD.readQueryStatic(deviceId, User.class, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
             if (profile.getTag().equals("false")) {

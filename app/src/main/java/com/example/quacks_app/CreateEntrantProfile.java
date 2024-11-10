@@ -63,7 +63,6 @@ public class CreateEntrantProfile extends AppCompatActivity {
             roles.add(Role.ENTRANT);
             User newUser = new User(mId, roles, newProfile);
 
-            CRUD<User> crud = new CRUD<>(User.class);
             CreateCallback createCallback = new CreateCallback() {
                 @Override
                 public void onCreateSuccess() {
@@ -76,7 +75,7 @@ public class CreateEntrantProfile extends AppCompatActivity {
                     Toast.makeText(CreateEntrantProfile.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                 }
             };
-            crud.create(newUser, createCallback);
+            CRUD.create(newUser, createCallback);
         });
     }
 }

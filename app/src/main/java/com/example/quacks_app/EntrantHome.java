@@ -59,8 +59,7 @@ public class EntrantHome extends AppCompatActivity {
 
         Map<String, String> deviceId = new HashMap<>();
         deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        CRUD<User> checkUserProfile = new CRUD<>(User.class);
-        checkUserProfile.readQueryStatic(deviceId, readMultipleCallback);
+        CRUD.readQueryStatic(deviceId, User.class, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
             if (!hasProfile) {

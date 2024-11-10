@@ -52,7 +52,6 @@ public class AdminViewOrganizer extends AppCompatActivity {
         Button edit = findViewById(R.id.edit_button);
 
         delete.setOnClickListener(view -> {
-            CRUD<Event> delEvent = new CRUD<>(Event.class);
             DeleteCallback delCall = new DeleteCallback(){
                 @Override
                 public void onDeleteSuccess() {
@@ -64,16 +63,14 @@ public class AdminViewOrganizer extends AppCompatActivity {
                     System.err.println("Error deleting document: " + e.getMessage());
                 }
             };
-            delEvent.delete(id, delCall);
-            CRUD<ApplicantList> delAppList = new CRUD<>(ApplicantList.class);
-            delAppList.delete(editEvent.getApplicantList(), delCall);
+            CRUD.delete(id, Event.class, delCall);
+            CRUD.delete(editEvent.getApplicantList(), ApplicantList.class, delCall);
         });
 
 
         String appList = editEvent.getApplicantList();
 
-        CRUD<Event> crud = new CRUD<>(Event.class);
-        crud.readLive(id, new ReadCallback<Event>() {
+        CRUD.readLive(id, Event.class, new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
                 //ApplicantList testSingle = document.toObject(ApplicantList.class);

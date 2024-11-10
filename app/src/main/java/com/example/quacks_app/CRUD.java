@@ -12,36 +12,21 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * The {@code CRUD} class provides functionality for interfacing with the firestore
+ * The {@code CRUD} class provides static methods for interfacing with the Firestore
  * database. It allows creating, reading, updating, and deleting models extending the
  * {@code RepoModel} class.
- *
- * @param <T> the type of elements used for CRUD operations
  */
-public class CRUD<T extends RepoModel> {
-
-    private final CollectionReference colRef;
-    private final Class<T> classType;
+public class CRUD {
 
     /**
-     * Constructs a new {@code CRUD} class of the specified model type.
+     * Creates an instance of a data model in the database.
      *
-     * @param model the class type of the elements used for CRUD operations
-     */
-    public CRUD(Class<T> model) {
-
-        colRef = FirebaseFirestore.getInstance().collection(model.getSimpleName());
-        classType = model;
-    }
-
-    /**
-     * Creates an instance of a data model in the database
-     *
-     * @param model the model to be created
+     * @param model    the model to be created
      * @param callback the callback instance that contains the logic for
      *                 success and failure of the data creation
      */
-    public void create(T model, CreateCallback callback) {
+    public static <T extends RepoModel> void create(T model, CreateCallback callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
         String id = colRef.document().getId();
         colRef.document(id).set(model)
                 .addOnSuccessListener(aVoid -> callback.onCreateSuccess())
@@ -50,13 +35,15 @@ public class CRUD<T extends RepoModel> {
     }
 
     /**
-     * Reads a static instance of a data model from the database
+     * Reads a static instance of a data model from the database.
      *
-     * @param id id of the model to be read
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param id        id of the model to be read
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      */
-    public void readStatic(String id, ReadCallback<T> callback) {
+    public static <T extends RepoModel> void readStatic(String id, Class<T> classType, ReadCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         colRef.document(id).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     T model = documentSnapshot.toObject(classType);
@@ -66,15 +53,17 @@ public class CRUD<T extends RepoModel> {
     }
 
     /**
-     * Reads a real-time instance of a data model from the database
+     * Reads a real-time instance of a data model from the database.
      *
-     * @param id id of the model to be read
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param id        id of the model to be read
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      * @return a {@code ListenerRegistration} that contains a listener that
      *         listens for changes in the data
      */
-    public ListenerRegistration readLive(String id, ReadCallback<T> callback) {
+    public static <T extends RepoModel> ListenerRegistration readLive(String id, Class<T> classType, ReadCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         DocumentReference docRef = colRef.document(id);
         return docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
@@ -92,12 +81,14 @@ public class CRUD<T extends RepoModel> {
     }
 
     /**
-     * Reads all the data within a collection from the database statically
+     * Reads all the data within a collection from the database statically.
      *
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      */
-    public void readAllStatic(ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> void readAllStatic(Class<T> classType, ReadMultipleCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         colRef.get()
                 .addOnCompleteListener(task -> {
                     ArrayList<T> dataList = new ArrayList<>();
@@ -111,14 +102,16 @@ public class CRUD<T extends RepoModel> {
     }
 
     /**
-     * Reads all the data within a collection from the database in real-time
+     * Reads all the data within a collection from the database in real-time.
      *
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      * @return a {@code ListenerRegistration} that contains a listener that
      *         listens for changes in the data
      */
-    public ListenerRegistration readAllLive(ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> ListenerRegistration readAllLive(Class<T> classType, ReadMultipleCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         return colRef.addSnapshotListener((value, e) -> {
             if (e != null) {
                 callback.onReadMultipleFailure(e);
@@ -131,22 +124,23 @@ public class CRUD<T extends RepoModel> {
                     dataList.add(model);
                 }
                 callback.onReadMultipleSuccess(dataList);
-            }
-            else {
+            } else {
                 callback.onReadMultipleFailure(new Exception("Null data"));
             }
         });
     }
 
     /**
-     * Reads all the data within a collection that conforms to a query statically
+     * Reads all the data within a collection that conforms to a query statically.
      *
-     * @param fields a mapping where the key is the field and the value is the value the field
-     *              of the object searched for should be
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param fields    a mapping where the key is the field and the value is the value the field
+     *                  of the object searched for should be
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      */
-    public void readQueryStatic(Map<String, String> fields, ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> void readQueryStatic(Map<String, String> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         Query query = colRef;
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
@@ -154,73 +148,80 @@ public class CRUD<T extends RepoModel> {
         query.get()
                 .addOnCompleteListener(task -> {
                     ArrayList<T> dataList = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        T model = document.toObject(classType);
-                        dataList.add(model);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            T model = document.toObject(classType);
+                            dataList.add(model);
+                        }
+                        callback.onReadMultipleSuccess(dataList);
+                    } else {
+                        callback.onReadMultipleFailure(task.getException());
                     }
-                    callback.onReadMultipleSuccess(dataList);
                 })
                 .addOnFailureListener(callback::onReadMultipleFailure);
     }
 
     /**
-     * Reads all the data within a collection that conforms to a query in real-time
+     * Reads all the data within a collection that conforms to a query in real-time.
      *
-     * @param fields a mapping where the key is the field and the value is the value the field
-     *              of the object searched for should be
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of the data reading
+     * @param fields    a mapping where the key is the field and the value is the value the field
+     *                  of the object searched for should be
+     * @param classType the class type of the model
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of the data reading
      * @return a {@code ListenerRegistration} that contains a listener that
      *         listens for changes in the data
      */
-    public ListenerRegistration readQueryLive(Map<String, String> fields, ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> ListenerRegistration readQueryLive(Map<String, String> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         Query query = colRef;
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
         }
-        return query
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        callback.onReadMultipleFailure(e);
-                    }
-                    if (value != null) {
-                        ArrayList<T> dataList = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : value) {
-                            T model = document.toObject(classType);
-                            dataList.add(model);
-                        }
-                        callback.onReadMultipleSuccess(dataList);
-                    }
-                    else {
-                        callback.onReadMultipleFailure(new Exception("Null data"));
-                    }
-                });
+        return query.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                callback.onReadMultipleFailure(e);
+                return;
+            }
+
+            if (value != null) {
+                ArrayList<T> dataList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : value) {
+                    T model = document.toObject(classType);
+                    dataList.add(model);
+                }
+                callback.onReadMultipleSuccess(dataList);
+            } else {
+                callback.onReadMultipleFailure(new Exception("Null data"));
+            }
+        });
     }
 
     /**
-     * Updates a data model in the database
+     * Updates a data model in the database.
      *
-     * @param id id of the model to be updated
-     * @param model the model used to update the model in the database
-     * @param callback the callback instance that contains the logic for
-     *                 success and failure of updating the data
+     * @param id        id of the model to be updated
+     * @param model     the model used to update the model in the database
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of updating the data
      */
-
-    public void update(String id, T model, UpdateCallback callback) {
+    public static <T extends RepoModel> void update(String id, T model, UpdateCallback callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
         colRef.document(id).set(model, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
                 .addOnFailureListener(callback::onUpdateFailure);
     }
 
     /**
-     * Deletes a data model in the database
+     * Deletes a data model in the database.
      *
-     * @param id id of the model to be updated
+     * @param id       id of the model to be deleted
+     * @param classType the class type of the model
      * @param callback the callback instance that contains the logic for
      *                 success and failure of deleting the data
      */
-
-    public void delete(String id, DeleteCallback callback) {
+    public static <T extends RepoModel> void delete(String id, Class<T> classType, DeleteCallback callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         colRef.document(id).delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
                 .addOnFailureListener(callback::onDeleteFailure);

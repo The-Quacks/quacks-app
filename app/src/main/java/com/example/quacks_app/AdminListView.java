@@ -58,8 +58,7 @@ public class AdminListView extends AppCompatActivity {
         ArrayList<Event> testarr = new ArrayList<>();
         ArrayList<Event> queryList = new ArrayList<>();
 
-        CRUD<Event> crud = new CRUD<>(Event.class);
-        crud.readAllLive(new ReadMultipleCallback<Event>() {
+        CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Event> data) {
                 queryList.clear();

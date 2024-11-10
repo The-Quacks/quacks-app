@@ -33,7 +33,6 @@ public class EventDescription extends AppCompatActivity {
         setContentView(R.layout.event_description);
 
         String id = getIntent().getStringExtra("id");
-        CRUD<Event> eventCrud = new CRUD<>(Event.class);
         ReadCallback<Event> readEventCallback = new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
@@ -51,7 +50,7 @@ public class EventDescription extends AppCompatActivity {
             }
         };
 
-        eventCrud.readStatic(id, readEventCallback);
+        CRUD.readStatic(id, Event.class, readEventCallback);
 
         ImageButton back = findViewById(R.id.backButton);
         ImageButton home = findViewById(R.id.homeIcon);
@@ -96,8 +95,8 @@ public class EventDescription extends AppCompatActivity {
                     }
                 };
 
-                CRUD<User> getUserId = new CRUD<>(User.class);
-                getUserId.readQueryStatic(user, readMultipleCallback);
+
+                CRUD.readQueryStatic(user, User.class, readMultipleCallback);
 
 
                 UpdateCallback updateCallback = new UpdateCallback() {
@@ -114,7 +113,6 @@ public class EventDescription extends AppCompatActivity {
                     }
                 };
 
-                CRUD<ApplicantList> applicantListCrud = new CRUD<>(ApplicantList.class);
 
                 ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
                     @Override
@@ -122,7 +120,7 @@ public class EventDescription extends AppCompatActivity {
                         ArrayList<String> applicantIds = data.getApplicantIds();
                         applicantList.setApplicantIds(applicantIds);
                         applicantList.addUser(userId);
-                        applicantListCrud.update(applicantListId, applicantList, updateCallback);
+                        CRUD.update(applicantListId, applicantList, updateCallback);
                     }
 
                     @Override
@@ -130,7 +128,7 @@ public class EventDescription extends AppCompatActivity {
                         Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
                     }
                 };
-                applicantListCrud.readStatic(applicantListId, readAppListCallback);
+                CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
             }
         });
     }
