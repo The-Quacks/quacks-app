@@ -56,31 +56,26 @@ public class AdminListView extends AppCompatActivity {
         ImageButton home = findViewById(R.id.homeIcon);
 
         ArrayList<Event> testarr = new ArrayList<>();
-        ArrayList<QueryDocumentSnapshot> queryList = new ArrayList<>();
+        ArrayList<Event> queryList = new ArrayList<>();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        if (viewType.equals("Events")) {
-            db.collection("Event")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    testarr.add(document.toObject(Event.class));
-                                    queryList.add(document);
+        CRUD<Event> crud = new CRUD<>(Event.class);
+        crud.readAllLive(new ReadMultipleCallback<Event>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<Event> data) {
+                queryList.clear();
+                testarr.clear();
+                queryList.addAll(data);
+                testarr.addAll(data);
+                genAdapter = new CustomAdapter(AdminListView.this, R.layout.admin_profile_content, testarr);
+                genList.setAdapter(genAdapter);
 
-                                }
-                                genAdapter = new CustomAdapter(AdminListView.this, R.layout.admin_profile_content, testarr);
-                                genList.setAdapter(genAdapter);
+            }
 
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
+            @Override
+            public void onReadMultipleFailure(Exception e) {
 
-        }
+            }
+        });
 
         genList.setOnItemClickListener((adapterView, view, i, l) ->{
             selected = testarr.get(i);
