@@ -199,7 +199,6 @@ public class CreateEvent extends AppCompatActivity {
                     //event.setStartDateTime(start_date);
                     //event.setInstructor(name);
                    // event.setGeolocation(geo);
-                    event.setQRCode(null);
                     event.setDescription(text);
                     event.setOrganizerId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                     event.setEventId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
