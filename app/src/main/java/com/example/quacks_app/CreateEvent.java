@@ -46,6 +46,7 @@ public class CreateEvent extends AppCompatActivity {
     private EditText geolocation;
     private EditText description;
     private Facility facility;
+    private User user;
     private Button back;
     private Button confirm;
     private Event event;
@@ -80,6 +81,8 @@ public class CreateEvent extends AppCompatActivity {
             finish();
         }
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
+        user = (User) getIntent().getSerializableExtra("User");
+
 
 
         //Then we set them like in create profile
@@ -200,10 +203,8 @@ public class CreateEvent extends AppCompatActivity {
                     //event.setInstructor(name);
                    // event.setGeolocation(geo);
                     event.setDescription(text);
-                    event.setOrganizerId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    event.setEventId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    event.setApplicantList(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    event.setFacility(facility);
+                    event.setOrganizerId(user.getDocumentId());
+                    event.setFacility(facility.getDocumentId());
 
                     if (eventList != null){
                         eventList.addEvent(event);

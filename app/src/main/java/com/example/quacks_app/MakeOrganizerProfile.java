@@ -187,17 +187,26 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
                     new_facility.setContactInfo(test_3);
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);
-                    new_facility.setDeviceId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    new_facility.setOrganizerId(current.getDocumentId());
 
-                    UserProfile profile =  current.getUserProfile();
+                    CRUD.createOrUpdate(new_facility, new UpdateCallback() {
+                        @Override
+                        public void onUpdateSuccess() {
+                            Toast.makeText(MakeOrganizerProfile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(MakeOrganizerProfile.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    UserProfile profile = current.getUserProfile();
                     profile.setEmail(test_7);
                     profile.setUserName(test_6);
                     profile.setPhoneNumber(test_3);
                     current.setUserProfile(profile);
-
-
-                    Toast.makeText(MakeOrganizerProfile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                    finish();
                 }else{
                     Toast.makeText(MakeOrganizerProfile.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                 }

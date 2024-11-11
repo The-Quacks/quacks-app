@@ -45,6 +45,24 @@ public class CRUD {
     }
 
     /**
+     * Updates a data model in the database. If the model does not exist,
+     * it is created.
+     *
+     * @param model     the model used to create/update the model in the database
+     * @param callback  the callback instance that contains the logic for
+     *                  success and failure of creating/updating the data
+     */
+    public static <T extends RepoModel> void createOrUpdate(T model, UpdateCallback callback) {
+        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
+        if (model.getDocumentId() == null) {
+            model.setDocumentId(colRef.document().getId());
+        }
+        colRef.document(model.getDocumentId()).set(model, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
+                .addOnFailureListener(callback::onUpdateFailure);
+    }
+
+    /**
      * Reads a static instance of a data model from the database.
      *
      * @param id        id of the model to be read
@@ -220,6 +238,7 @@ public class CRUD {
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
                 .addOnFailureListener(callback::onUpdateFailure);
     }
+
 
     /**
      * Deletes a data model in the database.

@@ -61,7 +61,27 @@ public class OrganizerHomepage extends AppCompatActivity {
                         current = user;
                         if (user.getUserProfile() != null) {
                             UserProfile temp = user.getUserProfile();
-                            facility = temp.getFacility();
+                            Map<String, Object> query = new HashMap<>();
+                            query.put("organizerId", user.getDocumentId());
+                            CRUD.readQueryStatic(query, Facility.class, new ReadMultipleCallback<Facility>() {
+                                @Override
+                                public void onReadMultipleSuccess(ArrayList<Facility> data) {
+                                    if (data.isEmpty()) {
+                                        Toast.makeText(OrganizerHomepage.this, "No facility found", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else if (data.size() > 1) {
+                                        Toast.makeText(OrganizerHomepage.this, "Multiple facilities found", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        facility = data.get(0);
+                                    }
+                                }
+
+                                @Override
+                                public void onReadMultipleFailure(Exception e) {
+                                    Toast.makeText(OrganizerHomepage.this, "Could not retrieve facilities", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                         profile.setTag("true");
                         break;
@@ -106,7 +126,6 @@ public class OrganizerHomepage extends AppCompatActivity {
         });
 
         entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
-
 
     }
 

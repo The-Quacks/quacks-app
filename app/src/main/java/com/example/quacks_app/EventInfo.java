@@ -25,7 +25,7 @@ public class EventInfo extends AppCompatActivity {
     private EventList eventList;
     private Button open_registration;
     private Button close_registration;
-    private Button edit_event;
+    private Button delete_event;
     private Button entrant_map;
     private ImageButton profile;
     private ImageButton search;
@@ -60,13 +60,13 @@ public class EventInfo extends AppCompatActivity {
         id = findViewById(R.id.event_id);
         open_registration = findViewById(R.id.register);
         close_registration = findViewById(R.id.close);
-        edit_event = findViewById(R.id.delete_button);
+        delete_event = findViewById(R.id.delete_button);
         entrant_map = findViewById(R.id.map);
 
 
         String text = event.getDescription();
         Date dated = event.getDateTime();
-        Facility fac = event.getFacility();
+        Facility fac = actual_facility;
         String name = "";
         if (facility != null) {
             name = fac.getName();
@@ -106,45 +106,18 @@ public class EventInfo extends AppCompatActivity {
             }
         });
 
-        edit_event.setOnClickListener(new View.OnClickListener() {
+        delete_event.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View view) {
-                  Map<String, Object> query = new HashMap<>();
-                  query.put("description", event.getDescription());
-                  query.put("organizerId", event.getOrganizerId());
-                  query.put("dateTime", event.getDateTime());
-
-                  CRUD.readQueryStatic(query, Event.class, new ReadMultipleCallback<Event>() {
+                  CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
                       @Override
-                      public void onReadMultipleSuccess(ArrayList<Event> data) {
-                          for (Event event : data) {
-                              CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
-                                  @Override
-                                  public void onDeleteSuccess() {
-                                      Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
-                                  }
-
-                                  @Override
-                                  public void onDeleteFailure(Exception e) {
-                                      Toast.makeText(EventInfo.this, "Error deleting events", Toast.LENGTH_SHORT).show();
-
-                                  }
-                              });
-                          }
-                          if (data.isEmpty()) {
-                              Toast.makeText(EventInfo.this, "No events found with the given description and organizer ID", Toast.LENGTH_SHORT).show();
-                          }
-                          else {
-                              Intent intent = new Intent(EventInfo.this, OrganizerHomepage.class);
-                              startActivity(intent);
-                              finish();
-                          }
-
+                      public void onDeleteSuccess() {
+                          Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
                       }
 
                       @Override
-                      public void onReadMultipleFailure(Exception e) {
-                          Toast.makeText(EventInfo.this, "Error getting events", Toast.LENGTH_SHORT).show();
+                      public void onDeleteFailure(Exception e) {
+                          Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
                       }
                   });
               }

@@ -172,13 +172,11 @@ public class CreateFacility extends AppCompatActivity {
                     new_facility.setContactInfo(test_3);
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);
-                    new_facility.setDeviceId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    new_facility.setDocumentId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
                     UserProfile userProfile = new UserProfile(test_6, test_7, test_3); // Example user profile
                     ArrayList<Role> roles = new ArrayList<>();
                     roles.add(Role.ORGANIZER);
-                    userProfile.setFacility(new_facility);
+
 
                     String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                     User new_user = new User(deviceId, roles, userProfile);
@@ -187,16 +185,27 @@ public class CreateFacility extends AppCompatActivity {
                     CRUD.create(new_user, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
-                            Intent resultIntent = new Intent();
-                            resultIntent.putExtra("User", new_user);
-                            resultIntent.putExtra("Facility", new_facility);
-                            setResult(RESULT_OK, resultIntent);
-                            finish();
-                        }
+                            new_facility.setOrganizerId(user.getDocumentId());
+                            CRUD.create(new_facility, new CreateCallback() {
+                                @Override
+                                public void onCreateSuccess() {
+                                    Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("User", new_user);
+                                    resultIntent.putExtra("Facility", new_facility);
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
+                                }
+                                @Override
+                                public void onCreateFailure(Exception e) {
+                                    Toast.makeText(CreateFacility.this, "Error creating facility Created!", Toast.LENGTH_SHORT).show();
 
+                                }
+                            });
+                        }
                         @Override
                         public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateFacility.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
 

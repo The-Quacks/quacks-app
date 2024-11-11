@@ -57,7 +57,7 @@ public class ViewEvents extends AppCompatActivity {
         eventList = findViewById(R.id.event_list);
 
         eventDataList = new ArrayList<>();
-        eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
+        eventArrayAdapter = new EventArrayAdapter(this, eventDataList, facility);
         eventList.setAdapter(eventArrayAdapter);
 
         listenerRegistration = CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
