@@ -1,5 +1,9 @@
 package com.example.quacks_app;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -7,9 +11,15 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
+
 
 /**
  * The {@code CRUD} class provides static methods for interfacing with the Firestore
@@ -222,6 +232,86 @@ public class CRUD {
     public static <T extends RepoModel> void delete(String id, Class<T> classType, DeleteCallback callback) {
         CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         colRef.document(id).delete()
+                .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
+                .addOnFailureListener(callback::onDeleteFailure);
+    }
+
+    /**
+     * Stores an image using Firebase Cloud Storage.
+     *
+     * @param image    the image to be stored
+     * @param callback the callback instance that contains the logic for
+     *                 success and failure of the image storage. The success
+     *                 callback is passed the firestore path of the stored image
+     */
+    public static void storeImage(Bitmap image, ReadCallback<String> callback) {
+        StorageReference storageRef =  FirebaseStorage.getInstance().getReference();
+        String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
+        StorageReference imageRef = storageRef.child(uniquePath);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask
+                .addOnFailureListener(callback::onReadFailure)
+                .addOnSuccessListener(taskSnapshot -> callback.onReadSuccess(uniquePath));
+
+    }
+
+    /**
+     * Stores an image using Firebase Cloud Storage.
+     *
+     * @param uri       the uri of the image to be stored
+     * @param callback the callback instance that contains the logic for
+     *                 success and failure of the image storage. The success
+     *                 callback is passed the firestore path of the stored image
+     */
+    public static void storeImage(Uri uri, ReadCallback<String> callback) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
+        StorageReference imageRef = storageRef.child(uniquePath);
+
+        UploadTask uploadTask = imageRef.putFile(uri);
+        uploadTask
+                .addOnFailureListener(callback::onReadFailure)
+                .addOnSuccessListener(taskSnapshot -> callback.onReadSuccess(uniquePath));
+    }
+
+    /**
+     * Downloads an image from Firebase Cloud Storage.
+     *
+     * @param imagePath the image path in Firebase Cloud Storage
+     * @param callback the callback instance that contains the logic for
+     *                 success and failure of the image downloading. The success
+     *                 callback is passed bitmap downloaded
+     */
+    public static void downloadImage(String imagePath, ReadCallback<Bitmap> callback) {
+        StorageReference storageRef =  FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child(imagePath);
+
+        // 4 MB limit
+        long sizeLimit = (long) Math.pow(2, 22);
+        imageRef.getBytes(sizeLimit).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            callback.onReadSuccess(bitmap);
+        }).addOnFailureListener(callback::onReadFailure);
+
+    }
+
+    /**
+     * Removes an image from Firebase Cloud Storage.
+     *
+     * @param imagePath the image path in Firebase Cloud Storage
+     * @param callback the callback instance that contains the logic for
+     *                 success and failure of the image deletion
+     */
+    public static void removeImage(String imagePath, DeleteCallback callback) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child(imagePath);
+
+        imageRef.delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
                 .addOnFailureListener(callback::onDeleteFailure);
     }

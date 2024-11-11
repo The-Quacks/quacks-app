@@ -9,7 +9,7 @@ import java.util.Date;
 public class Event extends RepoModel implements Serializable {
     private Date dateTime;
     private String description;
-    private Bitmap QRCode;
+    private String qrCodePath;
     private String applicantList;
     private Facility facility;
     private String organizerId;
@@ -59,24 +59,6 @@ public class Event extends RepoModel implements Serializable {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * Retrieves the QR code bitmap associated with the event.
-     *
-     * @return An {@code bitmap} object representing the event's QR code.
-     */
-    public Bitmap getQRCode() {
-        return QRCode;
-    }
-
-    /**
-     * Sets the QR code bitmap for the event.
-     *
-     * @param QRCode A {@code Bitmap} object representing the event's QR code.
-     */
-    public void setQRCode(Bitmap QRCode) {
-        this.QRCode = QRCode;
     }
 
     /**
@@ -155,5 +137,13 @@ public class Event extends RepoModel implements Serializable {
 
     public String getEventId() {
         return super.getId();
+    }
+
+    public String getQrCodePath() {
+        return qrCodePath;
+    }
+
+    public void setQrCodePath(String qrCodePath) {
+        this.qrCodePath = qrCodePath;
     }
 }

@@ -10,7 +10,7 @@ public class UserProfile implements Serializable {
     private String phoneNumber;
     private Facility facility;
     private ArrayList<Event> successful_events;
-    private String profilePictureUrl;
+    private String profilePicturePath;
 
     // Required empty constructor for Firebase
     public UserProfile() {
@@ -68,11 +68,11 @@ public class UserProfile implements Serializable {
         return this.successful_events;
     }
 
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
+    public String getProfilePicturePath() {
+        return profilePicturePath;
     }
 
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
     }
 }
