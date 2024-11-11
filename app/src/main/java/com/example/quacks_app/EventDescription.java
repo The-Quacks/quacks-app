@@ -74,7 +74,7 @@ public class EventDescription extends AppCompatActivity {
                 Intent createProfile = new Intent(this, CreateEntrantProfile.class);
                 startActivity(createProfile);
             } else {
-                Map<String, String> user = new HashMap<>();
+                Map<String, Object> user = new HashMap<>();
                 user.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
                 ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
@@ -120,7 +120,8 @@ public class EventDescription extends AppCompatActivity {
                         ArrayList<String> applicantIds = data.getApplicantIds();
                         applicantList.setApplicantIds(applicantIds);
                         applicantList.addUser(userId);
-                        CRUD.update(applicantListId, applicantList, updateCallback);
+                        applicantList.setId(applicantListId);
+                        CRUD.update(applicantList, updateCallback);
                     }
 
                     @Override

@@ -14,8 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * A dialog fragment for editing user profile information.
  * It allows the user to update their username, email, and phone number.
@@ -24,7 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class EditDialogueFragment extends DialogFragment {
     private EditText usernameEditText, emailEditText, phoneEditText;
     private Button saveButton, cancelButton;
-    private FirebaseFirestore db;
     private String deviceID;
     private OnProfileUpdatedListener listener;
 
@@ -57,7 +57,6 @@ public class EditDialogueFragment extends DialogFragment {
         saveButton = view.findViewById(R.id.saveButton);
         cancelButton = view.findViewById(R.id.cancelButton);
 
-        db = FirebaseFirestore.getInstance();
         deviceID = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         loadUserProfile();
@@ -73,18 +72,28 @@ public class EditDialogueFragment extends DialogFragment {
      * Populates the EditText fields with existing data if available.
      */
     private void loadUserProfile() {
-        db.collection("User").document(deviceID)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
-                        if (userProfile != null) {
-                            usernameEditText.setText(userProfile.getUserName());
-                            emailEditText.setText(userProfile.getEmail());
-                            phoneEditText.setText(userProfile.getPhoneNumber());
-                        }
-                    }
-                });
+        Map<String, Object> query = new HashMap<>();
+        query.put("deviceId", deviceID);
+        CRUD.readQueryStatic(query, User.class, new ReadMultipleCallback<User>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<User> data) {
+                if (data.size() == 1) {
+                    User user = data.get(0);
+                    UserProfile userProfile = user.getUserProfile();
+                    usernameEditText.setText(userProfile.getUserName());
+                    emailEditText.setText(userProfile.getEmail());
+                    phoneEditText.setText(userProfile.getPhoneNumber());
+                }
+                else if (data.size() > 1) {
+                    Toast.makeText(getContext(), "Multiple profiles linked", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onReadMultipleFailure(Exception e) {
+                Toast.makeText(getContext(), "Failed to retrieve profile", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -99,21 +108,44 @@ public class EditDialogueFragment extends DialogFragment {
         // Update the UserProfile object
         UserProfile updatedProfile = new UserProfile(username, email, phoneNumber);
 
-        db.collection("User").document(deviceID)
-                .set(updatedProfile)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+        Map<String, Object> query = new HashMap<>();
+        query.put("deviceId", deviceID);
+        CRUD.readQueryStatic(query, User.class, new ReadMultipleCallback<User>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<User> data) {
+                if (data.size() == 1) {
+                    User user = data.get(0);
+                    user.setUserProfile(updatedProfile);
+                    CRUD.update(user, new UpdateCallback() {
+                        @Override
+                        public void onUpdateSuccess() {
+                            Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
 
-                    // Notify the listener with the updated profile
-                    if (listener != null) {
-                        listener.onProfileUpdated(updatedProfile); // Pass the updated profile
-                    }
-                    dismiss();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("EditProfileDialog", "Failed to update profile", e);
-                    Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
-                });
+                            // Notify the listener with the updated profile
+                            if (listener != null) {
+                                listener.onProfileUpdated(updatedProfile); // Pass the updated profile
+                            }
+                            dismiss();
+                        }
+
+                        @Override
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else if (data.isEmpty()) {
+                    Toast.makeText(getContext(), "Failed to find profile to update", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onReadMultipleFailure(Exception e) {
+                Toast.makeText(getContext(), "Failed to fetch profile", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**

@@ -139,10 +139,10 @@ public class CRUD {
      * @param callback  the callback instance that contains the logic for
      *                  success and failure of the data reading
      */
-    public static <T extends RepoModel> void readQueryStatic(Map<String, String> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> void readQueryStatic(Map<String, Object> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
         CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         Query query = colRef;
-        for (Map.Entry<String, String> entry : fields.entrySet()) {
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
         }
         query.get()
@@ -200,14 +200,13 @@ public class CRUD {
     /**
      * Updates a data model in the database.
      *
-     * @param id        id of the model to be updated
      * @param model     the model used to update the model in the database
      * @param callback  the callback instance that contains the logic for
      *                  success and failure of updating the data
      */
-    public static <T extends RepoModel> void update(String id, T model, UpdateCallback callback) {
+    public static <T extends RepoModel> void update(T model, UpdateCallback callback) {
         CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
-        colRef.document(id).set(model, SetOptions.merge())
+        colRef.document(model.getId()).set(model, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
                 .addOnFailureListener(callback::onUpdateFailure);
     }

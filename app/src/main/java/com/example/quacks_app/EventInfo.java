@@ -21,7 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EventInfo extends AppCompatActivity {
     private TextView organizer;
@@ -39,8 +42,6 @@ public class EventInfo extends AppCompatActivity {
     private ImageButton search;
     private ImageButton homepage;
     private Facility actual_facility;
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
 
 
     private Event event;
@@ -117,91 +118,86 @@ public class EventInfo extends AppCompatActivity {
         });
 
         edit_event.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-                                              db = FirebaseFirestore.getInstance();
-                                              eventsRef = db.collection("Event");
-                                              eventsRef
-                                                      .whereEqualTo("description", event.getDescription())
-                                                      .whereEqualTo("organizerId", event.getOrganizerId())
-                                                      .whereEqualTo("dateTime", event.getDateTime())
-                                                      .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                          @Override
-                                                          public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                              if (task.isSuccessful()) {
-                                                                  QuerySnapshot querySnapshot = task.getResult();
-                                                                  if (querySnapshot != null && !querySnapshot.isEmpty()) {
+              @Override
+              public void onClick(View view) {
+                  Map<String, Object> query = new HashMap<>();
+                  query.put("description", event.getDescription());
+                  query.put("organizerId", event.getOrganizerId());
+                  query.put("dateTime", event.getDateTime());
 
-                                                                      for (QueryDocumentSnapshot document : querySnapshot) {
-                                                                          String documentId = document.getId();
-                                                                          eventsRef.document(documentId).delete()
-                                                                                  .addOnSuccessListener(aVoid -> {
+                  CRUD.readQueryStatic(query, Event.class, new ReadMultipleCallback<Event>() {
+                      @Override
+                      public void onReadMultipleSuccess(ArrayList<Event> data) {
+                          for (Event event : data) {
+                              CRUD.delete(event.getId(), Event.class, new DeleteCallback() {
+                                  @Override
+                                  public void onDeleteSuccess() {
+                                      Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                                  }
 
-                                                                                      Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                                  @Override
+                                  public void onDeleteFailure(Exception e) {
+                                      Toast.makeText(EventInfo.this, "Error deleting events", Toast.LENGTH_SHORT).show();
 
-                                                                                      Intent intent = new Intent(EventInfo.this, OrganizerHomepage.class);
-                                                                                      startActivity(intent);
-                                                                                      finish();
-                                                                                  })
-                                                                                  .addOnFailureListener(e -> {
+                                  }
+                              });
+                          }
+                          if (data.isEmpty()) {
+                              Toast.makeText(EventInfo.this, "No events found with the given description and organizer ID", Toast.LENGTH_SHORT).show();
+                          }
+                          else {
+                              Intent intent = new Intent(EventInfo.this, OrganizerHomepage.class);
+                              startActivity(intent);
+                              finish();
+                          }
 
-                                                                                      Toast.makeText(EventInfo.this, "Failed to delete event", Toast.LENGTH_SHORT).show();
-                                                                                  });
-                                                                      }
-                                                                  } else {
+                      }
 
-                                                                      Toast.makeText(EventInfo.this, "No events found with the given description and organizer ID", Toast.LENGTH_SHORT).show();
-                                                                  }
-                                                              } else {
+                      @Override
+                      public void onReadMultipleFailure(Exception e) {
+                          Toast.makeText(EventInfo.this, "Error getting events", Toast.LENGTH_SHORT).show();
+                      }
+                  });
+              }
+          });
 
-                                                                  Toast.makeText(EventInfo.this, "Error getting events", Toast.LENGTH_SHORT).show();
-                                                              }
-                                                          }
-                                                      });
-                                          }
-                                      });
+        //This is the bottom of the page directory
+        homepage = findViewById(R.id.house);
+        profile = findViewById(R.id.person);
+        search = findViewById(R.id.search);
 
-
-
-                    //This is the bottom of the page directory
-                    homepage = findViewById(R.id.house);
-                    profile = findViewById(R.id.person);
-                    search = findViewById(R.id.search);
-
-                    homepage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //Already here
-                            Intent intent = new Intent(EventInfo.this, OrganizerHomepage.class);
-                            if (facility != null) {
-                                intent.putExtra("Facility", actual_facility);
-                            }
-                            startActivity(intent);
-
-                        }
-                    });
-
-                    profile.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(EventInfo.this, ViewOrganizer.class);
-                            if (facility != null) {
-                                intent.putExtra("Facility", actual_facility);
-                            }
-                            startActivity(intent);
-                        }
-                    });
-
-                    search.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                           finish();
-                        }
-                    });
-
-
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Already here
+                Intent intent = new Intent(EventInfo.this, OrganizerHomepage.class);
+                if (facility != null) {
+                    intent.putExtra("Facility", actual_facility);
+                }
+                startActivity(intent);
 
             }
+        });
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EventInfo.this, ViewOrganizer.class);
+                if (facility != null) {
+                    intent.putExtra("Facility", actual_facility);
+                }
+                startActivity(intent);
+            }
+        });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
+            }
+        });
+
     }
+}
 
 

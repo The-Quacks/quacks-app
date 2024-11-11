@@ -36,8 +36,6 @@ public class CreateFacility extends AppCompatActivity {
     private EditText facility_deets;
     private EditText accessibility;
     private Facility new_facility;
-    private FirebaseFirestore db;
-    private CollectionReference userRef;
     private Button confirm;
     private Button back;
     private int round_one = 0;
@@ -199,20 +197,18 @@ public class CreateFacility extends AppCompatActivity {
                     User new_user = new User(deviceId, roles, userProfile);
 
 
-                    db = FirebaseFirestore.getInstance();
-                    userRef = db.collection("User");
-                    userRef.add(new_user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    CRUD.create(new_user, new CreateCallback() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
+                        public void onCreateSuccess() {
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("User", new_user);
                             resultIntent.putExtra("Facility", new_facility);
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
+                        public void onCreateFailure(Exception e) {
                             Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
                         }
                     });

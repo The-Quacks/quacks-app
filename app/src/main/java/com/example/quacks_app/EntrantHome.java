@@ -57,7 +57,7 @@ public class EntrantHome extends AppCompatActivity {
             }
         };
 
-        Map<String, String> deviceId = new HashMap<>();
+        Map<String, Object> deviceId = new HashMap<>();
         deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         CRUD.readQueryStatic(deviceId, User.class, readMultipleCallback);
 

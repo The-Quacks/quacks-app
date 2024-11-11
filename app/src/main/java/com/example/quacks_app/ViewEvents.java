@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -28,16 +29,12 @@ public class ViewEvents extends AppCompatActivity {
     private ImageButton profile;
     private ImageButton search;
     private Facility facility;
-
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
-
-
     private ListView eventList;
     private ArrayList<Event> eventDataList;
     private EventArrayAdapter eventArrayAdapter;
     private ArrayList<Listable> dataList;
     private EventList evented;
+    private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +43,6 @@ public class ViewEvents extends AppCompatActivity {
 
 
         dataList = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("Event");
         evented = (EventList) getIntent().getSerializableExtra("EventList");
         if (evented == null){
            finish();
@@ -65,21 +60,19 @@ public class ViewEvents extends AppCompatActivity {
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
         eventList.setAdapter(eventArrayAdapter);
 
-        eventsRef.addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (e != null) {
+        listenerRegistration = CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<Event> data) {
+                eventDataList.clear();
+                eventDataList.addAll(data);
+                eventArrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onReadMultipleFailure(Exception e) {
                 Toast.makeText(ViewEvents.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
-                return;
             }
-
-            eventDataList.clear();
-            for (DocumentSnapshot document : queryDocumentSnapshots) {
-                Event event = document.toObject(Event.class);
-                eventDataList.add(event);
-            }
-            eventArrayAdapter.notifyDataSetChanged();
         });
-
-
 
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
