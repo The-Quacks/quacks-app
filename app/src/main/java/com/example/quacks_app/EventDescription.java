@@ -82,7 +82,7 @@ public class EventDescription extends AppCompatActivity {
                     public void onReadMultipleSuccess(ArrayList<User> data) {
                         for (User user : data) {
                             if (user.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
-                                userId = user.getId();
+                                userId = user.getDocumentId();
                                 Log.d("User ID", userId);
                                 return;
                             }
@@ -120,7 +120,7 @@ public class EventDescription extends AppCompatActivity {
                         ArrayList<String> applicantIds = data.getApplicantIds();
                         applicantList.setApplicantIds(applicantIds);
                         applicantList.addUser(userId);
-                        applicantList.setId(applicantListId);
+                        applicantList.setDocumentId(applicantListId);
                         CRUD.update(applicantList, updateCallback);
                     }
 

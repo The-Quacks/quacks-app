@@ -7,17 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.lang.ref.Reference;
 
 public class OpenRegistration  extends AppCompatActivity {
     private Button back;
@@ -75,7 +65,7 @@ public class OpenRegistration  extends AppCompatActivity {
                     CRUD.create(app, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
-                            event.setApplicantList(app.getId());
+                            event.setApplicantList(app.getDocumentId());
                             CRUD.update(event, new UpdateCallback() {
                                 @Override
                                 public void onUpdateSuccess() {

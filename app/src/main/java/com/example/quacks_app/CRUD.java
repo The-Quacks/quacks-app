@@ -41,7 +41,7 @@ public class CRUD {
         colRef.document(id).set(model)
                 .addOnSuccessListener(aVoid -> callback.onCreateSuccess())
                 .addOnFailureListener(callback::onCreateFailure);
-        model.setId(id);
+        model.setDocumentId(id);
     }
 
     /**
@@ -216,7 +216,7 @@ public class CRUD {
      */
     public static <T extends RepoModel> void update(T model, UpdateCallback callback) {
         CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
-        colRef.document(model.getId()).set(model, SetOptions.merge())
+        colRef.document(model.getDocumentId()).set(model, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
                 .addOnFailureListener(callback::onUpdateFailure);
     }

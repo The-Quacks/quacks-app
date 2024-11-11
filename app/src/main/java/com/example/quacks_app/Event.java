@@ -1,9 +1,6 @@
 package com.example.quacks_app;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
@@ -136,7 +133,7 @@ public class Event extends RepoModel implements Serializable {
     }
 
     public String getEventId() {
-        return super.getId();
+        return super.getDocumentId();
     }
 
     public String getQrCodePath() {

@@ -4,14 +4,14 @@ import com.google.firebase.firestore.DocumentId;
 
 public abstract class RepoModel {
     @DocumentId
-    private String id;
+    private String documentId;
 
-    public String getId() {
-        return id;
+    public String getDocumentId() {
+        return documentId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
 }

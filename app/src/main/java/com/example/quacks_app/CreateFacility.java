@@ -1,7 +1,5 @@
 package com.example.quacks_app;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,20 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.security.AccessControlContext;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CreateFacility extends AppCompatActivity {
     private EditText bussiness_name;
@@ -186,7 +173,7 @@ public class CreateFacility extends AppCompatActivity {
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);
                     new_facility.setDeviceId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    new_facility.setId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    new_facility.setDocumentId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
                     UserProfile userProfile = new UserProfile(test_6, test_7, test_3); // Example user profile
                     ArrayList<Role> roles = new ArrayList<>();

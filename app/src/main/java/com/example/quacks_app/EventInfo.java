@@ -8,18 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -129,7 +118,7 @@ public class EventInfo extends AppCompatActivity {
                       @Override
                       public void onReadMultipleSuccess(ArrayList<Event> data) {
                           for (Event event : data) {
-                              CRUD.delete(event.getId(), Event.class, new DeleteCallback() {
+                              CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
                                   @Override
                                   public void onDeleteSuccess() {
                                       Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();

@@ -13,22 +13,15 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 /**
  * ProfileActivity handles the display, editing, and management of the user's profile.
@@ -108,10 +101,10 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     private void loadUserProfile() {
         user = (User) getIntent().getSerializableExtra("user");
 
-        // Check if the user object and deviceId are not null
-        if (user != null && user.getDeviceId() != null) {
+        // Check if the user object and documentId are not null
+        if (user != null && user.getDocumentId() != null) {
             // Fetch the user profile from Firestore using the deviceId
-            CRUD.readStatic(user.getId(), User.class, new ReadCallback<User>() {
+            CRUD.readStatic(user.getDocumentId(), User.class, new ReadCallback<User>() {
                 @Override
                 public void onReadSuccess(User data) {
                     userProfile = data.getUserProfile();
