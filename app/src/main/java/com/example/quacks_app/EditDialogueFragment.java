@@ -80,9 +80,11 @@ public class EditDialogueFragment extends DialogFragment {
                 if (data.size() == 1) {
                     User user = data.get(0);
                     UserProfile userProfile = user.getUserProfile();
-                    usernameEditText.setText(userProfile.getUserName());
-                    emailEditText.setText(userProfile.getEmail());
-                    phoneEditText.setText(userProfile.getPhoneNumber());
+                    if (userProfile != null) {
+                        usernameEditText.setText(userProfile.getUserName());
+                        emailEditText.setText(userProfile.getEmail());
+                        phoneEditText.setText(userProfile.getPhoneNumber());
+                    }
                 }
                 else if (data.size() > 1) {
                     Toast.makeText(getContext(), "Multiple profiles linked", Toast.LENGTH_SHORT).show();

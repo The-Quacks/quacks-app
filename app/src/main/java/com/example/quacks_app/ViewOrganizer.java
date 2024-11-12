@@ -42,8 +42,6 @@ public class ViewOrganizer extends AppCompatActivity {
 
 
         current = (User) getIntent().getSerializableExtra("User");
-        facility = (Facility) getIntent().getSerializableExtra("Facility");
-
 
         name = findViewById(R.id.Name);
         location = findViewById(R.id.location);
@@ -53,21 +51,8 @@ public class ViewOrganizer extends AppCompatActivity {
         emailed = findViewById(R.id.email);
         usernamed = findViewById(R.id.username);
 
-
         edit = findViewById(R.id.edit_button);
         back = findViewById(R.id.back_button);
-
-
-
-        name.setText(facility.getName());
-        location.setText(facility.getLocation());
-        contact_info.setText(facility.getPhone());
-        details.setText(facility.getDetails());
-        accessibility.setText(facility.getAccessible());
-        UserProfile userProfile = current.getUserProfile();
-        emailed.setText(userProfile.getEmail());
-        usernamed.setText(userProfile.getUserName());
-
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,19 +62,52 @@ public class ViewOrganizer extends AppCompatActivity {
             }
         });
 
-        edit.setOnClickListener(new View.OnClickListener() {
+
+
+        Map<String, Object> query = new HashMap<>();
+        query.put("organizerId", current.getDocumentId());
+        CRUD.readQueryStatic(query, Facility.class, new ReadMultipleCallback<Facility>() {
             @Override
-            public void onClick(View view) {
-                //this is the edit function
-                Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", current);
-                startActivity(intent);
+            public void onReadMultipleSuccess(ArrayList<Facility> data) {
+                if (data.isEmpty()) {
+                    // No facility
+                }
+                else if (data.size() > 1) {
+                    // Too many facilities
+                }
+                else {
+                    facility = data.get(0);
+
+                    name.setText(facility.getName());
+                    location.setText(facility.getLocation());
+                    contact_info.setText(facility.getPhone());
+                    details.setText(facility.getDetails());
+                    accessibility.setText(facility.getAccessible());
+                    UserProfile userProfile = current.getUserProfile();
+                    if (userProfile != null) {
+                        emailed.setText(userProfile.getEmail());
+                        usernamed.setText(userProfile.getUserName());
+                    }
+
+
+                    edit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //this is the edit function
+                            Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
+                            intent.putExtra("Facility", facility);
+                            intent.putExtra("User", current);
+                            startActivity(intent);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onReadMultipleFailure(Exception e) {
+
             }
         });
-
-
     }
-
-
 }

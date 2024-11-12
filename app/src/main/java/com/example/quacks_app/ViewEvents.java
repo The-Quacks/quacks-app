@@ -23,6 +23,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewEvents extends AppCompatActivity {
     private ImageButton homepage;
@@ -34,6 +36,7 @@ public class ViewEvents extends AppCompatActivity {
     private EventArrayAdapter eventArrayAdapter;
     private ArrayList<Listable> dataList;
     private EventList evented;
+    private User user;
     private ListenerRegistration listenerRegistration;
 
     @Override
@@ -53,6 +56,7 @@ public class ViewEvents extends AppCompatActivity {
         }
 
         facility = (Facility) getIntent().getSerializableExtra("Facility");
+        user = (User) getIntent().getSerializableExtra("User");
 
         eventList = findViewById(R.id.event_list);
 
@@ -60,7 +64,9 @@ public class ViewEvents extends AppCompatActivity {
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList, facility);
         eventList.setAdapter(eventArrayAdapter);
 
-        listenerRegistration = CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
+        Map<String, Object> query = new HashMap<>();
+        query.put("organizerId", user.getDocumentId());
+        listenerRegistration = CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Event> data) {
                 eventDataList.clear();

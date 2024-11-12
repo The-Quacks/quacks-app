@@ -200,10 +200,10 @@ public class CRUD {
      * @return a {@code ListenerRegistration} that contains a listener that
      *         listens for changes in the data
      */
-    public static <T extends RepoModel> ListenerRegistration readQueryLive(Map<String, String> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
+    public static <T extends RepoModel> ListenerRegistration readQueryLive(Map<String, Object> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
         CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
         Query query = colRef;
-        for (Map.Entry<String, String> entry : fields.entrySet()) {
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
         }
         return query.addSnapshotListener((value, e) -> {

@@ -2,7 +2,9 @@ package com.example.quacks_app;
 
 import com.google.firebase.firestore.DocumentId;
 
-public abstract class RepoModel {
+import java.io.Serializable;
+
+public abstract class RepoModel implements Serializable {
     @DocumentId
     private String documentId;
 

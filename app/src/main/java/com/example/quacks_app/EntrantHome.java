@@ -3,6 +3,7 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +40,57 @@ public class EntrantHome extends AppCompatActivity {
         ImageButton waitlist = findViewById(R.id.waitlistButton);
         ImageButton notifications = findViewById(R.id.notificationsButton);
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
+        ImageButton switch_activity = findViewById(R.id.switch_activity_entrant);
+
+        switch_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.getRoles().contains(Role.ORGANIZER)) {
+                    Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (user.getRoles().contains(Role.ADMIN)) {
+                    Intent intent = new Intent(EntrantHome.this, AdminHome.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
 
         ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<User> data) {
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                for (User user : data) {
-                    if (user.getDeviceId().equals(deviceId)) {
-                        hasProfile = true;
+                for (User u : data) {
+                    if (u.getDeviceId().equals(deviceId)) {
+                        user = u;
+                        if (user.getUserProfile() != null) {
+                            hasProfile = true;
+                        }
                         break;
                     }
+                }
+                // Create user if they don't exist yet
+                if (data.isEmpty()) {
+                    User user = new User();
+                    user.setDeviceId(deviceId);
+                    ArrayList<Role> roles = new ArrayList<>();
+                    roles.add(Role.ENTRANT);
+                    user.setRoles(roles);
+                    CRUD.create(user, new CreateCallback() {
+                        @Override
+                        public void onCreateSuccess() {
+                        }
+
+                        @Override
+                        public void onCreateFailure(Exception e) {
+                            Toast.makeText(EntrantHome.this, "Failed to create user", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             }
 

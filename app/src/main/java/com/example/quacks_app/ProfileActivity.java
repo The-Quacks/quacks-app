@@ -99,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
      * Loads the user profile from Firestore and updates the UI.
      */
     private void loadUserProfile() {
-        user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("User");
 
         // Check if the user object and documentId are not null
         if (user != null && user.getDocumentId() != null) {
@@ -108,37 +108,38 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
                 @Override
                 public void onReadSuccess(User data) {
                     userProfile = data.getUserProfile();
+                    if (userProfile != null) {
+                        // Debug log to confirm data retrieval
+                        Log.d("ProfileActivity", "UserProfile fetched: " + userProfile.toString());
 
-                    // Debug log to confirm data retrieval
-                    Log.d("ProfileActivity", "UserProfile fetched: " + userProfile.toString());
-
-                    // Update the UI with the user's profile data
-                    if (userProfile.getUserName() != null) {
-                        userNameInput.setText(userProfile.getUserName());
-                    }
-                    if (userProfile.getEmail() != null) {
-                        emailInput.setText(userProfile.getEmail());
-                    }
-                    if (userProfile.getPhoneNumber() != null) {
-                        phoneNumberInput.setText(userProfile.getPhoneNumber());
-                    }
-
-                    // Load profile picture if it exists
-                    CRUD.downloadImage(userProfile.getProfilePicturePath(), new ReadCallback<Bitmap>() {
-                        @Override
-                        public void onReadSuccess(Bitmap data) {
-                            profilePicture.setImageBitmap(data);
+                        // Update the UI with the user's profile data
+                        if (userProfile.getUserName() != null) {
+                            userNameInput.setText(userProfile.getUserName());
+                        }
+                        if (userProfile.getEmail() != null) {
+                            emailInput.setText(userProfile.getEmail());
+                        }
+                        if (userProfile.getPhoneNumber() != null) {
+                            phoneNumberInput.setText(userProfile.getPhoneNumber());
                         }
 
-                        @Override
-                        public void onReadFailure(Exception e) {
-                            Log.e("ProfileActivity", "Failed to load profile picture: " + e.getMessage());
-                            // Generate and display a default profile picture with initials
-                            Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
-                            profilePicture.setImageBitmap(defaultImage);
+                        // Load profile picture if it exists
+                        CRUD.downloadImage(userProfile.getProfilePicturePath(), new ReadCallback<Bitmap>() {
+                            @Override
+                            public void onReadSuccess(Bitmap data) {
+                                profilePicture.setImageBitmap(data);
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void onReadFailure(Exception e) {
+                                Log.e("ProfileActivity", "Failed to load profile picture: " + e.getMessage());
+                                // Generate and display a default profile picture with initials
+                                Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
+                                profilePicture.setImageBitmap(defaultImage);
+
+                            }
+                        });
+                    }
                 }
 
                 @Override
