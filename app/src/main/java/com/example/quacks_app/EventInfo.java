@@ -32,6 +32,8 @@ public class EventInfo extends AppCompatActivity {
     private ImageButton homepage;
     private Facility actual_facility;
 
+    private User user;
+
 
     private Event event;
 
@@ -51,6 +53,8 @@ public class EventInfo extends AppCompatActivity {
         if (getIntent().getSerializableExtra("Facility") != null) {
             actual_facility = (Facility) getIntent().getSerializableExtra("Facility");
         }
+
+        user = (User) getIntent().getSerializableExtra("User");
 
 
         date = findViewById(R.id.event_date);
@@ -136,6 +140,7 @@ public class EventInfo extends AppCompatActivity {
                 if (facility != null) {
                     intent.putExtra("Facility", actual_facility);
                 }
+                intent.putExtra("User", user);
                 startActivity(intent);
 
             }
@@ -148,6 +153,7 @@ public class EventInfo extends AppCompatActivity {
                 if (facility != null) {
                     intent.putExtra("Facility", actual_facility);
                 }
+                intent.putExtra("User", user);
                 startActivity(intent);
             }
         });

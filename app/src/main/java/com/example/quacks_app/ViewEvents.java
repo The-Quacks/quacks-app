@@ -93,6 +93,9 @@ public class ViewEvents extends AppCompatActivity {
                 if (facility != null){
                     intent.putExtra("Facility", facility);
                 }
+                if (user != null) {
+                    intent.putExtra("User", user);
+                }
                 startActivity(intent);
             }
         });
@@ -107,6 +110,8 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, OrganizerHomepage.class);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });
@@ -115,6 +120,8 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, ViewOrganizer.class);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });

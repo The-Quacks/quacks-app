@@ -3,11 +3,16 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -23,6 +28,8 @@ import java.util.Map;
 
 public class WelcomeEntrant extends AppCompatActivity {
     private User user;
+    private Facility facility;
+    private ActivityResultLauncher<Intent> resultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,35 @@ public class WelcomeEntrant extends AppCompatActivity {
                 finish();
             }
         });
+
+        resultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            user = (User) data.getSerializableExtra("User");
+                            facility = (Facility) data.getSerializableExtra("Facility");
+                        }
+                    }
+                });
+
+        createFacility.setOnClickListener(v -> {
+            if (user != null) {
+                if (facility == null) {
+                    Intent intent = new Intent(WelcomeEntrant.this, CreateFacility.class);
+                    intent.putExtra("User", user);
+                    resultLauncher.launch(intent);
+
+                }
+                else {
+                    Toast.makeText(WelcomeEntrant.this, "Facility already exists", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+        });
+
         ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<User> data) {
@@ -79,6 +115,29 @@ public class WelcomeEntrant extends AppCompatActivity {
 
                         }
                     });
+                }
+                //fetch their facility if they have one
+                else {
+                    ReadMultipleCallback<Facility> readMultipleCallback = new ReadMultipleCallback<Facility>() {
+                        @Override
+                        public void onReadMultipleSuccess(ArrayList<Facility> data) {
+                            for (Facility fac : data) {
+                                if (fac.getOrganizerId().equals(user.getDocumentId())) {
+                                    facility = fac;
+                                    break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onReadMultipleFailure(Exception e) {
+                            Toast.makeText(WelcomeEntrant.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
+                        }
+                    };
+
+                    Map<String, Object> query = new HashMap<>();
+                    query.put("organizerId", user.getDocumentId());
+                    CRUD.readQueryStatic(query, Facility.class, readMultipleCallback);
                 }
             }
 

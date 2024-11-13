@@ -218,6 +218,8 @@ public class CreateEvent extends AppCompatActivity {
                             Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
                             intent.putExtra("EventList", eventList);
+                            intent.putExtra("User", user);
+                            intent.putExtra("Facility", facility);
                             startActivity(intent);
                             finish();
                         }

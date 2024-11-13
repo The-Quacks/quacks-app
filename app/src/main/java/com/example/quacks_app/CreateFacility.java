@@ -49,6 +49,8 @@ public class CreateFacility extends AppCompatActivity {
         setContentView(R.layout.create_facility);
 
 
+        user = (User) getIntent().getSerializableExtra("User");
+
         context = this;
         //on back click nothing is saved
         back = findViewById(R.id.back_button);
@@ -178,20 +180,20 @@ public class CreateFacility extends AppCompatActivity {
                     roles.add(Role.ORGANIZER);
 
 
-                    String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                    User new_user = new User(deviceId, roles, userProfile);
+                    user.setUserProfile(userProfile);
+                    user.setRoles(roles);
 
 
-                    CRUD.create(new_user, new CreateCallback() {
+                    CRUD.update(user, new UpdateCallback() {
                         @Override
-                        public void onCreateSuccess() {
+                        public void onUpdateSuccess() {
                             new_facility.setOrganizerId(user.getDocumentId());
                             CRUD.create(new_facility, new CreateCallback() {
                                 @Override
                                 public void onCreateSuccess() {
                                     Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
                                     Intent resultIntent = new Intent();
-                                    resultIntent.putExtra("User", new_user);
+                                    resultIntent.putExtra("User", user);
                                     resultIntent.putExtra("Facility", new_facility);
                                     setResult(RESULT_OK, resultIntent);
                                     finish();
@@ -204,7 +206,7 @@ public class CreateFacility extends AppCompatActivity {
                             });
                         }
                         @Override
-                        public void onCreateFailure(Exception e) {
+                        public void onUpdateFailure(Exception e) {
                             Toast.makeText(CreateFacility.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
