@@ -36,6 +36,11 @@ public class EntrantHome extends AppCompatActivity {
         setContentView(R.layout.entrant_home);
         EdgeToEdge.enable(this);
 
+        user = (User) getIntent().getSerializableExtra("User");
+        if (user.getUserProfile() != null) {
+            hasProfile = true;
+        }
+
         ImageButton profile = findViewById(R.id.profileButton);
         ImageButton waitlist = findViewById(R.id.waitlistButton);
         ImageButton notifications = findViewById(R.id.notificationsButton);
@@ -60,56 +65,16 @@ public class EntrantHome extends AppCompatActivity {
             }
         });
 
-        ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
-            @Override
-            public void onReadMultipleSuccess(ArrayList<User> data) {
-                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                for (User u : data) {
-                    if (u.getDeviceId().equals(deviceId)) {
-                        user = u;
-                        if (user.getUserProfile() != null) {
-                            hasProfile = true;
-                        }
-                        break;
-                    }
-                }
-                // Create user if they don't exist yet
-                if (data.isEmpty()) {
-                    User user = new User();
-                    user.setDeviceId(deviceId);
-                    ArrayList<Role> roles = new ArrayList<>();
-                    roles.add(Role.ENTRANT);
-                    user.setRoles(roles);
-                    CRUD.create(user, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-                        }
-
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(EntrantHome.this, "Failed to create user", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onReadMultipleFailure(Exception e) {
-                Toast.makeText(EntrantHome.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        Map<String, Object> deviceId = new HashMap<>();
-        deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        CRUD.readQueryStatic(deviceId, User.class, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
             if (!hasProfile) {
-                startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
+                Intent intent = new Intent(EntrantHome.this, CreateEntrantProfile.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
             } else {
-                Toast.makeText(EntrantHome.this, "Go to profile activity", Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(EntrantHome.this, EntrantProfile.class));
+                Intent intent = new Intent(EntrantHome.this, ProfileActivity.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
             }
         });
 
