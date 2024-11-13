@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -56,6 +57,8 @@ public class AdminViewOrganizer extends AppCompatActivity {
                 @Override
                 public void onDeleteSuccess() {
                     System.out.println("Document successfully deleted!");
+                    Toast.makeText(AdminViewOrganizer.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
 
                 @Override
