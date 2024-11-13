@@ -124,21 +124,25 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
                         }
 
                         // Load profile picture if it exists
-                        CRUD.downloadImage(userProfile.getProfilePicturePath(), new ReadCallback<Bitmap>() {
-                            @Override
-                            public void onReadSuccess(Bitmap data) {
-                                profilePicture.setImageBitmap(data);
-                            }
+                        if (userProfile.getProfilePicturePath() != null) {
+                            CRUD.downloadImage(userProfile.getProfilePicturePath(), new ReadCallback<Bitmap>() {
+                                @Override
+                                public void onReadSuccess(Bitmap data) {
+                                    profilePicture.setImageBitmap(data);
+                                }
 
-                            @Override
-                            public void onReadFailure(Exception e) {
-                                Log.e("ProfileActivity", "Failed to load profile picture: " + e.getMessage());
-                                // Generate and display a default profile picture with initials
-                                Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
-                                profilePicture.setImageBitmap(defaultImage);
+                                @Override
+                                public void onReadFailure(Exception e) {
+                                    Log.e("ProfileActivity", "Failed to load profile picture: " + e.getMessage());
+                                    // Generate and display a default profile picture with initials
+                                    Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
+                                    profilePicture.setImageBitmap(defaultImage);
 
-                            }
-                        });
+                                }
+                            });
+
+                        }
+
                     }
                 }
 
@@ -273,8 +277,20 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         // Set the default image in the ImageView
         profilePicture.setImageBitmap(defaultImage);
 
-        // Show a confirmation message
-        Toast.makeText(this, "Profile picture removed", Toast.LENGTH_SHORT).show();
+        CRUD.removeImage(userProfile.getProfilePicturePath(), new DeleteCallback() {
+            @Override
+            public void onDeleteSuccess() {
+                userProfile.setProfilePicturePath(null);
+                // Show a confirmation message
+                Toast.makeText(ProfileActivity.this, "Profile picture removed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteFailure(Exception e) {
+                Toast.makeText(ProfileActivity.this, "Failed to remove profile picture", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     /**
@@ -282,6 +298,7 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
      */
     private void saveUserProfileToFirestore() {
         if (user != null && user.getDeviceId() != null && userProfile != null) {
+            user.setUserProfile(userProfile);
             CRUD.update(user, new UpdateCallback() {
                 @Override
                 public void onUpdateSuccess() {
