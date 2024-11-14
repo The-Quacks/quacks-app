@@ -26,6 +26,8 @@ public class EventDescription extends AppCompatActivity {
     private String userId;
     private String applicantListId;
 
+    private User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,21 +68,15 @@ public class EventDescription extends AppCompatActivity {
 
         joinWaitlist.setOnClickListener(v -> {
             // **This code needs a LOT of refactoring**
-
-
-            if (!EntrantHome.hasProfile) {
-                Toast.makeText(this, "Please create a profile", Toast.LENGTH_SHORT).show();
-                Intent createProfile = new Intent(this, CreateEntrantProfile.class);
-                startActivity(createProfile);
-            } else {
                 Map<String, Object> user = new HashMap<>();
                 user.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                 CRUD.readQueryStatic(user, User.class, new ReadMultipleCallback<User>() {
                     @Override
                     public void onReadMultipleSuccess(ArrayList<User> data) {
-                        for (User user : data) {
-                            if (user.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
-                                userId = user.getDocumentId();
+                        for (User u : data) {
+                            if (u.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
+                                userId = u.getDocumentId();
+                                currentUser = u;
                                 Log.d("User ID", userId);
                             }
                         }
@@ -94,7 +90,9 @@ public class EventDescription extends AppCompatActivity {
                                         public void onUpdateSuccess() {
                                             Toast.makeText(EventDescription.this, "Successfully joined waitlist", Toast.LENGTH_LONG).show();
                                             Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+                                            intent.putExtra("User", currentUser);
                                             startActivity(intent);
+                                            finish();
                                         }
 
                                         @Override
@@ -121,7 +119,6 @@ public class EventDescription extends AppCompatActivity {
                         Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
         });
     }
 

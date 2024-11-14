@@ -3,6 +3,7 @@ package com.example.quacks_app;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,8 +18,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -28,6 +31,17 @@ import java.util.UUID;
  */
 public class CRUD {
 
+    // Gets the firebase instance. Returns default instance in normal use and
+    // a test instance in testing
+    private static FirebaseFirestore getInstance() {
+        if ("true".equals(System.getProperty("junit.test"))) {
+            return FirebaseFirestore.getInstance("testquacksdb");
+        }
+        else {
+            return FirebaseFirestore.getInstance();
+        }
+    }
+
     /**
      * Creates an instance of a data model in the database.
      *
@@ -36,7 +50,7 @@ public class CRUD {
      *                 success and failure of the data creation
      */
     public static <T extends RepoModel> void create(T model, CreateCallback callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
+        CollectionReference colRef = getInstance().collection(model.getClass().getSimpleName());
         String id = colRef.document().getId();
         colRef.document(id).set(model)
                 .addOnSuccessListener(aVoid -> callback.onCreateSuccess())
@@ -53,7 +67,7 @@ public class CRUD {
      *                  success and failure of creating/updating the data
      */
     public static <T extends RepoModel> void createOrUpdate(T model, UpdateCallback callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
+        CollectionReference colRef = getInstance().collection(model.getClass().getSimpleName());
         if (model.getDocumentId() == null) {
             model.setDocumentId(colRef.document().getId());
         }
@@ -71,7 +85,7 @@ public class CRUD {
      *                  success and failure of the data reading
      */
     public static <T extends RepoModel> void readStatic(String id, Class<T> classType, ReadCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         colRef.document(id).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     T model = documentSnapshot.toObject(classType);
@@ -91,7 +105,7 @@ public class CRUD {
      *         listens for changes in the data
      */
     public static <T extends RepoModel> ListenerRegistration readLive(String id, Class<T> classType, ReadCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         DocumentReference docRef = colRef.document(id);
         return docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
@@ -116,7 +130,7 @@ public class CRUD {
      *                  success and failure of the data reading
      */
     public static <T extends RepoModel> void readAllStatic(Class<T> classType, ReadMultipleCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         colRef.get()
                 .addOnCompleteListener(task -> {
                     ArrayList<T> dataList = new ArrayList<>();
@@ -139,7 +153,7 @@ public class CRUD {
      *         listens for changes in the data
      */
     public static <T extends RepoModel> ListenerRegistration readAllLive(Class<T> classType, ReadMultipleCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         return colRef.addSnapshotListener((value, e) -> {
             if (e != null) {
                 callback.onReadMultipleFailure(e);
@@ -168,7 +182,7 @@ public class CRUD {
      *                  success and failure of the data reading
      */
     public static <T extends RepoModel> void readQueryStatic(Map<String, Object> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         Query query = colRef;
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
@@ -201,7 +215,7 @@ public class CRUD {
      *         listens for changes in the data
      */
     public static <T extends RepoModel> ListenerRegistration readQueryLive(Map<String, Object> fields, Class<T> classType, ReadMultipleCallback<T> callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         Query query = colRef;
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
             query = query.whereEqualTo(entry.getKey(), entry.getValue());
@@ -233,7 +247,7 @@ public class CRUD {
      *                  success and failure of updating the data
      */
     public static <T extends RepoModel> void update(T model, UpdateCallback callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(model.getClass().getSimpleName());
+        CollectionReference colRef = getInstance().collection(model.getClass().getSimpleName());
         colRef.document(model.getDocumentId()).set(model, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onUpdateSuccess())
                 .addOnFailureListener(callback::onUpdateFailure);
@@ -249,7 +263,7 @@ public class CRUD {
      *                 success and failure of deleting the data
      */
     public static <T extends RepoModel> void delete(String id, Class<T> classType, DeleteCallback callback) {
-        CollectionReference colRef = FirebaseFirestore.getInstance().collection(classType.getSimpleName());
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         colRef.document(id).delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
                 .addOnFailureListener(callback::onDeleteFailure);
@@ -333,5 +347,36 @@ public class CRUD {
         imageRef.delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())
                 .addOnFailureListener(callback::onDeleteFailure);
+    }
+
+    public static <T extends RepoModel> void clearColection(Class<T> classType, DeleteCallback callback) {
+        CollectionReference colRef = getInstance().collection(classType.getSimpleName());
+        colRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<T> documents = task.getResult().toObjects(classType);
+                        int totalDocuments = documents.size();
+                        AtomicInteger deletedDocuments = new AtomicInteger(0);
+
+                        for (T document : documents) {
+                            colRef.document(document.getDocumentId()).delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        deletedDocuments.incrementAndGet();
+
+                                        if (deletedDocuments.get() == totalDocuments) {
+                                            callback.onDeleteSuccess();
+                                        }
+                                    })
+                                    .addOnFailureListener(callback::onDeleteFailure);
+                        }
+
+                        if (totalDocuments == 0) {
+                            callback.onDeleteSuccess();
+                        }
+
+                    } else {
+                        callback.onDeleteFailure(task.getException());
+                    }
+                });
     }
 }
