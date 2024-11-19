@@ -13,22 +13,15 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 /**
  * ProfileActivity handles the display, editing, and management of the user's profile.
@@ -41,10 +34,6 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     private ImageView profilePicture;
     private TextView userNameInput, emailInput, phoneNumberInput;
     private Button saveProfileButton, editPictureButton, removePictureButton, editProfileDetailsButton, backButton;
-
-    // Firebase instances
-    private FirebaseFirestore firestore;
-    private FirebaseStorage storage;
 
     // ActivityResultLauncher for handling the photo picker
     private ActivityResultLauncher<Intent> pickImageLauncher;
@@ -60,10 +49,6 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        // Initialize Firebase instances
-        firestore = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
 
         // Initialize UI elements
         profilePicture = findViewById(R.id.profilePicture);
@@ -114,52 +99,59 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
      * Loads the user profile from Firestore and updates the UI.
      */
     private void loadUserProfile() {
-        user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("User");
 
-        // Check if the user object and deviceId are not null
-        if (user != null && user.getDeviceId() != null) {
+        // Check if the user object and documentId are not null
+        if (user != null && user.getDocumentId() != null) {
             // Fetch the user profile from Firestore using the deviceId
-            firestore.collection("User").document(user.getDeviceId())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Retrieve user profile data from Firestore
-                            userProfile = documentSnapshot.toObject(UserProfile.class);
+            CRUD.readStatic(user.getDocumentId(), User.class, new ReadCallback<User>() {
+                @Override
+                public void onReadSuccess(User data) {
+                    userProfile = data.getUserProfile();
+                    if (userProfile != null) {
+                        // Debug log to confirm data retrieval
+                        Log.d("ProfileActivity", "UserProfile fetched: " + userProfile.toString());
 
-                            if (userProfile != null) {
-                                // Debug log to confirm data retrieval
-                                Log.d("ProfileActivity", "UserProfile fetched: " + userProfile.toString());
+                        // Update the UI with the user's profile data
+                        if (userProfile.getUserName() != null) {
+                            userNameInput.setText(userProfile.getUserName());
+                        }
+                        if (userProfile.getEmail() != null) {
+                            emailInput.setText(userProfile.getEmail());
+                        }
+                        if (userProfile.getPhoneNumber() != null) {
+                            phoneNumberInput.setText(userProfile.getPhoneNumber());
+                        }
 
-                                // Update the UI with the user's profile data
-                                if (userProfile.getUserName() != null) {
-                                    userNameInput.setText(userProfile.getUserName());
-                                }
-                                if (userProfile.getEmail() != null) {
-                                    emailInput.setText(userProfile.getEmail());
-                                }
-                                if (userProfile.getPhoneNumber() != null) {
-                                    phoneNumberInput.setText(userProfile.getPhoneNumber());
+                        // Load profile picture if it exists
+                        if (userProfile.getProfilePicturePath() != null) {
+                            CRUD.downloadImage(userProfile.getProfilePicturePath(), new ReadCallback<Bitmap>() {
+                                @Override
+                                public void onReadSuccess(Bitmap data) {
+                                    profilePicture.setImageBitmap(data);
                                 }
 
-                                // Load profile picture if it exists
-                                if (userProfile.getProfilePictureUrl() != null && !userProfile.getProfilePictureUrl().isEmpty()) {
-                                    Glide.with(this).load(userProfile.getProfilePictureUrl()).into(profilePicture);
-                                } else {
+                                @Override
+                                public void onReadFailure(Exception e) {
+                                    Log.e("ProfileActivity", "Failed to load profile picture: " + e.getMessage());
                                     // Generate and display a default profile picture with initials
                                     Bitmap defaultImage = generateDefaultProfilePicture(userProfile.getUserName());
                                     profilePicture.setImageBitmap(defaultImage);
+
                                 }
-                            } else {
-                                Log.e("ProfileActivity", "UserProfile is null");
-                            }
-                        } else {
-                            Toast.makeText(this, "No profile found for this user", Toast.LENGTH_SHORT).show();
+                            });
+
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("ProfileActivity", "Failed to load profile: " + e.getMessage());
-                        Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
-                    });
+
+                    }
+                }
+
+                @Override
+                public void onReadFailure(Exception e) {
+                    Log.e("ProfileActivity", "Failed to load profile: " + e.getMessage());
+                }
+            });
+
         } else {
             Log.e("ProfileActivity", "User or DeviceId is null");
         }
@@ -243,23 +235,31 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     private void uploadImageToFirebase(Uri imageUri) {
         if (user == null || user.getDeviceId() == null) return;
 
-        StorageReference storageRef = storage.getReference().child("profile_pictures/" + user.getDeviceId() + ".jpg");
+        CRUD.storeImage(imageUri, new ReadCallback<String>() {
+            @Override
+            public void onReadSuccess(String path) {
+                userProfile.setProfilePicturePath(path);
+                saveUserProfileToFirestore();
 
-        storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        userProfile.setProfilePictureUrl(uri.toString());
-                        saveUserProfileToFirestore();
+                CRUD.downloadImage(path, new ReadCallback<Bitmap>() {
+                    @Override
+                    public void onReadSuccess(Bitmap data) {
+                        profilePicture.setImageBitmap(data);
+                        Toast.makeText(ProfileActivity.this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                    }
 
-                        // Update the ImageView with the new image
-                        Glide.with(this)
-                                .load(uri) // Load the image from the URI
-                                .into(profilePicture); // Display it in the ImageView
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(ProfileActivity.this, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
 
-                        Toast.makeText(this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
-                    });
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show());
+            @Override
+            public void onReadFailure(Exception e) {
+                Toast.makeText(ProfileActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -277,8 +277,20 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         // Set the default image in the ImageView
         profilePicture.setImageBitmap(defaultImage);
 
-        // Show a confirmation message
-        Toast.makeText(this, "Profile picture removed", Toast.LENGTH_SHORT).show();
+        CRUD.removeImage(userProfile.getProfilePicturePath(), new DeleteCallback() {
+            @Override
+            public void onDeleteSuccess() {
+                userProfile.setProfilePicturePath(null);
+                // Show a confirmation message
+                Toast.makeText(ProfileActivity.this, "Profile picture removed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteFailure(Exception e) {
+                Toast.makeText(ProfileActivity.this, "Failed to remove profile picture", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     /**
@@ -286,15 +298,18 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
      */
     private void saveUserProfileToFirestore() {
         if (user != null && user.getDeviceId() != null && userProfile != null) {
-            firestore.collection("User").document(user.getDeviceId())
-                    .update("profilePictureUrl", userProfile.getProfilePictureUrl())
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Profile picture updated in Firestore", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Failed to update profile picture in Firestore", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            user.setUserProfile(userProfile);
+            CRUD.update(user, new UpdateCallback() {
+                @Override
+                public void onUpdateSuccess() {
+                    Toast.makeText(ProfileActivity.this, "Profile picture updated in Firestore", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onUpdateFailure(Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Failed to update profile picture in Firestore", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

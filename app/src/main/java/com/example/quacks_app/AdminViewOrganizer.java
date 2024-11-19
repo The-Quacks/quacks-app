@@ -4,8 +4,10 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -34,79 +36,68 @@ public class AdminViewOrganizer extends AppCompatActivity {
         EdgeToEdge.enable(this);
         ApplicantList testSingle;
 
-
-
         Bundle bundle = getIntent().getExtras();
         Event editEvent = (Event) bundle.getSerializable("value");
         String id = bundle.getString("id");
 
-        String appList = editEvent.getApplicantList();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("ApplicantList").document(appList);
-
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        ApplicantList testSingle = document.toObject(ApplicantList.class);
-
-                        EditText name = findViewById(R.id.Name);
-                        EditText capacity = findViewById(R.id.capacity);
-                        EditText available = findViewById(R.id.availability);
-                        EditText location = findViewById(R.id.location);
-                        String nameVal = "Name: " + editEvent.getDescription();
-                        String capval = "Capacity: "+ testSingle.getLimit().toString();
-                        String availval = "Availability: " + (testSingle.getLimit() - testSingle.getApplicantIds().size());
-                        String locVal = "Location: " + editEvent.getFacility().getLocation();
-
-                        name.setText(nameVal);
-                        capacity.setText(capval);
-                        available.setText(availval);
-                        location.setText(locVal);
-
-                        Button delete = findViewById(R.id.delete_button);
-                        Button edit = findViewById(R.id.edit_button);
-                        Button back = findViewById(R.id.back_button);
-
-                        delete.setOnClickListener(view -> {
-                            CRUD<Event> delEvent = new CRUD<>(Event.class);
-                            DeleteCallback delCall = new DeleteCallback(){
-                                @Override
-                                public void onDeleteSuccess() {
-                                    System.out.println("Document successfully deleted!");
-                                }
-
-                                @Override
-                                public void onDeleteFailure(Exception e) {
-                                    System.err.println("Error deleting document: " + e.getMessage());
-                                }
-                            };
-                            delEvent.delete(id, delCall);
-                            CRUD<ApplicantList> delAppList = new CRUD<>(ApplicantList.class);
-                            delAppList.delete(editEvent.getApplicantList(), delCall);
-                        });
-
-                        edit.setOnClickListener(view -> {
-
-                        });
-
-                        back.setOnClickListener(view -> {
-                            finish();
-                        });
-
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
+            public void onClick(View view) {
+                finish();
             }
         });
 
 
+        Button delete = findViewById(R.id.delete_button);
+        Button edit = findViewById(R.id.edit_button);
+
+        delete.setOnClickListener(view -> {
+            DeleteCallback delCall = new DeleteCallback(){
+                @Override
+                public void onDeleteSuccess() {
+                    System.out.println("Document successfully deleted!");
+                    Toast.makeText(AdminViewOrganizer.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onDeleteFailure(Exception e) {
+                    System.err.println("Error deleting document: " + e.getMessage());
+                }
+            };
+            CRUD.delete(id, Event.class, delCall);
+            CRUD.delete(editEvent.getApplicantList(), ApplicantList.class, delCall);
+        });
+
+
+        String appList = editEvent.getApplicantList();
+
+        CRUD.readLive(id, Event.class, new ReadCallback<Event>() {
+            @Override
+            public void onReadSuccess(Event data) {
+                //ApplicantList testSingle = document.toObject(ApplicantList.class);
+
+                EditText name = findViewById(R.id.Name);
+                EditText capacity = findViewById(R.id.capacity);
+                EditText available = findViewById(R.id.availability);
+                EditText location = findViewById(R.id.location);
+                String nameVal = "Name: " + data.getDescription();
+                String capval = "Capacity: "+ "";
+                String availval = "Availability: " + "";
+                String locVal = "Location: " + "";
+
+                name.setText(nameVal);
+                capacity.setText(capval);
+                available.setText(availval);
+                location.setText(locVal);
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                Log.d(TAG, "get failed with ", e);
+
+            }
+        });
     }
 }
