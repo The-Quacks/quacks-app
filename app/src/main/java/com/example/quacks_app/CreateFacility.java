@@ -1,5 +1,7 @@
 package com.example.quacks_app;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.AccessControlContext;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CreateFacility extends AppCompatActivity {
     private EditText bussiness_name;
@@ -23,6 +36,8 @@ public class CreateFacility extends AppCompatActivity {
     private EditText facility_deets;
     private EditText accessibility;
     private Facility new_facility;
+    private FirebaseFirestore db;
+    private CollectionReference userRef;
     private Button confirm;
     private Button back;
     private int round_one = 0;
@@ -48,8 +63,6 @@ public class CreateFacility extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_facility);
 
-
-        user = (User) getIntent().getSerializableExtra("User");
 
         context = this;
         //on back click nothing is saved
@@ -174,40 +187,33 @@ public class CreateFacility extends AppCompatActivity {
                     new_facility.setContactInfo(test_3);
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);
+                    new_facility.setDeviceId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    new_facility.setId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
                     UserProfile userProfile = new UserProfile(test_6, test_7, test_3); // Example user profile
                     ArrayList<Role> roles = new ArrayList<>();
                     roles.add(Role.ORGANIZER);
+                    userProfile.setFacility(new_facility);
+
+                    String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                    User new_user = new User(deviceId, roles, userProfile);
 
 
-                    user.setUserProfile(userProfile);
-                    user.setRoles(roles);
-
-
-                    CRUD.update(user, new UpdateCallback() {
+                    db = FirebaseFirestore.getInstance();
+                    userRef = db.collection("User");
+                    userRef.add(new_user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
-                        public void onUpdateSuccess() {
-                            new_facility.setOrganizerId(user.getDocumentId());
-                            CRUD.create(new_facility, new CreateCallback() {
-                                @Override
-                                public void onCreateSuccess() {
-                                    Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
-                                    Intent resultIntent = new Intent();
-                                    resultIntent.putExtra("User", user);
-                                    resultIntent.putExtra("Facility", new_facility);
-                                    setResult(RESULT_OK, resultIntent);
-                                    finish();
-                                }
-                                @Override
-                                public void onCreateFailure(Exception e) {
-                                    Toast.makeText(CreateFacility.this, "Error creating facility Created!", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
+                        public void onSuccess(DocumentReference documentReference) {
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("User", new_user);
+                            resultIntent.putExtra("Facility", new_facility);
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
                         }
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onUpdateFailure(Exception e) {
-                            Toast.makeText(CreateFacility.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
                         }
                     });
 

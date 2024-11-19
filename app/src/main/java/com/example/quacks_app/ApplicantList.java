@@ -8,6 +8,8 @@ This object represents the list of applicants belonging to each activity
 we use this instead of an ArrayList to give us control like setting limits, and drawing applicants
 randomly
  */
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Represents a list of applicants with functionality to manage and retrieve applicant information.
@@ -59,7 +61,7 @@ public class ApplicantList extends RepoModel implements Serializable {
     public void setApplicants(ArrayList<User> applicants) {
         applicantIds = new ArrayList<>();
         for (User user : applicants) {
-            applicantIds.add(user.getDocumentId());
+            applicantIds.add(user.getId());
         }
     }
 
@@ -69,7 +71,7 @@ public class ApplicantList extends RepoModel implements Serializable {
      * @param user The {@code User} object to be added.
      */
     public void addUser(User user) {
-        this.applicantIds.add(user.getDocumentId());
+        this.applicantIds.add(user.getId());
     }
 
     /**
@@ -87,7 +89,7 @@ public class ApplicantList extends RepoModel implements Serializable {
      * @param user The {@code User} object to be removed.
      */
     public void removeUser(User user) {
-        this.applicantIds.remove(user.getDocumentId());
+        this.applicantIds.remove(user.getId());
     }
 
     /**

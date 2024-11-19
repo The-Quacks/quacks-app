@@ -1,18 +1,22 @@
 package com.example.quacks_app;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
     private Date dateTime;
     private String description;
-    private String qrCodePath;
+    private Bitmap QRCode;
     private String applicantList;
-    private String facilityId;
+    private Facility facility;
     private String organizerId;
     private String QRCodeHash;
+    private String eventId;
 
-    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
+    public Event(Date dateTime, String description, ApplicantList applicantList, Facility facility, String organizerId) {
         // placeholder
     }
 
@@ -58,6 +62,24 @@ public class Event extends RepoModel implements Serializable {
     }
 
     /**
+     * Retrieves the QR code bitmap associated with the event.
+     *
+     * @return An {@code bitmap} object representing the event's QR code.
+     */
+    public Bitmap getQRCode() {
+        return QRCode;
+    }
+
+    /**
+     * Sets the QR code bitmap for the event.
+     *
+     * @param QRCode A {@code Bitmap} object representing the event's QR code.
+     */
+    public void setQRCode(Bitmap QRCode) {
+        this.QRCode = QRCode;
+    }
+
+    /**
      * Retrieves the applicant list identifier for the event.
      *
      * @return A {@code String} representing the applicant list identifier.
@@ -76,21 +98,21 @@ public class Event extends RepoModel implements Serializable {
     }
 
     /**
-     * Retrieves the facility identifier for the event.
+     * Retrieves the facility associated with the event.
      *
-     * @return A {@code Facility} object representing the facility's identifier.
+     * @return A {@code Facility} object representing the event's facility.
      */
-    public String getFacility() {
-        return facilityId;
+    public Facility getFacility() {
+        return facility;
     }
 
     /**
-     * Sets the facility identifier for the event.
+     * Sets the facility for the event.
      *
-     * @param facilityId A {@code String} representing the facility's identifier.
+     * @param facility A {@code Facility} object representing the event's facility.
      */
-    public void setFacility(String facilityId) {
-        this.facilityId = facilityId;
+    public void setFacility(Facility facility) {
+        this.facility = facility;
     }
 
     /**
@@ -127,15 +149,11 @@ public class Event extends RepoModel implements Serializable {
         return "";
     }
 
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public String getEventId() {
-        return super.getDocumentId();
-    }
-
-    public String getQrCodePath() {
-        return qrCodePath;
-    }
-
-    public void setQrCodePath(String qrCodePath) {
-        this.qrCodePath = qrCodePath;
+        return super.getId();
     }
 }

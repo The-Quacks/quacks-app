@@ -8,16 +8,21 @@ public class UserProfile implements Serializable {
     private String userName;
     private String email;
     private String phoneNumber;
-    private String profilePicturePath;
+    private Facility facility;
+    private ArrayList<Event> successful_events;
+    private String profilePictureUrl;
 
     // Required empty constructor for Firebase
-    public UserProfile() {}
+    public UserProfile() {
+        this.successful_events = new ArrayList<>(); // Initialize the list to avoid null pointer exceptions
+    }
 
     // Constructor without the event list
     public UserProfile(String userName, String email, String phoneNumber) {
         this.userName = userName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.successful_events = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -45,11 +50,29 @@ public class UserProfile implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getProfilePicturePath() {
-        return profilePicturePath;
+    public Facility getFacility() {
+        return facility;
     }
 
-    public void setProfilePicturePath(String profilePicturePath) {
-        this.profilePicturePath = profilePicturePath;
+    public void setFacility(Facility facility) {
+        this.facility = facility;
+    }
+
+    public void setNotification(Event eventId){
+        if (eventId != null){
+            successful_events.add(eventId);
+        }
+    }
+
+    public ArrayList<Event> getNotifications(){
+        return this.successful_events;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

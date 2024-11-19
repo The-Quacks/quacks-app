@@ -7,13 +7,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.lang.ref.Reference;
 
 public class OpenRegistration  extends AppCompatActivity {
     private Button back;
     private Button confirm;
     private EditText capacity;
     private Event event;
+    private FirebaseFirestore db;
+    private CollectionReference applicantRef;
     private int flagger = 0;
 
     /*
@@ -59,32 +71,22 @@ public class OpenRegistration  extends AppCompatActivity {
                 if (flagger == 0) {
                     capacity.setText(value);
 
+
+                    db = FirebaseFirestore.getInstance();
+
+                    applicantRef = db.collection("ApplicantList");
+
                     ApplicantList app = new ApplicantList();
 
                     app.setLimit(parsedValue);
-                    CRUD.create(app, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-                            event.setApplicantList(app.getDocumentId());
-                            CRUD.update(event, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(OpenRegistration.this, OrganizerHomepage.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(OpenRegistration.this, "Failed to update event.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
 
-                        }
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(OpenRegistration.this, "Failed to open registration.", Toast.LENGTH_SHORT).show();
-                        }
+                    applicantRef.add(app).addOnSuccessListener(documentReference -> {
+                        Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(OpenRegistration.this, OrganizerHomepage.class);
+                        startActivity(intent);
+                        finish();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(OpenRegistration.this, "Failed to open registration.", Toast.LENGTH_SHORT).show();
                     });
 
                 } else {

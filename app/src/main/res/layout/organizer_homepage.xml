@@ -11,14 +11,6 @@
     android:visibility="visible"
     tools:context=".OrganizerHomepage">
 
-    <ImageButton
-        android:id="@+id/switch_activity_organizer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/icons8_switch_50" />
-
     <TextView
         android:id="@+id/titlea"
         android:layout_width="wrap_content"

@@ -25,8 +25,7 @@ import java.util.Map;
 public class EventDescription extends AppCompatActivity {
     private String userId;
     private String applicantListId;
-
-    private User currentUser;
+    private ApplicantList applicantList = new ApplicantList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,7 @@ public class EventDescription extends AppCompatActivity {
         setContentView(R.layout.event_description);
 
         String id = getIntent().getStringExtra("id");
+        CRUD<Event> eventCrud = new CRUD<>(Event.class);
         ReadCallback<Event> readEventCallback = new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
@@ -51,7 +51,7 @@ public class EventDescription extends AppCompatActivity {
             }
         };
 
-        CRUD.readStatic(id, Event.class, readEventCallback);
+        eventCrud.readStatic(id, readEventCallback);
 
         ImageButton back = findViewById(R.id.backButton);
         ImageButton home = findViewById(R.id.homeIcon);
@@ -68,49 +68,25 @@ public class EventDescription extends AppCompatActivity {
 
         joinWaitlist.setOnClickListener(v -> {
             // **This code needs a LOT of refactoring**
-                Map<String, Object> user = new HashMap<>();
+
+
+            if (!EntrantHome.hasProfile) {
+                Toast.makeText(this, "Please create a profile", Toast.LENGTH_SHORT).show();
+                Intent createProfile = new Intent(this, CreateEntrantProfile.class);
+                startActivity(createProfile);
+            } else {
+                Map<String, String> user = new HashMap<>();
                 user.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                CRUD.readQueryStatic(user, User.class, new ReadMultipleCallback<User>() {
+
+                ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
                     @Override
                     public void onReadMultipleSuccess(ArrayList<User> data) {
-                        for (User u : data) {
-                            if (u.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
-                                userId = u.getDocumentId();
-                                currentUser = u;
+                        for (User user : data) {
+                            if (user.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
+                                userId = user.getId();
                                 Log.d("User ID", userId);
+                                return;
                             }
-                        }
-                        if (userId != null) {
-                            ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
-                                @Override
-                                public void onReadSuccess(ApplicantList data) {
-                                    data.addUser(userId);
-                                    CRUD.update(data, new UpdateCallback() {
-                                        @Override
-                                        public void onUpdateSuccess() {
-                                            Toast.makeText(EventDescription.this, "Successfully joined waitlist", Toast.LENGTH_LONG).show();
-                                            Intent intent = new Intent(EventDescription.this, EntrantHome.class);
-                                            intent.putExtra("User", currentUser);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-
-                                        @Override
-                                        public void onUpdateFailure(Exception e) {
-                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onReadFailure(Exception e) {
-                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                }
-                            };
-                            CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
-                        }
-                        else {
-                            Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -118,7 +94,44 @@ public class EventDescription extends AppCompatActivity {
                     public void onReadMultipleFailure(Exception e) {
                         Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
                     }
-                });
+                };
+
+                CRUD<User> getUserId = new CRUD<>(User.class);
+                getUserId.readQueryStatic(user, readMultipleCallback);
+
+
+                UpdateCallback updateCallback = new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        Toast.makeText(EventDescription.this, "Successfully joined waitlist", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                CRUD<ApplicantList> applicantListCrud = new CRUD<>(ApplicantList.class);
+
+                ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList data) {
+                        ArrayList<String> applicantIds = data.getApplicantIds();
+                        applicantList.setApplicantIds(applicantIds);
+                        applicantList.addUser(userId);
+                        applicantListCrud.update(applicantListId, applicantList, updateCallback);
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                    }
+                };
+                applicantListCrud.readStatic(applicantListId, readAppListCallback);
+            }
         });
     }
 

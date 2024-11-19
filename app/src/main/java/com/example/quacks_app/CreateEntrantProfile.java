@@ -20,14 +20,10 @@ import java.util.ArrayList;
  */
 
 public class CreateEntrantProfile extends AppCompatActivity {
-    private User user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_entrant_profile);
-
-        user = (User) getIntent().getSerializableExtra("User");
 
         Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(v -> {
@@ -63,21 +59,24 @@ public class CreateEntrantProfile extends AppCompatActivity {
             UserProfile newProfile = new UserProfile(name.getText().toString(), email.getText().toString(), phoneNumber.getText().toString());
 
             String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            user.setUserProfile(newProfile);
+            ArrayList<Role> roles = new ArrayList<>();
+            roles.add(Role.ENTRANT);
+            User newUser = new User(mId, roles, newProfile);
 
-            UpdateCallback updateCallback = new UpdateCallback() {
+            CRUD<User> crud = new CRUD<>(User.class);
+            CreateCallback createCallback = new CreateCallback() {
                 @Override
-                public void onUpdateSuccess() {
+                public void onCreateSuccess() {
                     EntrantHome.hasProfile = true;
                     finish();
                 }
 
                 @Override
-                public void onUpdateFailure(Exception e) {
+                public void onCreateFailure(Exception e) {
                     Toast.makeText(CreateEntrantProfile.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                 }
             };
-            CRUD.update(user, updateCallback);
+            crud.create(newUser, createCallback);
         });
     }
 }
