@@ -34,6 +34,7 @@ public class PickApplicant extends AppCompatActivity {
     private ArrayList<Cartable> userList;
     private ArrayList<User> real_user;
     private ApplicantArrayAdapter applicantArrayAdapter;
+    private FirebaseFirestore db;
     private Button select;
     private ImageButton homepage;
     private ImageButton search;
@@ -70,46 +71,45 @@ public class PickApplicant extends AppCompatActivity {
         }
 
         String applicantListId = event.getApplicantList();
+        db = FirebaseFirestore.getInstance();
 
         // Load the applicants
-        CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
-            @Override
-            public void onReadSuccess(ApplicantList applicantList) {
-                if (applicantList != null) {
+        DocumentReference docRef = db.collection("ApplicantList").document(applicantListId);
+        docRef.get().addOnCompleteListener(task -> {
 
-                    userList.clear();
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
 
-                    for (String applicantId : applicantList.getApplicantIds()) {
+                if (document.exists()) {
+                    ApplicantList applicantList = document.toObject(ApplicantList.class);
 
-                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
-                            @Override
-                            public void onReadSuccess(User user) {
-                                if (user != null) {
-                                    real_user.add(user);
-                                    UserProfile profile = user.getUserProfile();
-                                    userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
-                                    userList.add(userdisplay);
-                                    applicantList.removeUser(user);
-                                }
-                                applicantArrayAdapter.notifyDataSetChanged();
+                    if (applicantList != null) {
 
-                            }
+                        userList.clear();
 
-                            @Override
-                            public void onReadFailure(Exception e) {
-                                Toast.makeText(PickApplicant.this, "Failed to load users", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        for (String applicantId : applicantList.getApplicantIds()) {
+
+                            db.collection("User").document(applicantId).get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        User user = documentSnapshot.toObject(User.class);
+                                        if (user != null) {
+                                            real_user.add(user);
+                                            UserProfile profile = user.getUserProfile();
+                                            userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
+                                            userList.add(userdisplay);
+                                            applicantList.removeUser(user);
+                                        }
+                                        applicantArrayAdapter.notifyDataSetChanged();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(PickApplicant.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(PickApplicant.this, "No applicant list found", Toast.LENGTH_SHORT).show();
                 }
-
-            }
-
-            @Override
-            public void onReadFailure(Exception e) {
+            } else {
                 Toast.makeText(PickApplicant.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
             }
         });
@@ -130,6 +130,7 @@ public class PickApplicant extends AppCompatActivity {
 
             }
         });
+
 
         select.setOnClickListener(new View.OnClickListener() {
             @Override

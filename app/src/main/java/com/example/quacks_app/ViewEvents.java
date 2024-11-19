@@ -17,27 +17,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ViewEvents extends AppCompatActivity {
     private ImageButton homepage;
     private ImageButton profile;
     private ImageButton search;
     private Facility facility;
+
+    private FirebaseFirestore db;
+    private CollectionReference eventsRef;
+
+
     private ListView eventList;
     private ArrayList<Event> eventDataList;
     private EventArrayAdapter eventArrayAdapter;
     private ArrayList<Listable> dataList;
     private EventList evented;
-    private User user;
-    private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,8 @@ public class ViewEvents extends AppCompatActivity {
 
 
         dataList = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("Event");
         evented = (EventList) getIntent().getSerializableExtra("EventList");
         if (evented == null){
            finish();
@@ -56,29 +58,28 @@ public class ViewEvents extends AppCompatActivity {
         }
 
         facility = (Facility) getIntent().getSerializableExtra("Facility");
-        user = (User) getIntent().getSerializableExtra("User");
 
         eventList = findViewById(R.id.event_list);
 
         eventDataList = new ArrayList<>();
-        eventArrayAdapter = new EventArrayAdapter(this, eventDataList, facility);
+        eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
         eventList.setAdapter(eventArrayAdapter);
 
-        Map<String, Object> query = new HashMap<>();
-        query.put("organizerId", user.getDocumentId());
-        listenerRegistration = CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
-            @Override
-            public void onReadMultipleSuccess(ArrayList<Event> data) {
-                eventDataList.clear();
-                eventDataList.addAll(data);
-                eventArrayAdapter.notifyDataSetChanged();
+        eventsRef.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Toast.makeText(ViewEvents.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            @Override
-            public void onReadMultipleFailure(Exception e) {
-                Toast.makeText(ViewEvents.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
+            eventDataList.clear();
+            for (DocumentSnapshot document : queryDocumentSnapshots) {
+                Event event = document.toObject(Event.class);
+                eventDataList.add(event);
             }
+            eventArrayAdapter.notifyDataSetChanged();
         });
+
+
 
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,9 +93,6 @@ public class ViewEvents extends AppCompatActivity {
                 }
                 if (facility != null){
                     intent.putExtra("Facility", facility);
-                }
-                if (user != null) {
-                    intent.putExtra("User", user);
                 }
                 startActivity(intent);
             }
@@ -110,8 +108,6 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, OrganizerHomepage.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });
@@ -120,8 +116,6 @@ public class ViewEvents extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewEvents.this, ViewOrganizer.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });

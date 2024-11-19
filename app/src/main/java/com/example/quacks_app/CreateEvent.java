@@ -46,7 +46,6 @@ public class CreateEvent extends AppCompatActivity {
     private EditText geolocation;
     private EditText description;
     private Facility facility;
-    private User user;
     private Button back;
     private Button confirm;
     private Event event;
@@ -62,6 +61,7 @@ public class CreateEvent extends AppCompatActivity {
     private int test_eight = 0;
     private int wrong = 0;
     private FirebaseFirestore db;
+    private CollectionReference eventsRef;
     private EventList eventList;
 
 
@@ -81,9 +81,9 @@ public class CreateEvent extends AppCompatActivity {
             finish();
         }
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
-        user = (User) getIntent().getSerializableExtra("User");
 
-
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("Event");
 
         //Then we set them like in create profile
 
@@ -202,9 +202,12 @@ public class CreateEvent extends AppCompatActivity {
                     //event.setStartDateTime(start_date);
                     //event.setInstructor(name);
                    // event.setGeolocation(geo);
+                    event.setQRCode(null);
                     event.setDescription(text);
-                    event.setOrganizerId(user.getDocumentId());
-                    event.setFacility(facility.getDocumentId());
+                    event.setOrganizerId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    event.setEventId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    event.setApplicantList(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                    event.setFacility(facility);
 
                     if (eventList != null){
                         eventList.addEvent(event);
@@ -212,22 +215,14 @@ public class CreateEvent extends AppCompatActivity {
 
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
-                    CRUD.create(event, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-                            Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
-                            intent.putExtra("EventList", eventList);
-                            intent.putExtra("User", user);
-                            intent.putExtra("Facility", facility);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
-                        }
+                    eventsRef.add(event).addOnSuccessListener(documentReference -> {
+                        Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
+                        intent.putExtra("EventList", eventList);
+                        startActivity(intent);
+                        finish();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
                     });
 
                 }else{

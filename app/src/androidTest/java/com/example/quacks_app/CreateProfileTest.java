@@ -11,54 +11,17 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-
 @RunWith(AndroidJUnit4.class)
 public class CreateProfileTest {
     @Rule
-    public ActivityScenarioRule<WelcomeEntrant> activityRule = new ActivityScenarioRule<>(WelcomeEntrant.class);
-
-    @BeforeClass
-    public static void setup() {
-        // Set the system property to indicate to CRUD to use test db
-        System.setProperty("junit.test", "true");
-    }
-
-    @AfterClass
-    public static void tearDown() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        CRUD.clearColection(User.class, new DeleteCallback() {
-            @Override
-            public void onDeleteSuccess() {
-                latch.countDown();
-            }
-
-            @Override
-            public void onDeleteFailure(Exception e) {
-                latch.countDown();
-            }
-        });
-
-        // Block until async tasks are completed
-        latch.await();
-    }
-
+    public ActivityScenarioRule<EntrantHome> activityRule = new ActivityScenarioRule<>(EntrantHome.class);
 
     @Test
     public void testCreateProfile() {
-        // wait for user data to be fetched from database
-        sleep(1000);
-        // Click on entrant home button
-        onView(withId(R.id.welcome_home)).perform(click());
-
-        sleep(1000);
         // Click on profile button
         onView(withId(R.id.profileButton)).perform(click());
 
@@ -73,13 +36,12 @@ public class CreateProfileTest {
         // Click on save button
         onView(withId(R.id.save)).perform(click());
 
+        sleep(1000);
         // Check if EntrantHome activity is displayed
         onView(withId(R.id.profileButton)).check(matches(isDisplayed()));
-        sleep(1000);
 
-        // Check that clicking profile button goes to profile activity
+        // Check that clicking profile button does nothing
         onView(withId(R.id.profileButton)).perform(click());
-        sleep(1000);
-        onView(withId(R.id.profileHeaderText)).check(matches(isDisplayed()));
+        onView(withId(R.id.welcomeTitleEntrant)).check(matches(isDisplayed()));
     }
 }

@@ -35,7 +35,6 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.google.zxing:javase:3.5.1")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
