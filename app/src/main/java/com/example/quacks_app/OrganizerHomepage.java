@@ -27,6 +27,7 @@ public class OrganizerHomepage extends AppCompatActivity {
     private Button view_events;
     private Button create_events;
     private Button entrant_map;
+    private ImageButton switch_activity;
     private Facility facility;
     private User current;
     private EventList eventList;
@@ -48,24 +49,45 @@ public class OrganizerHomepage extends AppCompatActivity {
         view_events = findViewById(R.id.view_events);
         create_events = findViewById(R.id.create_event);
         entrant_map = findViewById(R.id.map);
+        switch_activity = findViewById(R.id.switch_activity_organizer);
 
-        profile.setTag("false");
+        current = (User) getIntent().getSerializableExtra("User");
 
 
-        ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
+
+
+        switch_activity.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onReadMultipleSuccess(ArrayList<User> data) {
-                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                for (User user : data) {
-                    if (user.getDeviceId().equals(deviceId)) {
-                        current = user;
-                        if (user.getUserProfile() != null) {
-                            UserProfile temp = user.getUserProfile();
-                            facility = temp.getFacility();
-                        }
-                        profile.setTag("true");
+            public void onClick(View v) {
+                if (current.getRoles().contains(Role.ADMIN)) {
+                    Intent intent = new Intent(OrganizerHomepage.this, AdminHome.class);
+                    intent.putExtra("User", current);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(OrganizerHomepage.this, EntrantHome.class);
+                    intent.putExtra("User", current);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        ReadMultipleCallback<Facility> readMultipleCallback = new ReadMultipleCallback<Facility>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<Facility> data) {
+                for (Facility fac : data) {
+                    if (fac.getOrganizerId().equals(current.getDocumentId())) {
+                        facility = fac;
                         break;
                     }
+                }
+                if (facility == null) {
+                    profile.setTag("false");
+                }
+                else {
+                    profile.setTag("true");
                 }
             }
 
@@ -75,10 +97,9 @@ public class OrganizerHomepage extends AppCompatActivity {
             }
         };
 
-        Map<String, String> deviceId = new HashMap<>();
-        deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        CRUD<User> crud = new CRUD<>(User.class);
-        crud.readQueryStatic(deviceId, readMultipleCallback);
+        Map<String, Object> query = new HashMap<>();
+        query.put("organizerId", current.getDocumentId());
+        CRUD.readQueryStatic(query, Facility.class, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
             if (profile.getTag().equals("false")) {
@@ -106,8 +127,8 @@ public class OrganizerHomepage extends AppCompatActivity {
             startActivity(intent);
         });
 
-        entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
 
+        entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
 
     }
 

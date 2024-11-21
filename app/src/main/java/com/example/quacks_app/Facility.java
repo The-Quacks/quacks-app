@@ -1,6 +1,7 @@
 package com.example.quacks_app;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Facility extends RepoModel implements Serializable {
 
@@ -8,7 +9,9 @@ public class Facility extends RepoModel implements Serializable {
     private String name;
     private String phone;
     private String details;
-    private String deviceId;
+    private String organizerId;
+
+    private ArrayList<Event> successful_events;
 
     public String getLocation() {
         return location;
@@ -66,10 +69,22 @@ public class Facility extends RepoModel implements Serializable {
     public String getPhone(){
         return this.phone;
     }
-    public String getDiviceId(){
-        return this.deviceId;
+
+    public void setNotification(Event eventId){
+        if (eventId != null){
+            successful_events.add(eventId);
+        }
     }
-    public void setDeviceId(String d){
-        this.deviceId = d;
+
+    public String getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    public ArrayList<Event> getNotifications(){
+        return this.successful_events;
     }
 }

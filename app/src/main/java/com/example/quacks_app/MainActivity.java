@@ -1,6 +1,8 @@
 package com.example.quacks_app;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -20,23 +22,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        CRUD<Event> crud = new CRUD<>(Event.class);
-        Map<String, String> mapping = new HashMap<>();
-        mapping.put("organizerId", "EVhksR-xxD7aObuNKPsO-14");
-        crud.readQueryLive(mapping, new ReadMultipleCallback<Event>() {
-            @Override
-            public void onReadMultipleSuccess(ArrayList<Event> data) {
-                TextView textView = findViewById(R.id.text_sample);
-                if (!data.isEmpty()) {
-                    textView.setText(data.get(0).getDescription());
-                }
-            }
-
-            @Override
-            public void onReadMultipleFailure(Exception e) {
-
-            }
-        });
     }
 }

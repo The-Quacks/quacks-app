@@ -15,11 +15,13 @@ import java.util.ArrayList;
 public class EventArrayAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> events;
     private Context context;
+    private Facility facility;
 
-    public EventArrayAdapter(Context context,ArrayList<Event> events){
+    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility){
         super(context, 0, events);
         this.events = events;
         this.context = context;
+        this.facility = facility;
     }
 
     @NonNull
@@ -40,7 +42,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         eventName.setText(event.getDateTime().toString());
         date.setText(event.getDescription());
-        instructor.setText(event.getFacility().getName());
+        instructor.setText(facility.getName());
 
         return view;
     }
