@@ -78,7 +78,7 @@ public class CreateEvent extends AppCompatActivity {
             finish();
         }
         facility = (Facility) getIntent().getSerializableExtra("Facility");
-        if (getIntent().getSerializableExtra("EventList")==null){
+        if (getIntent().getSerializableExtra("EventList") == null){
             finish();
         }
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
@@ -99,8 +99,6 @@ public class CreateEvent extends AppCompatActivity {
         description = findViewById(R.id.description);
 
 
-
-
         //buttons
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,66 +110,57 @@ public class CreateEvent extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                try{
+                try {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                    String startdate = beginning.getText().toString().trim();
-                    String enddate = end.getText().toString().trim();
+                    String startDateString = beginning.getText().toString().trim();
+                    String endDateString = end.getText().toString().trim();
                     LocalDate current_date = LocalDate.now();
 
-                    LocalDate startDate = LocalDate.parse(startdate, formatter);
-                    LocalDate endDate = LocalDate.parse(enddate, formatter);
+                    LocalDate startDate = LocalDate.parse(startDateString, formatter);
+                    LocalDate endDate = LocalDate.parse(endDateString, formatter);
                     start_date = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                     end_date = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-                    if (current_date.isBefore(startDate) && startDate.isBefore(endDate)){
+                    if (current_date.isBefore(startDate) && startDate.isBefore(endDate)) {
                         test_one = 1;
                         test_two = 1;
 
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
                 }
-
-
-
 
                 int classes = 0;
                 try {
                     classes = Integer.parseInt(class_capacity.getText().toString());
-
-
                 } catch(Exception e){
                     wrong = 1;
                     Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
                 }
 
-                if (wrong == 1){
+                if (wrong == 1) {
                     wrong = 0;
-                }else{
+                } else{
                     test_three = 1;
                     //Toast.makeText(CreateEvent.this, "3 passed", Toast.LENGTH_SHORT).show();
                 }
                 int classes_two = 0;
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
-
-                }catch(Exception e){
+                } catch(Exception e) {
                     wrong = 1;
                     Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
                 }
-
-                if (wrong != 1){
+                if (wrong != 1) {
                     test_five = 1;
                     //Toast.makeText(CreateEvent.this, "5 passed", Toast.LENGTH_SHORT).show();
                 }
 
                 String name = instructor.getText().toString();
-                if (name.length() >=1 && name.length() <= 40 ){
+                if (name.length() >= 1 && name.length() <= 40 ) {
                     test_six = 1;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(CreateEvent.this, "Error Instructor length needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
                 }
 
@@ -185,10 +174,10 @@ public class CreateEvent extends AppCompatActivity {
 
 
                 String eventname = event_name.getText().toString();
-                if (eventname.length() <= 40){
+                if (eventname.length() <= 40) {
                     test_eight = 1;
                     //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(CreateEvent.this, "Event Name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
                 }
                 String text = description.getText().toString();
@@ -204,7 +193,7 @@ public class CreateEvent extends AppCompatActivity {
                     event.setOrganizerId(user.getDocumentId());
                     event.setFacility(facility.getDocumentId());
 
-                    if (eventList != null){
+                    if (eventList != null) {
                         eventList.addEvent(event);
                     }
 
@@ -249,7 +238,6 @@ public class CreateEvent extends AppCompatActivity {
                     intent.putExtra("Facility", facility);
                 }
                 startActivity(intent);
-
             }
         });
 
@@ -274,8 +262,5 @@ public class CreateEvent extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
-
 }
