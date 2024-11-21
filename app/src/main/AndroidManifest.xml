@@ -66,6 +66,9 @@
         <activity android:name=".ViewOrganizer"
             android:exported="true" />
 
+        <activity android:name=".MakeOrganizerProfile"
+            android:exported="true" />
+
         <activity android:name=".EventInfo"
             android:exported="true" />
 
