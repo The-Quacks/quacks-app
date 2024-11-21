@@ -3,8 +3,6 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,22 +13,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 /**
  * Create Event allows the organizer to create an event and store it in the DB
@@ -54,14 +42,10 @@ public class CreateEvent extends AppCompatActivity {
     private ImageButton search;
     private ImageButton profile;
     private ImageButton homepage;
-    private int test_one = 0;
-    private int test_two = 0;
-    private int test_three = 0;
-    private int test_five = 0;
-    private int test_six = 0;
-    private int test_seven = 0;
-    private int test_eight = 0;
-    private int wrong = 0;
+    private boolean validDate = false;
+    private boolean validInstructorName = false;
+    private boolean validEventName = false;
+    private boolean wrong = false;
     private FirebaseFirestore db;
     private EventList eventList;
 
@@ -122,8 +106,7 @@ public class CreateEvent extends AppCompatActivity {
                     end_date = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
                     if (current_date.isBefore(startDate) && startDate.isBefore(endDate)) {
-                        test_one = 1;
-                        test_two = 1;
+                        validDate = true;
 
                     }
                 } catch (Exception e) {
@@ -134,50 +117,43 @@ public class CreateEvent extends AppCompatActivity {
                 try {
                     classes = Integer.parseInt(class_capacity.getText().toString());
                 } catch(Exception e){
-                    wrong = 1;
+                    wrong = true;
                     Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
                 }
 
-                if (wrong == 1) {
-                    wrong = 0;
-                } else{
-                    test_three = 1;
-                    //Toast.makeText(CreateEvent.this, "3 passed", Toast.LENGTH_SHORT).show();
+                if (wrong) {
+                    wrong = false;
                 }
+
                 int classes_two = 0;
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
                 } catch(Exception e) {
-                    wrong = 1;
+                    wrong = true;
                     Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
-                }
-                if (wrong != 1) {
-                    test_five = 1;
-                    //Toast.makeText(CreateEvent.this, "5 passed", Toast.LENGTH_SHORT).show();
                 }
 
                 String name = instructor.getText().toString();
                 if (name.length() >= 1 && name.length() <= 40 ) {
-                    test_six = 1;
+                    validInstructorName = true;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CreateEvent.this, "Error Instructor length needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
                 }
 
                 boolean geo = geolocation.isChecked();
-                test_seven = 1;
 
 
                 String eventname = event_name.getText().toString();
                 if (eventname.length() <= 40) {
-                    test_eight = 1;
+                    validEventName = true;
                     //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CreateEvent.this, "Event Name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "Event name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
                 }
                 String text = description.getText().toString();
 
-                if (test_one == 1 && test_two == 1 && test_three == 1 && test_five == 1 && test_six == 1 && test_seven == 1 && test_eight == 1) {
+                if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
                     event.setDateTime(start_date);
                     event.setEventName(eventname);
