@@ -42,10 +42,10 @@ public class ProfileActivityTest {
         onView(withId(R.id.profilesButton)).perform(click());
 
         // Verify that ProfileActivity is launched
-        Intents.intended(IntentMatchers.hasComponent(ProfileActivity.class.getName()));
+        Intents.intended(IntentMatchers.hasComponent(AdminListView.class.getName()));
 
         // Check if a view from ProfileActivity is displayed
-        onView(withId(R.id.profilePicture)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(withId(R.id.listViewType)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         // Close the scenario
         scenario.close();

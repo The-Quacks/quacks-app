@@ -3,6 +3,7 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,40 +36,45 @@ public class EntrantHome extends AppCompatActivity {
         setContentView(R.layout.entrant_home);
         EdgeToEdge.enable(this);
 
+        user = (User) getIntent().getSerializableExtra("User");
+        if (user.getUserProfile() != null) {
+            hasProfile = true;
+        }
+
         ImageButton profile = findViewById(R.id.profileButton);
         ImageButton waitlist = findViewById(R.id.waitlistButton);
         ImageButton notifications = findViewById(R.id.notificationsButton);
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
+        ImageButton switch_activity = findViewById(R.id.switch_activity_entrant);
 
-        ReadMultipleCallback<User> readMultipleCallback = new ReadMultipleCallback<User>() {
+        switch_activity.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onReadMultipleSuccess(ArrayList<User> data) {
-                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                for (User user : data) {
-                    if (user.getDeviceId().equals(deviceId)) {
-                        hasProfile = true;
-                        break;
-                    }
+            public void onClick(View v) {
+                if (user.getRoles().contains(Role.ORGANIZER)) {
+                    Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (user.getRoles().contains(Role.ADMIN)) {
+                    Intent intent = new Intent(EntrantHome.this, AdminHome.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
                 }
             }
+        });
 
-            @Override
-            public void onReadMultipleFailure(Exception e) {
-                Toast.makeText(EntrantHome.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        Map<String, String> deviceId = new HashMap<>();
-        deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        CRUD<User> checkUserProfile = new CRUD<>(User.class);
-        checkUserProfile.readQueryStatic(deviceId, readMultipleCallback);
 
         profile.setOnClickListener(view -> {
             if (!hasProfile) {
-                startActivity(new Intent(EntrantHome.this, CreateEntrantProfile.class));
+                Intent intent = new Intent(EntrantHome.this, CreateEntrantProfile.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
             } else {
-                Toast.makeText(EntrantHome.this, "Go to profile activity", Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(EntrantHome.this, EntrantProfile.class));
+                Intent intent = new Intent(EntrantHome.this, ProfileActivity.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
             }
         });
 

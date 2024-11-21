@@ -50,7 +50,7 @@ public class EventList extends RepoModel implements Serializable {
      * @param event The {@code Event} object to be added.
      */
     public void addEvent(Event event) {
-        this.eventIds.add(event.getId());
+        this.eventIds.add(event.getDocumentId());
     }
 
     /**
@@ -68,7 +68,7 @@ public class EventList extends RepoModel implements Serializable {
      * @param event The {@code Event} object to be removed.
      */
     public void removeEvent(Event event) {
-        this.eventIds.remove(event.getId());
+        this.eventIds.remove(event.getDocumentId());
     }
 
     /**
@@ -88,7 +88,7 @@ public class EventList extends RepoModel implements Serializable {
     public void setEvents(ArrayList<Event> events) {
         eventIds = new ArrayList<>();
         for (Event event : events) {
-            eventIds.add(event.getId());
+            eventIds.add(event.getDocumentId());
         }
     }
 }

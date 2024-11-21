@@ -33,7 +33,6 @@ public class SelectAtRandom extends AppCompatActivity {
     private EditText capacity;
     private Button back;
     private Button confirm;
-    private FirebaseFirestore db;
     private ArrayList<String> Tracker;
 
     @Override
@@ -41,7 +40,6 @@ public class SelectAtRandom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selected_random_applicants);
 
-        db = FirebaseFirestore.getInstance();
         Tracker = new ArrayList<>();
         capacity = findViewById(R.id.amount);
         back = findViewById(R.id.back_button);
@@ -56,8 +54,6 @@ public class SelectAtRandom extends AppCompatActivity {
             Toast.makeText(SelectAtRandom.this, "Error loading applicant list ID", Toast.LENGTH_SHORT).show();
             finish();
         }
-        db = FirebaseFirestore.getInstance();
-
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,79 +72,69 @@ public class SelectAtRandom extends AppCompatActivity {
                     return;
                 }
 
-                DocumentReference docRef = db.collection("ApplicantList").document(applicantListId);
+                CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList applicantList) {
 
-                docRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-
-                        if (document.exists()) {
-                            ApplicantList applicantList = document.toObject(ApplicantList.class);
-
-                            if (applicantList != null) {
-                                int limit;
-                                try {
-                                    limit = Integer.parseInt(capacity.getText().toString());
-                                    if (limit <= 0 || limit > applicantList.getApplicantIds().size()) {
-                                        Toast.makeText(SelectAtRandom.this, "Invalid number of applicants", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                } catch (NumberFormatException e) {
-                                    Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
+                        if (applicantList != null) {
+                            int limit;
+                            try {
+                                limit = Integer.parseInt(capacity.getText().toString());
+                                if (limit <= 0 || limit > applicantList.getApplicantIds().size()) {
+                                    Toast.makeText(SelectAtRandom.this, "Invalid number of applicants", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                                List<String> ids = applicantList.getApplicantIds().subList(0, limit);
-                                int counter = 0;
-                                for (String applicantId : ids) {
-                                    db.collection("User").document(applicantId).get()
-                                            .addOnSuccessListener(documentSnapshot -> {
-                                                if (documentSnapshot.exists()) {
-                                                    User user = documentSnapshot.toObject(User.class);
-                                                    if (user != null) {
-                                                        UserProfile profile = user.getUserProfile();
-                                                        Notification notify = new Notification(user.getDeviceId());
-                                                        notify.setNotification(event);
-                                                        applicantList.removeUser(user);
+                            List<String> ids = applicantList.getApplicantIds().subList(0, limit);
+                            int counter = 0;
+                            for (String applicantId : ids) {
+                                CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
+                                    @Override
+                                    public void onReadSuccess(User user) {
+                                        if (user != null) {
+                                            UserProfile profile = user.getUserProfile();
+                                            Notification notify = new Notification(user.getDeviceId());
+                                            notify.setNotification(event);
+                                            applicantList.removeUser(user);
 
-                                                    }
-                                                }
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
-                                            });
-                                            Tracker.add("1");
-                                }
-                                if (!Tracker.isEmpty()){
-                                    Toast.makeText(SelectAtRandom.this, "Users Notified.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SelectAtRandom.this, OrganizerHomepage.class);
-                                    intent.putExtra("Event", event);
-                                    startActivity(intent);
+                                        }
 
-                                }else{
-                                    Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
+                                    }
 
+                                    @Override
+                                    public void onReadFailure(Exception e) {
+                                        Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                Tracker.add("1");
+                            }
+                            if (!Tracker.isEmpty()){
+                                Toast.makeText(SelectAtRandom.this, "Users Notified.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SelectAtRandom.this, OrganizerHomepage.class);
+                                intent.putExtra("Event", event);
+                                startActivity(intent);
 
-
-                            } else {
-                                Toast.makeText(SelectAtRandom.this, "Applicant list is empty.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
 
 
+
                         } else {
-                            Toast.makeText(SelectAtRandom.this, "Applicant list document does not exist.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SelectAtRandom.this, "Applicant list is empty.", Toast.LENGTH_SHORT).show();
                         }
 
-
-                    } else {
-                        Toast.makeText(SelectAtRandom.this, "Failed to retrieve applicant list.", Toast.LENGTH_SHORT).show();
                     }
 
-
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(SelectAtRandom.this, "Error retrieving applicant list.", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(SelectAtRandom.this, "Error retrieving applicant list.", Toast.LENGTH_SHORT).show();
+                    }
                 });
             }
         });

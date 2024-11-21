@@ -2,16 +2,18 @@ package com.example.quacks_app;
 
 import com.google.firebase.firestore.DocumentId;
 
-public abstract class RepoModel {
-    @DocumentId
-    private String id;
+import java.io.Serializable;
 
-    public String getId() {
-        return id;
+public abstract class RepoModel implements Serializable {
+    @DocumentId
+    private String documentId;
+
+    public String getDocumentId() {
+        return documentId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
 }
