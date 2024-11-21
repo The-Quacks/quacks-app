@@ -223,10 +223,11 @@ public class CreateEvent extends AppCompatActivity {
                                 @Override
                                 public void onUpdateSuccess() {
                                     Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
+                                    Intent intent = new Intent(CreateEvent.this, QRCodeGeneratorActivity.class);
                                     intent.putExtra("EventList", eventList);
                                     intent.putExtra("User", user);
                                     intent.putExtra("Facility", facility);
+                                    intent.putExtra("Event", event);
                                     startActivity(intent);
                                     finish();
                                 }
