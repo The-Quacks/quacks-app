@@ -79,19 +79,26 @@
             android:inputType = "text"
             android:hint ="Instructor Name"/>
         <EditText
-            android:id = "@+id/geolocation"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:ems="30"
-            android:inputType = "text"
-            android:hint ="Geolocation (Enabled/Disabled)"/>
-        <EditText
             android:id = "@+id/description"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
             android:inputType = "text"
             android:hint ="Description"/>
+
+        <CheckBox
+            android:id="@+id/geolocation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Enable Geolocation?"
+            app:centerIfNoTextEnabled="false" />
+<!--        <EditText-->
+<!--            android:id = "@+id/geolocation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:ems="30"-->
+<!--            android:inputType = "text"-->
+<!--            android:hint ="Geolocation (Enabled/Disabled)"/>-->
     </LinearLayout>
 
     <Button

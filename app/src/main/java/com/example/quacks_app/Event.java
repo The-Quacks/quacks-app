@@ -5,12 +5,14 @@ import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
     private Date dateTime;
+    private String eventName;
     private String description;
     private String qrCodePath;
     private String applicantList;
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private boolean geolocationRequired;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -37,6 +39,14 @@ public class Event extends RepoModel implements Serializable {
      */
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     /**
@@ -137,5 +147,13 @@ public class Event extends RepoModel implements Serializable {
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
+    }
+
+    public boolean getGeolocationRequired() {
+        return geolocationRequired;
+    }
+
+    public void setGeolocationRequired(boolean geolocationRequired) {
+        this.geolocationRequired = geolocationRequired;
     }
 }

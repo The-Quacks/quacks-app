@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class CreateEvent extends AppCompatActivity {
     private EditText beginning;
     private EditText end;
     private EditText instructor;
-    private EditText geolocation;
+    private CheckBox geolocation;
     private EditText description;
     private Facility facility;
     private User user;
@@ -174,14 +175,11 @@ public class CreateEvent extends AppCompatActivity {
                     Toast.makeText(CreateEvent.this, "Error Instructor length needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
                 }
 
-                String geo = geolocation.getText().toString();
-                if (geo.contains("Disabled")){
+                boolean geo = geolocation.isChecked();
+                if (!geo) {
                     test_seven = 1;
                     //Toast.makeText(CreateEvent.this, "7 passed", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(CreateEvent.this, "Geolocation has two options: Enabled/Disabled", Toast.LENGTH_SHORT).show();
-                }
-                if (geo.contains("Enabled")){
+                } else {
                     Toast.makeText(CreateEvent.this, "Enabled geolocation is not currently available.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -195,13 +193,13 @@ public class CreateEvent extends AppCompatActivity {
                 }
                 String text = description.getText().toString();
 
-                if (test_one == 1 && test_two == 1 && test_three == 1 && test_five == 1 && test_six == 1 && test_seven == 1&& test_eight == 1 ) {
-
+                if (test_one == 1 && test_two == 1 && test_three == 1 && test_five == 1 && test_six == 1 && test_seven == 1 && test_eight == 1) {
                     event = new Event();
                     event.setDateTime(start_date);
+                    event.setEventName(eventname);
                     //event.setStartDateTime(start_date);
                     //event.setInstructor(name);
-                   // event.setGeolocation(geo);
+                    event.setGeolocationRequired(geo);
                     event.setDescription(text);
                     event.setOrganizerId(user.getDocumentId());
                     event.setFacility(facility.getDocumentId());
@@ -230,7 +228,7 @@ public class CreateEvent extends AppCompatActivity {
                         }
                     });
 
-                }else{
+                } else {
                     Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
                 }
 
