@@ -70,7 +70,7 @@
         android:stateListAnimator="@null"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_51"
+        android:drawableTop = "@drawable/profile_icon_med"
         android:fadingEdge="horizontal"
         android:text="Open Registration"
         android:textSize = "15sp"
@@ -90,7 +90,7 @@
 
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_49"
+        android:drawableTop = "@drawable/email_icon_med"
         android:fadingEdge="horizontal"
         android:text="Close Registration and Notify"
         android:textSize ="15sp"
@@ -110,7 +110,7 @@
 
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_52"
+        android:drawableTop = "@drawable/create_event_resize"
         android:fadingEdge="horizontal"
         android:text="Delete Event"
         android:textSize = "18sp"
@@ -131,7 +131,7 @@
 
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_50"
+        android:drawableTop = "@drawable/entrant_map_resize"
         android:fadingEdge="horizontal"
         android:text="Entrant Map"
         android:textSize = "18sp"
@@ -174,7 +174,7 @@
             android:layout_height="48dp"
             android:background="@color/base"
             android:contentDescription="Button"
-            android:src = "@drawable/image_165"
+            android:src = "@drawable/profile_icon_tiny"
             android:layout_alignParentRight="true" />
 
     </RelativeLayout>

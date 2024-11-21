@@ -79,7 +79,7 @@
             android:layout_height="48dp"
             android:background="@color/background"
             android:contentDescription="Button"
-            android:src = "@drawable/image_165"
+            android:src = "@drawable/profile_icon_tiny"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
 

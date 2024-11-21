@@ -173,7 +173,7 @@
             android:background="@color/base"
             android:alpha = ".5"
             android:contentDescription="Button"
-            android:src = "@drawable/image_165"
+            android:src = "@drawable/profile_icon_tiny"
             android:layout_gravity = "end"
             android:layout_marginLeft="120dp"
             />
