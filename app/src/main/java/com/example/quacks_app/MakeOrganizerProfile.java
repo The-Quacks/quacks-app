@@ -34,7 +34,6 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
     private Facility new_facility;
     private User current;
     private UserProfile userProfile;
-    private int breaker = 0;
     private int round_one = 0;
     private int round_two = 0;
     private int round_three = 0;
@@ -105,7 +104,7 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
 
 
                 String test_2 = location.getText().toString();
-                if (test_2.length() <=0){
+                if (test_2.length() <= 0){
                     Toast.makeText(MakeOrganizerProfile.this, "Please enter a location", Toast.LENGTH_SHORT).show();
                 }
                 else{

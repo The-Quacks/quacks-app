@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/icons8_switch_50" />
+        app:srcCompat="@drawable/icons8_switch_50"
+        android:backgroundTint="@color/button" />
 
     <TextView
         android:id="@+id/titlea"
@@ -46,7 +47,7 @@
 
         android:layout_marginTop="75dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/image_193"
+        android:drawableTop = "@drawable/profile_icon_med"
         android:fadingEdge="horizontal"
         android:text="Organizer Profile"
         android:textSize = "18sp"
@@ -67,7 +68,7 @@
         android:focusable="true"
         android:layout_marginTop="75dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/event"
+        android:drawableTop = "@drawable/event_resize"
         android:fadingEdge="horizontal"
         android:text="View Events"
         android:textSize = "18sp"
@@ -88,7 +89,7 @@
         android:focusable="true"
         android:layout_marginTop="75dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/create"
+        android:drawableTop = "@drawable/create_event_resize"
         android:fadingEdge="horizontal"
         android:text="Create Event"
         android:textSize = "18sp"
@@ -110,7 +111,7 @@
         android:focusable="true"
         android:layout_marginTop="75dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/map"
+        android:drawableTop = "@drawable/entrant_map_resize"
         android:fadingEdge="horizontal"
         android:text="Entrant Map"
         android:textSize = "18sp"
