@@ -1,6 +1,7 @@
 package com.example.quacks_app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -215,13 +216,30 @@ public class CreateEvent extends AppCompatActivity {
                     CRUD.create(event, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
-                            Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
-                            intent.putExtra("EventList", eventList);
-                            intent.putExtra("User", user);
-                            intent.putExtra("Facility", facility);
-                            startActivity(intent);
-                            finish();
+                            Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 100, 100);
+                            String hash = QRCodeUtil.hash(qrcode);
+                            event.setQRCodeHash(hash);
+                            CRUD.update(event, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
+                                    intent.putExtra("EventList", eventList);
+                                    intent.putExtra("User", user);
+                                    intent.putExtra("Facility", facility);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+
+
                         }
 
                         @Override
