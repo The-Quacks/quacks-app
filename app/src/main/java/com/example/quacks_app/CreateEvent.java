@@ -165,12 +165,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
 
                 boolean geo = geolocation.isChecked();
-                if (!geo) {
-                    test_seven = 1;
-                    //Toast.makeText(CreateEvent.this, "7 passed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(CreateEvent.this, "Enabled geolocation is not currently available.", Toast.LENGTH_SHORT).show();
-                }
+                test_seven = 1;
 
 
                 String eventname = event_name.getText().toString();
