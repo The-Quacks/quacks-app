@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.barcode.scanning.common)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
+    implementation(libs.core)
     testImplementation(libs.junit)
     testImplementation(libs.espresso.core)
     testImplementation(libs.ext.junit)

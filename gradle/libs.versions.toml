@@ -11,6 +11,7 @@ runner = "1.6.1"
 barcodeScanningCommon = "17.0.0"
 firebaseStorage = "21.0.1"
 firebaseFirestore = "25.1.1"
+core = "1.6.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -24,6 +25,7 @@ runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 barcode-scanning-common = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref = "barcodeScanningCommon" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
