@@ -69,6 +69,12 @@
         <activity android:name=".MakeOrganizerProfile"
             android:exported="true" />
 
+        <activity android:name=".QRCodeGeneratorActivity"
+            android:exported="true" />
+
+        <activity android:name=".UploadPosterActivity"
+            android:exported="true" />
+
         <activity android:name=".EventInfo"
             android:exported="true" />
 
