@@ -48,13 +48,11 @@ public class EditEvent extends AppCompatActivity {
     private int test_eight = 0;
     private int wrong = 0;
     private FirebaseFirestore db;
-    private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
     private Event old_event;
     private int classes = 0;
     private int classes_two = 0;
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -67,22 +65,21 @@ public class EditEvent extends AppCompatActivity {
         confirm = findViewById(R.id.edit_confirm_button);
         upload_poster = findViewById(R.id.edit_upload_button);
 
-        //gets intents
-        if (getIntent().getSerializableExtra("Facility") == null) {
-            finish();
-        }
-        facility = (Facility) getIntent().getSerializableExtra("Facility");
-        if (getIntent().getSerializableExtra("EventList")==null){
-            finish();
-        }
         if (getIntent().getSerializableExtra("Event") == null){
             finish();
         }
         old_event = (Event) getIntent().getSerializableExtra("Event");
 
+        if (getIntent().getSerializableExtra("Facility") == null){
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
 
-        eventList = (EventList) getIntent().getSerializableExtra("EventList");
+        if (getIntent().getSerializableExtra("User") == null){
+            finish();
+        }
         user = (User) getIntent().getSerializableExtra("User");
+
 
         //Finding the right text box
         event_name = findViewById(R.id.editted_event_name);
@@ -96,31 +93,43 @@ public class EditEvent extends AppCompatActivity {
 
         //Setting the textboxes with old data
         event_name.setText(old_event.getEventName());
-        class_capacity.setText(old_event.getRegistrationCapacity());
-        waitlist_capacity.setText(old_event.getWaitlistCapacity());
-        beginning.setText(old_event.getDateTime().toString());
+        class_capacity.setText(String.valueOf(old_event.getRegistrationCapacity()));
+        waitlist_capacity.setText(String.valueOf(old_event.getWaitlistCapacity()));
         instructor.setText(old_event.getInstructor());
         geolocation.setText(old_event.getGeo());
         description.setText(old_event.getDescription());
 
-        //getting the event time
+        //getting the hour
         Date date = old_event.getDateTime();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
+        int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        String day_display = "";
+
+        day_display = String.format("%02d-%02d-%04d", day, month, year);
+        beginning.setText(day_display);
+
+
         int hours = calendar.get(Calendar.HOUR_OF_DAY); //24 hr format
         int minutes = calendar.get(Calendar.MINUTE);
         String display = "";
 
-        if (hours > 12){
+        if (hours > 12) {
             hours -= 12;
             display = String.format("%02d:%02dpm", hours, minutes);
 
-        }else{
+        } else {
             display = String.format("%02d:%02dpm", hours, minutes);
         }
         eventtime.setText(display);
+
+
+        //getting the event time
+
 
         //buttons
         upload_poster.setOnClickListener(new View.OnClickListener() {
@@ -278,20 +287,9 @@ public class EditEvent extends AppCompatActivity {
                             old_event.setFacility(facility.getDocumentId());
                             old_event.setRegistrationCapacity(classes);
                             old_event.setWaitlistCapacity(classes_two);
-                            CRUD.create(old_event, new CreateCallback() {
-                                @Override
-                                public void onCreateSuccess() {
-                                    Toast.makeText(EditEvent.this, "Event Created!", Toast.LENGTH_SHORT).show();
-                                    Intent resultIntent = new Intent();
-                                    resultIntent.putExtra("Event", old_event);
-                                    resultIntent.putExtra("Facility", facility);
-                                    setResult(RESULT_OK, resultIntent);
-                                    finish();
-                                }
-                                @Override
-                                public void onCreateFailure(Exception e) {
-                                }
-                            });
+                            Toast.makeText(EditEvent.this, "Event Successfully Updated!", Toast.LENGTH_SHORT).show();
+                            finish();
+
                         }
                         @Override
                         public void onUpdateFailure(Exception e) {
@@ -353,3 +351,4 @@ public class EditEvent extends AppCompatActivity {
     }
 
 }
+

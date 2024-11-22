@@ -130,7 +130,11 @@ public class EventInfo extends AppCompatActivity {
         entrant_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EventInfo.this, "Currently in the works", Toast.LENGTH_SHORT).show();
+                Intent intent  = new Intent(EventInfo.this, EditEvent.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", actual_facility);
+                startActivity(intent);
             }
         });
 

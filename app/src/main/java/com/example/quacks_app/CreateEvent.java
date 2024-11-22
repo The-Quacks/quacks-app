@@ -64,6 +64,7 @@ public class CreateEvent extends AppCompatActivity {
     private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
+    private Button upload_button;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -71,9 +72,11 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
-
+        // buttons
+        upload_button = findViewById(R.id.upload_button);
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
+
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
@@ -83,8 +86,6 @@ public class CreateEvent extends AppCompatActivity {
         }
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
-
-
 
         //Then we set them like in create profile
 
@@ -103,6 +104,12 @@ public class CreateEvent extends AppCompatActivity {
 
 
         //buttons
+        upload_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(CreateEvent.this, "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
