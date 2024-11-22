@@ -120,7 +120,7 @@ public class EventInfo extends AppCompatActivity {
         close_registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventInfo.this, NotifyOptions.class);
+                Intent intent = new Intent(EventInfo.this, ApplicantOptions.class);
                 intent.putExtra("Event", event);
                 startActivity(intent);
 

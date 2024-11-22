@@ -86,8 +86,12 @@
 
         <activity android:name=".PickApplicant"
             android:exported="true" />
+        <activity android:name=".ApplicantOptions"
+            android:exported="true" />
 
-
+        <activity android:name=".AllApplicants"
+            android:exported="true" />
+        
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

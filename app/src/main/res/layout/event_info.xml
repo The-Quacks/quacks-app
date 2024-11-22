@@ -228,7 +228,7 @@
         android:backgroundTint="@color/button"
         android:drawableTop = "@drawable/email_icon_med"
         android:fadingEdge="horizontal"
-        android:text="Close Registration and Notify"
+        android:text="Applicant Lists"
         android:textSize ="15sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
