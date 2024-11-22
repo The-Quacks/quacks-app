@@ -7,7 +7,7 @@
     android:background="@color/background"
     android:foregroundTint="#D5B4B4"
     android:visibility="visible"
-    tools:context=".QRCodeGenerator">
+    tools:context=".QRCodeGeneratorActivity">
 
     <TextView
         android:id="@+id/title"
@@ -15,13 +15,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Generating QR Code"
+        android:text="Generated QR Code"
         android:textColor="@color/text"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/code"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/code"/>
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id = "@+id/code"
         android:layout_width="match_parent"

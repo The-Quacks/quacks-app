@@ -7,7 +7,7 @@
     android:background="@color/background"
     android:foregroundTint="#D5B4B4"
     android:visibility="visible"
-    tools:context=".UploadPoster">
+    tools:context=".UploadPosterActivity">
 
     <TextView
         android:id="@+id/title"
@@ -21,9 +21,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/code"/>
+        app:layout_constraintBottom_toTopOf="@id/poster"/>
     <ImageView
-        android:id = "@+id/code"
+        android:id = "@+id/poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom = "100dp"
@@ -34,7 +34,7 @@
 
 
     <Button
-        android:id="@+id/next_button"
+        android:id="@+id/next_button_poster"
         android:layout_width="150dp"
         android:layout_height="79dp"
 

@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.barcode.scanning.common)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
+    implementation(libs.core)
     testImplementation(libs.junit)
     testImplementation(libs.espresso.core)
     testImplementation(libs.ext.junit)
@@ -55,6 +56,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.glide)
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
-    private String name;
+    private String eventName;
     private Date dateTime;
     private String description;
     private String qrCodePath;
@@ -14,8 +14,8 @@ public class Event extends RepoModel implements Serializable {
     private String QRCodeHash;
     private int waitlist_capacity;
     private int registration_capacity;
-    private String instructor;
-    private String geo;
+    private String instructorName;
+    private boolean geoRequired;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -29,37 +29,37 @@ public class Event extends RepoModel implements Serializable {
     /**
      * Set Geo Location
      */
-    public void setGeo(String decision){
-        this.geo = decision;
+    public void setGeo(boolean decision) {
+        this.geoRequired = decision;
     }
 
     /**
      * Gets the Geo Location
      * @ return String geo
      */
-    public String getGeo(){
-        return this.geo;
+    public boolean getGeo() {
+        return this.geoRequired;
     }
 
     /**
      * Sets the Instructor name
      */
-    public void setInstructor(String name){
-        this.instructor = name;
+    public void setInstructor(String name) {
+        this.instructorName = name;
     }
 
     /**
      * Gets the instructor name
      * @ return String name
      */
-    public String getInstructor(){
-        return this.instructor;
+    public String getInstructor() {
+        return this.instructorName;
     }
 
     /**
      * Sets the waitlist capacity for the event
      */
-    public void setWaitlistCapacity(int number){
+    public void setWaitlistCapacity(int number) {
         this.waitlist_capacity = number;
     }
 
@@ -91,14 +91,14 @@ public class Event extends RepoModel implements Serializable {
      * @ return none
      */
     public void setEventName(String Name){
-        this.name = Name;
+        this.eventName = Name;
     }
     /**
      * Gets the name of the event
      * @ return String name
      */
     public String getEventName(){
-        return this.name;
+        return this.eventName;
     }
 
     /**
