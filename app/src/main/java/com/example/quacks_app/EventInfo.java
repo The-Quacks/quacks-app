@@ -31,6 +31,12 @@ public class EventInfo extends AppCompatActivity {
     private ImageButton search;
     private ImageButton homepage;
     private Facility actual_facility;
+    private TextView eventname;
+    private TextView instructor_name;
+    private TextView geolocation;
+    private TextView waitlist_capacity;
+    private TextView registration_capacity;
+
 
     private User user;
 
@@ -56,12 +62,19 @@ public class EventInfo extends AppCompatActivity {
 
         user = (User) getIntent().getSerializableExtra("User");
 
-
+        //these are info fields
+        eventname = findViewById(R.id.event_name);
+        instructor_name = findViewById(R.id.instructor);
+        geolocation = findViewById(R.id.geolocation);
         date = findViewById(R.id.event_date);
         description = findViewById(R.id.event_description);
         facility = findViewById(R.id.event_facility);
         organizer = findViewById(R.id.event_organizer);
         id = findViewById(R.id.event_id);
+        waitlist_capacity = findViewById(R.id.waitlist_capacity);
+        registration_capacity = findViewById(R.id.class_capacity);
+
+        //these are buttons
         open_registration = findViewById(R.id.register);
         close_registration = findViewById(R.id.close);
         delete_event = findViewById(R.id.delete_button);
@@ -69,6 +82,12 @@ public class EventInfo extends AppCompatActivity {
 
 
         String text = event.getDescription();
+        String geo_text = event.getGeo();
+        String waitlist_text = String.valueOf(event.getWaitlistCapacity());
+        String capacity_text = String.valueOf(event.getRegistrationCapacity());
+        String inst_name = event.getInstructor();
+        String event_name = event.getEventName();
+
         Date dated = event.getDateTime();
         Facility fac = actual_facility;
         String name = "";
@@ -76,6 +95,11 @@ public class EventInfo extends AppCompatActivity {
             name = fac.getName();
         }
         String organizerid = event.getOrganizerId();
+        geolocation.setText(geo_text);
+        eventname.setText(event_name);
+        instructor_name.setText(inst_name);
+        registration_capacity.setText(waitlist_text);
+        waitlist_capacity.setText(capacity_text);
 
         date.setText(dated.toString());
         description.setText(text);
@@ -106,7 +130,7 @@ public class EventInfo extends AppCompatActivity {
         entrant_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EventInfo.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventInfo.this, "Currently in the works", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -117,6 +141,7 @@ public class EventInfo extends AppCompatActivity {
                       @Override
                       public void onDeleteSuccess() {
                           Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                          finish();
                       }
 
                       @Override

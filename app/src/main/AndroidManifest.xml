@@ -72,6 +72,9 @@
         <activity android:name=".EventInfo"
             android:exported="true" />
 
+        <activity android:name=".EditEvent"
+            android:exported="true" />
+
         <activity android:name=".OpenRegistration"
             android:exported="true" />
 

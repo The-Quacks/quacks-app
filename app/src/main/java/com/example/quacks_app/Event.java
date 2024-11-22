@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
+    private String name;
     private Date dateTime;
     private String description;
     private String qrCodePath;
@@ -11,6 +12,10 @@ public class Event extends RepoModel implements Serializable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private int waitlist_capacity;
+    private int registration_capacity;
+    private String instructor;
+    private String geo;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -19,6 +24,81 @@ public class Event extends RepoModel implements Serializable {
 
     public Event(){
         // need empty constructor for firebase
+    }
+
+    /**
+     * Set Geo Location
+     */
+    public void setGeo(String decision){
+        this.geo = decision;
+    }
+
+    /**
+     * Gets the Geo Location
+     * @ return String geo
+     */
+    public String getGeo(){
+        return this.geo;
+    }
+
+    /**
+     * Sets the Instructor name
+     */
+    public void setInstructor(String name){
+        this.instructor = name;
+    }
+
+    /**
+     * Gets the instructor name
+     * @ return String name
+     */
+    public String getInstructor(){
+        return this.instructor;
+    }
+
+    /**
+     * Sets the waitlist capacity for the event
+     */
+    public void setWaitlistCapacity(int number){
+        this.waitlist_capacity = number;
+    }
+
+    /**
+     * Gets the waitlist capacity for the event
+     * @ return int capacity
+     */
+    public int getWaitlistCapacity(){
+        return this.waitlist_capacity;
+    }
+
+    /**
+     * Sets the registration Capacity
+     */
+    public void setRegistrationCapacity(int number){
+        this.registration_capacity = number;
+    }
+
+    /**
+     * Gets the registration Capacity
+     * @ return int number
+     */
+    public int getRegistrationCapacity(){
+       return this.registration_capacity;
+    }
+
+    /**
+     * Sets the name of the event
+     * @ return none
+     */
+    public void setEventName(String Name){
+        this.name = Name;
+    }
+    /**
+     * Gets the name of the event
+     * @ return String name
+     */
+    public String getEventName(){
+        return this.name;
     }
 
     /**

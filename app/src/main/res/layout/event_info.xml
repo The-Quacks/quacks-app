@@ -32,31 +32,167 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/event_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Date" />
-        <TextView
-            android:id="@+id/event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Description" />
-        <TextView
-            android:id="@+id/event_facility"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event facility" />
-        <TextView
-            android:id="@+id/event_organizer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Organizer" />
-        <TextView
-            android:id="@+id/event_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event id" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Name:    "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Activity Name" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/instructor_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Instructor:  "
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/instructor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Event Date:  "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/geolocation_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Geolocation:    "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/geolocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enabled/Disabled" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_description_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Description:    "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_facility_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Facility:    "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_facility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event facility" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/waitlist_capacity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Waitlist Capacity:   "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/waitlist_capacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/class_capacity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Class Capacity:  "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/class_capacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_organizer_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Organizer ID:   "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_organizer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1234" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/event_id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="      Event ID:   "
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/event_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123456" />
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -110,7 +246,7 @@
 
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/create_event_resize"
+        android:drawableTop = "@drawable/trash_icon_med"
         android:fadingEdge="horizontal"
         android:text="Delete Event"
         android:textSize = "18sp"
@@ -131,9 +267,9 @@
 
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/entrant_map_resize"
+        android:drawableTop = "@drawable/create_event_resize"
         android:fadingEdge="horizontal"
-        android:text="Entrant Map"
+        android:text="Edit Event"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"

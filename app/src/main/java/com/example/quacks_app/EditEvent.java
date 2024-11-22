@@ -3,8 +3,7 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,28 +13,16 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
-/**
- * Create Event allows the organizer to create an event and store it in the DB
- */
-public class CreateEvent extends AppCompatActivity {
+public class EditEvent extends AppCompatActivity {
     private LocalDate start_date;
     private EditText event_name;
     private EditText class_capacity;
@@ -48,7 +35,7 @@ public class CreateEvent extends AppCompatActivity {
     private User user;
     private Button back;
     private Button confirm;
-    private Event event;
+    private Button upload_poster;
     private ImageButton search;
     private ImageButton profile;
     private ImageButton homepage;
@@ -64,16 +51,23 @@ public class CreateEvent extends AppCompatActivity {
     private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
+    private Event old_event;
+    private int classes = 0;
+    private int classes_two = 0;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_event);
+        setContentView(R.layout.edit_event);
 
-        back = findViewById(R.id.back_button);
-        confirm = findViewById(R.id.confirm_button);
+        //back and confirm buttons
+        back = findViewById(R.id.edit_back_button);
+        confirm = findViewById(R.id.edit_confirm_button);
+        upload_poster = findViewById(R.id.edit_upload_button);
+
+        //gets intents
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
@@ -81,28 +75,62 @@ public class CreateEvent extends AppCompatActivity {
         if (getIntent().getSerializableExtra("EventList")==null){
             finish();
         }
+        if (getIntent().getSerializableExtra("Event") == null){
+            finish();
+        }
+        old_event = (Event) getIntent().getSerializableExtra("Event");
+
+
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
 
-
-
-        //Then we set them like in create profile
-
         //Finding the right text box
-        event_name = findViewById(R.id.event_name);
-        class_capacity = findViewById(R.id.class_capacity);
-        waitlist_capacity = findViewById(R.id.waitlist_capacity);
-        beginning = findViewById(R.id.event_date);
-        instructor = findViewById(R.id.instructor);
-        geolocation = findViewById(R.id.geolocation);
-        description = findViewById(R.id.description);
-        eventtime = findViewById(R.id.event_time);
+        event_name = findViewById(R.id.editted_event_name);
+        class_capacity = findViewById(R.id.editted_class_capacity);
+        waitlist_capacity = findViewById(R.id.editted_waitlist_capacity);
+        beginning = findViewById(R.id.editted_event_date);
+        instructor = findViewById(R.id.editted_instructor);
+        geolocation = findViewById(R.id.editted_geolocation);
+        description = findViewById(R.id.editted_description);
+        eventtime = findViewById(R.id.editted_event_time);
 
+        //Setting the textboxes with old data
+        event_name.setText(old_event.getEventName());
+        class_capacity.setText(old_event.getRegistrationCapacity());
+        waitlist_capacity.setText(old_event.getWaitlistCapacity());
+        beginning.setText(old_event.getDateTime().toString());
+        instructor.setText(old_event.getInstructor());
+        geolocation.setText(old_event.getGeo());
+        description.setText(old_event.getDescription());
 
+        //getting the event time
+        Date date = old_event.getDateTime();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
 
+        int hours = calendar.get(Calendar.HOUR_OF_DAY); //24 hr format
+        int minutes = calendar.get(Calendar.MINUTE);
+        String display = "";
+
+        if (hours > 12){
+            hours -= 12;
+            display = String.format("%02d:%02dpm", hours, minutes);
+
+        }else{
+            display = String.format("%02d:%02dpm", hours, minutes);
+        }
+        eventtime.setText(display);
 
         //buttons
+        upload_poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditEvent.this, "Event Poster Coming Soon", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +156,7 @@ public class CreateEvent extends AppCompatActivity {
 
                     }
                 } catch (Exception e){
-                    Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -143,7 +171,7 @@ public class CreateEvent extends AppCompatActivity {
                         eventTime = LocalTime.parse(hour.toUpperCase(), formatted);
                     } catch (Exception E) {
                         wrong = 1;
-                        Toast.makeText(CreateEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
                     }
 
                     if (wrong == 1) {
@@ -160,7 +188,7 @@ public class CreateEvent extends AppCompatActivity {
                         );
                         final_date_time = date;
                     } else {
-                        Toast.makeText(CreateEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
                     }
                 } catch(Exception E){
                     test_two = 0;
@@ -169,14 +197,13 @@ public class CreateEvent extends AppCompatActivity {
 
                 // this checks the format of the **class capacity**
 
-                int classes = 0;
                 try {
                     classes = Integer.parseInt(class_capacity.getText().toString());
 
 
                 } catch(Exception e){
                     wrong = 1;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
                 }
 
                 if (wrong == 1){
@@ -187,13 +214,12 @@ public class CreateEvent extends AppCompatActivity {
                 }
 
                 //this checks the format of the **waitlist capacity**
-                int classes_two = 0;
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
 
                 }catch(Exception e){
                     wrong = 1;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
                 }
 
                 if (wrong != 1){
@@ -208,7 +234,7 @@ public class CreateEvent extends AppCompatActivity {
                     test_six = 1;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CreateEvent.this, "Error Instructor length needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error Instructor length needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
                 }
 
                 // this checks the format of the **Geolocation**
@@ -218,10 +244,10 @@ public class CreateEvent extends AppCompatActivity {
                     test_seven = 1;
                     //Toast.makeText(CreateEvent.this, "7 passed", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CreateEvent.this, "Geolocation has two options: Enabled/Disabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Geolocation has two options: Enabled/Disabled", Toast.LENGTH_SHORT).show();
                 }
                 if (geo.contains("Enabled")){
-                    Toast.makeText(CreateEvent.this, "Enabled geolocation is not currently available.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Enabled geolocation is not currently available.", Toast.LENGTH_SHORT).show();
                 }
 
                 // this checks the format of the **event name**
@@ -231,7 +257,7 @@ public class CreateEvent extends AppCompatActivity {
                     test_eight = 1;
                     //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CreateEvent.this, "Event Name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Event Name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
                 }
                 String text = description.getText().toString();
 
@@ -240,60 +266,59 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (test_one == 1 && test_two == 1 && test_three == 1 && test_five == 1 && test_six == 1 && test_seven == 1&& test_eight == 1 ) {
 
-                    event = new Event();
-                    event.setEventName(eventname);
-                    event.setDateTime(final_date_time);
-                    event.setDescription(text);
-                    event.setInstructor(name);
-                    event.setGeo(geo);
-                    event.setOrganizerId(user.getDocumentId());
-                    event.setFacility(facility.getDocumentId());
-                    event.setRegistrationCapacity(classes);
-                    event.setWaitlistCapacity(classes_two);
-
-                    if (eventList != null){
-                        eventList.addEvent(event);
-                    }
-
-
-                    //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
-                    CRUD.create(event, new CreateCallback() {
+                    CRUD.update(old_event, new UpdateCallback() {
                         @Override
-                        public void onCreateSuccess() {
-                            Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                            // needs to save all the attributes.
-
-                            Intent intent = new Intent(CreateEvent.this, ViewEvents.class);
-                            intent.putExtra("EventList", eventList);
-                            intent.putExtra("User", user);
-                            intent.putExtra("Facility", facility);
-                            startActivity(intent);
-                            finish();
+                        public void onUpdateSuccess() {
+                            old_event.setEventName(eventname);
+                            old_event.setDateTime(final_date_time);
+                            old_event.setDescription(text);
+                            old_event.setInstructor(name);
+                            old_event.setGeo(geo);
+                            old_event.setOrganizerId(user.getDocumentId());
+                            old_event.setFacility(facility.getDocumentId());
+                            old_event.setRegistrationCapacity(classes);
+                            old_event.setWaitlistCapacity(classes_two);
+                            CRUD.create(old_event, new CreateCallback() {
+                                @Override
+                                public void onCreateSuccess() {
+                                    Toast.makeText(EditEvent.this, "Event Created!", Toast.LENGTH_SHORT).show();
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("Event", old_event);
+                                    resultIntent.putExtra("Facility", facility);
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
+                                }
+                                @Override
+                                public void onCreateFailure(Exception e) {
+                                }
+                            });
                         }
-
                         @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(EditEvent.this, "Error creating event, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-                }else{
-                    Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(EditEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
+
+
+
         //This is the bottom of the page directory
-        homepage = findViewById(R.id.house);
-        profile = findViewById(R.id.person);
-        search = findViewById(R.id.search);
+        homepage = findViewById(R.id.edit_house);
+        profile = findViewById(R.id.edit_person);
+        search = findViewById(R.id.edit_search);
 
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Already here
-                Intent intent = new Intent(CreateEvent.this, OrganizerHomepage.class);
+                Intent intent = new Intent(EditEvent.this, OrganizerHomepage.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }
@@ -305,7 +330,7 @@ public class CreateEvent extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
+                Intent intent = new Intent(EditEvent.this, ViewOrganizer.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }
@@ -316,7 +341,7 @@ public class CreateEvent extends AppCompatActivity {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
+                Intent intent = new Intent(EditEvent.this, ViewOrganizer.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }
