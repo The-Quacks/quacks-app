@@ -162,7 +162,6 @@ public class EditEvent extends AppCompatActivity {
 
                     if (current_date.isBefore(start_date)){
                         test_one = 1;
-
                     }
                 } catch (Exception e){
                     Toast.makeText(EditEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
@@ -208,8 +207,6 @@ public class EditEvent extends AppCompatActivity {
 
                 try {
                     classes = Integer.parseInt(class_capacity.getText().toString());
-
-
                 } catch(Exception e){
                     wrong = 1;
                     Toast.makeText(EditEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
@@ -237,9 +234,8 @@ public class EditEvent extends AppCompatActivity {
                 }
 
                 // this checks the format of the **instructor name**
-
                 String name = instructor.getText().toString();
-                if (name.length() >=1 && name.length() <= 40 ){
+                if (name.length()>=1 && name.length() <= 40 ){
                     test_six = 1;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
                 }else{
@@ -272,30 +268,38 @@ public class EditEvent extends AppCompatActivity {
 
 
                 //this is the case where all the tests pass
-
                 if (test_one == 1 && test_two == 1 && test_three == 1 && test_five == 1 && test_six == 1 && test_seven == 1&& test_eight == 1 ) {
 
-                    CRUD.update(old_event, new UpdateCallback() {
+                    old_event.setEventName(eventname);
+                    old_event.setDateTime(final_date_time);
+                    old_event.setDescription(text);
+                    old_event.setInstructor(name);
+                    old_event.setGeo(geo);
+                    old_event.setOrganizerId(user.getDocumentId());
+                    old_event.setFacility(facility.getDocumentId());
+                    old_event.setRegistrationCapacity(classes);
+                    old_event.setWaitlistCapacity(classes_two);
+
+                    Event event = old_event;
+
+                    CRUD.createOrUpdate(event, new UpdateCallback() {
                         @Override
                         public void onUpdateSuccess() {
-                            old_event.setEventName(eventname);
-                            old_event.setDateTime(final_date_time);
-                            old_event.setDescription(text);
-                            old_event.setInstructor(name);
-                            old_event.setGeo(geo);
-                            old_event.setOrganizerId(user.getDocumentId());
-                            old_event.setFacility(facility.getDocumentId());
-                            old_event.setRegistrationCapacity(classes);
-                            old_event.setWaitlistCapacity(classes_two);
-                            Toast.makeText(EditEvent.this, "Event Successfully Updated!", Toast.LENGTH_SHORT).show();
-                            finish();
+                            Toast.makeText(EditEvent.this, "Event Updated", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(EditEvent.this, EventInfo.class);
+                            intent.putExtra("Facility", facility);
+                            intent.putExtra("Event", event);
+                            intent.putExtra("User", user);
+                            startActivity(intent);
 
                         }
+
                         @Override
                         public void onUpdateFailure(Exception e) {
-                            Toast.makeText(EditEvent.this, "Error creating event, please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditEvent.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
+
                 }
                 else{
                     Toast.makeText(EditEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
@@ -303,8 +307,6 @@ public class EditEvent extends AppCompatActivity {
 
             }
         });
-
-
 
 
         //This is the bottom of the page directory
