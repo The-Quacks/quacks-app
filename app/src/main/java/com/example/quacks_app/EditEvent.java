@@ -93,8 +93,9 @@ public class EditEvent extends AppCompatActivity {
         class_capacity.setText(String.valueOf(old_event.getRegistrationCapacity()));
         waitlist_capacity.setText(String.valueOf(old_event.getWaitlistCapacity()));
         instructor.setText(old_event.getInstructor());
-        geolocation.setChecked(true);
         description.setText(old_event.getDescription());
+        geolocation.setChecked(old_event.getGeo());
+
 
         //getting the hour
         Date date = old_event.getDateTime();
@@ -144,8 +145,6 @@ public class EditEvent extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //this checks the format of the **day** entered
                 try{
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                     String startdate = beginning.getText().toString().trim();
@@ -196,6 +195,7 @@ public class EditEvent extends AppCompatActivity {
 
                 // this checks the format of the **class capacity**
 
+                int classes = 0;
                 try {
                     classes = Integer.parseInt(class_capacity.getText().toString());
                 } catch(Exception e) {
@@ -206,7 +206,7 @@ public class EditEvent extends AppCompatActivity {
                 //this checks the format of the **waitlist capacity**
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
-                } catch(Exception e){
+                } catch(Exception e) {
                     wrong = true;
                     Toast.makeText(EditEvent.this, "Error in format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
                 }

@@ -12,6 +12,7 @@ public class Event extends RepoModel implements Serializable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
     private String instructorName;

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -44,6 +46,7 @@ public class CreateEvent extends AppCompatActivity {
     private boolean validInstructorName = false;
     private boolean validEventName = false;
     private boolean wrong = false;
+    private FirebaseFirestore db;
     private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
@@ -59,7 +62,6 @@ public class CreateEvent extends AppCompatActivity {
         upload_button = findViewById(R.id.upload_button);
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
-
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
@@ -69,6 +71,8 @@ public class CreateEvent extends AppCompatActivity {
         }
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
+
+
 
         //Then we set them like in create profile
 
@@ -165,7 +169,8 @@ public class CreateEvent extends AppCompatActivity {
                 int classes_two = 0;
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
-                } catch(Exception e) {
+
+                }catch(Exception e){
                     wrong = true;
                     Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
                 }

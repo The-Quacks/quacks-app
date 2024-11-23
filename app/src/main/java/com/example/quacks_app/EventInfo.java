@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +34,9 @@ public class EventInfo extends AppCompatActivity {
     private Facility actual_facility;
     private TextView eventname;
     private TextView instructor_name;
-    private TextView geolocation;
     private TextView waitlist_capacity;
     private TextView registration_capacity;
+    private CheckBox geolocation;
 
 
     private User user;
@@ -65,7 +66,7 @@ public class EventInfo extends AppCompatActivity {
         //these are info fields
         eventname = findViewById(R.id.event_name);
         instructor_name = findViewById(R.id.instructor);
-        geolocation = findViewById(R.id.geolocation);
+        geolocation = findViewById(R.id.geolocation_status);
         date = findViewById(R.id.event_date);
         description = findViewById(R.id.event_description);
         facility = findViewById(R.id.event_facility);
@@ -82,7 +83,7 @@ public class EventInfo extends AppCompatActivity {
 
 
         String text = event.getDescription();
-        String geo_text = event.getGeo() + "";
+        geolocation.setChecked(event.getGeo());
         String waitlist_text = String.valueOf(event.getWaitlistCapacity());
         String capacity_text = String.valueOf(event.getRegistrationCapacity());
         String inst_name = event.getInstructor();
@@ -95,7 +96,6 @@ public class EventInfo extends AppCompatActivity {
             name = fac.getName();
         }
         String organizerid = event.getOrganizerId();
-        geolocation.setText(geo_text);
         eventname.setText(event_name);
         instructor_name.setText(inst_name);
         registration_capacity.setText(waitlist_text);
