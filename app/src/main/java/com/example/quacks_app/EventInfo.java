@@ -37,11 +37,7 @@ public class EventInfo extends AppCompatActivity {
     private TextView waitlist_capacity;
     private TextView registration_capacity;
     private CheckBox geolocation;
-
-
     private User user;
-
-
     private Event event;
 
     @Override
@@ -84,6 +80,7 @@ public class EventInfo extends AppCompatActivity {
 
         String text = event.getDescription();
         geolocation.setChecked(event.getGeo());
+        geolocation.setClickable(false);
         String waitlist_text = String.valueOf(event.getWaitlistCapacity());
         String capacity_text = String.valueOf(event.getRegistrationCapacity());
         String inst_name = event.getInstructor();
