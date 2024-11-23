@@ -148,7 +148,7 @@ public class CreateEvent extends AppCompatActivity {
                         Toast.makeText(CreateEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
                     }
                 } catch(Exception E) {
-                    validDate = true;
+                    validDate = false;
                 }
 
 

@@ -15,7 +15,7 @@ public class Event extends RepoModel implements Serializable {
     private int waitlist_capacity;
     private int registration_capacity;
     private String instructorName;
-    private boolean geoRequired;
+    private Boolean geoRequired;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -29,7 +29,7 @@ public class Event extends RepoModel implements Serializable {
     /**
      * Set Geo Location
      */
-    public void setGeo(boolean decision) {
+    public void setGeo(Boolean decision) {
         this.geoRequired = decision;
     }
 
@@ -37,7 +37,7 @@ public class Event extends RepoModel implements Serializable {
      * Gets the Geo Location
      * @ return String geo
      */
-    public boolean getGeo() {
+    public Boolean getGeo() {
         return this.geoRequired;
     }
 
