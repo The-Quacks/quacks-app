@@ -3,19 +3,23 @@ package com.example.notificationtest;
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationHandler {
     public static final String EVENTS_CHANNEL_ID = "events_channel";
     private static final int REQUEST_CODE = 1;
+    @SuppressLint("MissingPermission")
     public static void createChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -27,7 +31,7 @@ public class NotificationHandler {
             }
         }
     }
-
+    @SuppressLint("MissingPermission")
     public static void sendNotification(Context context, String title, String messageShort, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
@@ -38,7 +42,7 @@ public class NotificationHandler {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(10, builder.build());
     }
-
+    @SuppressLint("MissingPermission")
     public static void sendNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
@@ -51,7 +55,7 @@ public class NotificationHandler {
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
                 notificationManagerCompat.notify(10, builder.build());
     }
-
+    @SuppressLint("MissingPermission")
     public static void sendActionedNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
@@ -64,7 +68,7 @@ public class NotificationHandler {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(10, builder.build());
     }
-
+    @SuppressLint("MissingPermission")
     public static void askForPermission(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(activity, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE);
