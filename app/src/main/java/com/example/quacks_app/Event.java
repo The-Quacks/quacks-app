@@ -12,7 +12,7 @@ public class Event extends RepoModel implements Serializable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
-    private boolean geolocationRequired;
+    private boolean geo;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -149,11 +149,11 @@ public class Event extends RepoModel implements Serializable {
         this.qrCodePath = qrCodePath;
     }
 
-    public boolean getGeolocationRequired() {
-        return geolocationRequired;
+    public boolean getGeo() {
+        return geo;
     }
 
-    public void setGeolocationRequired(boolean geolocationRequired) {
-        this.geolocationRequired = geolocationRequired;
+    public void setGeo(boolean geo) {
+        this.geo = geo;
     }
 }

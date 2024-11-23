@@ -160,7 +160,7 @@ public class CreateEvent extends AppCompatActivity {
                     event.setEventName(eventname);
                     //event.setStartDateTime(start_date);
                     //event.setInstructor(name);
-                    event.setGeolocationRequired(geo);
+                    event.setGeo(geo);
                     event.setDescription(text);
                     event.setOrganizerId(user.getDocumentId());
                     event.setFacility(facility.getDocumentId());
