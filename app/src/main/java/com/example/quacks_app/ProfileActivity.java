@@ -66,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         loadUserProfile();
 
         // Initialize the ActivityResultLauncher for selecting an image from the gallery
-        // Initialize the ActivityResultLauncher for selecting an image from the gallery
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {

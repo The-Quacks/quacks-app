@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
 /**
  * Create Event allows the organizer to create an event and store it in the DB
  */

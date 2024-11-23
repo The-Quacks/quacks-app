@@ -47,21 +47,25 @@ public class EntrantHome extends AppCompatActivity {
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
         ImageButton switch_activity = findViewById(R.id.switch_activity_entrant);
 
-        switch_activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user.getRoles().contains(Role.ORGANIZER)) {
-                    Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
-                    intent.putExtra("User", user);
-                    startActivity(intent);
-                    finish();
-                }
-                else if (user.getRoles().contains(Role.ADMIN)) {
-                    Intent intent = new Intent(EntrantHome.this, AdminHome.class);
-                    intent.putExtra("User", user);
-                    startActivity(intent);
-                    finish();
-                }
+        // Check role of the user and set visibility for switch_activity button
+        if (user.getRoles().contains(Role.ORGANIZER) || user.getRoles().contains(Role.ADMIN)) {
+            switch_activity.setVisibility(View.VISIBLE);
+        } else {
+            switch_activity.setVisibility(View.GONE);
+        }
+
+        switch_activity.setOnClickListener(v -> {
+            if (user.getRoles().contains(Role.ORGANIZER)) {
+                Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
+                finish();
+            }
+            else if (user.getRoles().contains(Role.ADMIN)) {
+                Intent intent = new Intent(EntrantHome.this, AdminHome.class);
+                intent.putExtra("User", user);
+                startActivity(intent);
+                finish();
             }
         });
 
