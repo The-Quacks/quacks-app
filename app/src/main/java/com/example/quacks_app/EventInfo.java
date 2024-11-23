@@ -82,7 +82,7 @@ public class EventInfo extends AppCompatActivity {
 
 
         String text = event.getDescription();
-        String geo_text = event.getGeo();
+        String geo_text = event.getGeo() + "";
         String waitlist_text = String.valueOf(event.getWaitlistCapacity());
         String capacity_text = String.valueOf(event.getRegistrationCapacity());
         String inst_name = event.getInstructor();

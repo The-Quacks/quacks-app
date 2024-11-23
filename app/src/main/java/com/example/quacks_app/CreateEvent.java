@@ -112,6 +112,7 @@ public class CreateEvent extends AppCompatActivity {
 
                     if (current_date.isBefore(startDate)) {
                         validDate = true;
+                        wrong = false;
                     }
                 } catch (Exception e) {
                     Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
@@ -128,14 +129,12 @@ public class CreateEvent extends AppCompatActivity {
                     try {
                         eventTime = LocalTime.parse(hour.toUpperCase(), formatted);
                     } catch (Exception E) {
-                        wrong = false;
+                        wrong = true;
                         Toast.makeText(CreateEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
                     }
 
                     if (wrong) {
-                        wrong = false;
-                    } else {
-                        validDate = true;
+                        validDate = false;
                     }
 
                     if (startDate != null && eventTime != null) {
@@ -162,10 +161,6 @@ public class CreateEvent extends AppCompatActivity {
                     Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
                 }
 
-                if (wrong) {
-                    wrong = false;
-                }
-
                 //this checks the format of the **waitlist capacity**
                 int classes_two = 0;
                 try {
@@ -179,6 +174,7 @@ public class CreateEvent extends AppCompatActivity {
                 String name = instructor.getText().toString();
                 if (name.length() >= 1 && name.length() <= 40 ) {
                     validInstructorName = true;
+                    wrong = false;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CreateEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
@@ -193,6 +189,7 @@ public class CreateEvent extends AppCompatActivity {
                 String eventname = event_name.getText().toString();
                 if (eventname.length() <= 40) {
                     validEventName = true;
+                    wrong = false;
                     //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CreateEvent.this, "Event name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
