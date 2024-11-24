@@ -21,4 +21,14 @@
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="view_organizer_profile">View Organizer Profile</string>
+    <string name="create_a_profile">Create a Profile</string>
+    <string name="first_and_last_name">First and Last Name</string>
+    <string name="enter_name">Enter name</string>
+    <string name="enter_email">Enter email</string>
+    <string name="phone_number_optional">Phone Number (optional)</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="profile_picture">Profile picture:</string>
+    <string name="upload_picture">Upload picture</string>
+    <string name="take_picture">Take picture</string>
+    <string name="home">Home</string>
 </resources>
