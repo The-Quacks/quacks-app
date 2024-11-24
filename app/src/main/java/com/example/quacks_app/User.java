@@ -6,7 +6,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User extends RepoModel implements Serializable {
+public class User extends RepoModel implements Serializable,Listable {
     private String deviceId;
     private ArrayList<Role> roles; // Note: Firebase does not like enum sets
     private UserProfile userProfile;
@@ -40,6 +40,22 @@ public class User extends RepoModel implements Serializable {
             roles.add(role);
         }
     }
+    public String getDisplay() {
+        if (userProfile != null){
+            return userProfile.getUserName();
+        }
+        return "";
+    }
+
+    public String getSubDisplay() {
+        String roleStr = "";
+        if (roles != null){
+            for (Role role:roles){
+                roleStr += (role.name() +"/");
+            }
+        }
+        return roleStr;
+    }
 
     public void removeRole(Role role) {
         roles.remove(role);
@@ -62,17 +78,5 @@ public class User extends RepoModel implements Serializable {
     }
 
     }
-    /*
-    public String getDisplay() {
-        return userProfile.getUserName();
-    }
 
-    public String getSubDisplay() {
-        String roleStr = "";
-        for (Role role:roles){
-            roleStr += (role.name() +"/");
-        }
-        return roleStr;
-    }
-     */
 
