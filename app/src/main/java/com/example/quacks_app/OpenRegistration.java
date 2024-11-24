@@ -2,6 +2,7 @@ package com.example.quacks_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ public class OpenRegistration  extends AppCompatActivity {
     private EditText capacity;
     private Event event;
     private int flagger = 0;
+    private int old;
 
     /*
     Opens Registration for applicants
@@ -28,10 +30,25 @@ public class OpenRegistration  extends AppCompatActivity {
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
 
+
+
         if (getIntent().getSerializableExtra("Event") == null){
             finish();
-        }else{
-            event = (Event) getIntent().getSerializableExtra("Event");
+        }
+        event = (Event) getIntent().getSerializableExtra("Event");
+
+
+        //check if there is an applicant list already made
+        if (event.getApplicantList() != null){
+            Toast.makeText(OpenRegistration.this, "This event is already Open!!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        int number = event.getWaitlistCapacity();
+        try {
+            capacity.setText(String.valueOf(number));
+        } catch(Exception E){
+            Toast.makeText(OpenRegistration.this, "There was no waitlist capacity set for this event", Toast.LENGTH_SHORT).show();
         }
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +87,6 @@ public class OpenRegistration  extends AppCompatActivity {
                                 @Override
                                 public void onUpdateSuccess() {
                                     Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(OpenRegistration.this, OrganizerHomepage.class);
-                                    startActivity(intent);
                                     finish();
                                 }
                                 @Override

@@ -40,8 +40,8 @@
         android:id="@+id/organizer_profile_button"
         android:layout_width="175dp"
         android:layout_height="150dp"
-
         android:elevation="10dp"
+        android:stateListAnimator="@null"
         android:clickable="true"
         android:focusable="true"
 
