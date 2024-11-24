@@ -37,6 +37,7 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:background="@drawable/round_admin_button"
+            android:contentDescription="@string/profile_picture"
             android:padding="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/icon_profile_pic" />
@@ -45,6 +46,7 @@
     <!-- Edit and Remove Picture Buttons -->
     <LinearLayout
         android:id="@+id/editRemoveButtons"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -56,6 +58,7 @@
 
         <Button
             android:id="@+id/editPictureButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F5EBEB"
@@ -66,16 +69,18 @@
 
         <Button
             android:id="@+id/removePictureButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F5EBEB"
             android:text="@string/remove_picture"
             android:textColor="#867070"
             android:padding="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/editProfileButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -92,7 +97,7 @@
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name:"
+        android:text="@string/name"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/editRemoveButtons"
@@ -115,7 +120,7 @@
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email:"
+        android:text="@string/email"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/userNameInput"
@@ -138,7 +143,7 @@
         android:id="@+id/phoneLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone Number:"
+        android:text="@string/phone_number"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/emailInput"
@@ -156,36 +161,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="18sp" />
 
-    <!-- Save and Back Buttons -->
     <LinearLayout
+        android:id="@+id/actionButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/phoneNumberInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp">
 
+        <!-- Create Facility Button -->
         <Button
-            android:id="@+id/saveProfileButton"
+            android:id="@+id/createFacilityButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_admin_button"
+            android:backgroundTint="#F5EBEB"
             android:padding="10dp"
-            android:text="@string/save"
-            android:textColor="#FFFFFF"
-            android:layout_marginEnd="16dp" />
+            android:textColor="#867070"
+            android:text="@string/create_a_facility"
+            android:layout_marginBottom="32dp" />
 
-        <Button
-            android:id="@+id/backButton"
+        <!-- Save and Back Buttons -->
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_admin_button"
-            android:padding="10dp"
-            android:text="@string/back"
-            android:textColor="#FFFFFF" />
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/saveProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_admin_button"
+                android:padding="10dp"
+                android:text="@string/save"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_admin_button"
+                android:padding="10dp"
+                android:text="@string/back"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
+
 
     <!-- Bottom Navigation Bar -->
     <LinearLayout

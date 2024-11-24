@@ -2,7 +2,7 @@
     <string name="app_name">quacks-app</string>
     <string name="create_an_organizer_profile">Create An Organizer Profile</string>
     <string name="todo">TODO</string>
-    <string name="name">Name</string>
+    <string name="name">Name:</string>
     <string name="location">Location</string>
     <string name="contact_information">Contact Information</string>
     <string name="facility_details">Facility Details</string>
@@ -15,8 +15,8 @@
     <string name="user_profile">User Profile</string>
     <string name="edit_picture">Edit Picture</string>
     <string name="remove_picture">Remove Picture</string>
-    <string name="email">Email</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="email">Email:</string>
+    <string name="phone_number">Phone Number:</string>
     <string name="save">Save</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
@@ -31,4 +31,5 @@
     <string name="upload_picture">Upload picture</string>
     <string name="take_picture">Take picture</string>
     <string name="home">Home</string>
+    <string name="create_a_facility">Create a Facility</string>
 </resources>

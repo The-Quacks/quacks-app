@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     // UserProfile object to hold the user's information
     private UserProfile userProfile;
     private User user;
+    private Facility facility;
 
     /**
      * Initializes the activity and sets up Firebase, UI elements, and event listeners.
@@ -55,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         Button removePictureButton = findViewById(R.id.removePictureButton);
         Button editProfileDetailsButton = findViewById(R.id.editProfileButton);
         Button backButton = findViewById(R.id.backButton);
-
+        Button createFacilityButton = findViewById(R.id.createFacilityButton);
 
         // Load user profile data
         loadUserProfile();
@@ -67,10 +69,57 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         editProfileDetailsButton.setOnClickListener(view -> openEditProfileDialog());
         editPictureButton.setOnClickListener(v -> requestStoragePermissionAndOpenGallery());
         removePictureButton.setOnClickListener(v -> removeProfilePicture());
+
+        updateUI(createFacilityButton);
+
+        // Set up the ActivityResultLauncher
+        ActivityResultLauncher<Intent> createFacilityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        // Get updated user and facility from the result
+                        user = (User) result.getData().getSerializableExtra("User");
+                        facility = (Facility) result.getData().getSerializableExtra("Facility");
+
+                        // Update the UI based on the new data
+                        updateUI(createFacilityButton);
+
+                        Toast.makeText(this, "Facility created successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Set up listener for Create Facility button
+        createFacilityButton.setOnClickListener(v -> {
+            if (user != null) {
+                if (facility == null) {
+                    Intent intent = new Intent(ProfileActivity.this, CreateFacility.class);
+                    intent.putExtra("User", user);
+                    createFacilityLauncher.launch(intent);
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Facility already exists", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ProfileActivity.this, "User is not loaded yet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         saveProfileButton.setOnClickListener(v -> saveProfileChanges());
         backButton.setOnClickListener(view -> {
             finish();
         });
+    }
+
+    /**
+     * Updates the UI dynamically based on the user's facility and role status.
+     */
+    private void updateUI(Button createFacilityButton) {
+        // Hide Create Facility button if facility exists or the user is an organizer
+        if (facility != null || (user != null && user.getRoles().contains(Role.ORGANIZER))) {
+            createFacilityButton.setVisibility(View.GONE);
+        } else {
+            createFacilityButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initializePickImageLauncher() {
