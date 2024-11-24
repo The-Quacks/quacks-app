@@ -16,7 +16,7 @@ public class Event extends RepoModel implements Serializable {
     private int waitlist_capacity;
     private int registration_capacity;
     private String instructorName;
-    private Boolean geoRequired;
+    private Boolean geoRequired = false; // Default to false
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -219,4 +219,5 @@ public class Event extends RepoModel implements Serializable {
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
     }
+
 }
