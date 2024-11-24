@@ -90,6 +90,9 @@
         <activity android:name=".PickApplicant"
             android:exported="true" />
 
+        <activity android:name=".ViewEventsEntrant"
+            android:exported="true" />
+
 
         <meta-data
             android:name="preloaded_fonts"

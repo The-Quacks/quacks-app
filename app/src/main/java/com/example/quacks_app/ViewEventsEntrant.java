@@ -22,6 +22,9 @@ public class ViewEventsEntrant extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.entrant_event_list);
 
-
+//        ListView eventList = findViewById(R.id.event_list);
+//        EventList events = (EventList) getIntent().getSerializableExtra("EventList");
+//        EventArrayAdapter eventArrayAdapter = new EventArrayAdapter(this, (ArrayList<Event>) events);
+//        eventList.setAdapter(eventArrayAdapter);
     }
 }

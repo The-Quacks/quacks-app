@@ -2,7 +2,6 @@ package com.example.quacks_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -28,6 +27,7 @@ import java.util.Map;
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
     private User user;
+    private EventList eventIds;
     private ArrayList<Event> events;
 
     @Override
@@ -39,6 +39,7 @@ public class EntrantHome extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         if (user.getUserProfile() != null) {
             hasProfile = true;
+            eventIds = user.getUserProfile().getEventList();
         }
 
         ImageButton profile = findViewById(R.id.profileButton);
@@ -79,7 +80,27 @@ public class EntrantHome extends AppCompatActivity {
         });
 
         waitlist.setOnClickListener(view -> {
-            startActivity(new Intent(EntrantHome.this, ViewEventsEntrant.class));
+            Map<String, Object> query = new HashMap<>();
+            for (String eventId : eventIds.getEventIds()) {
+                query.put("eventId", eventId);
+            }
+
+            CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
+                @Override
+                public void onReadMultipleSuccess(ArrayList<Event> data) {
+                    events = data;
+                }
+
+                @Override
+                public void onReadMultipleFailure(Exception e) {
+                    Toast.makeText(EntrantHome.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Intent entrantWaitlistIntent = new Intent(EntrantHome.this, ViewEventsEntrant.class);
+            entrantWaitlistIntent.putExtra("User", user);
+            entrantWaitlistIntent.putExtra("EventList", events);
+            startActivity(entrantWaitlistIntent);
         });
 
 //        notifications.setOnClickListener(view -> {
@@ -106,23 +127,8 @@ public class EntrantHome extends AppCompatActivity {
         });
 
 
-        // Add list of events to entrant attributes (done)
-        // For this, get the list of events that match the array
+        // Add list of eventIds to entrant attributes (done)
+        // For this, get the list of eventIds that match the array
         // Then display the list on the next page
-
-//        ReadMultipleCallback<Event> eventsCallback = new ReadMultipleCallback<Event>() {
-//            @Override
-//            public void onReadMultipleSuccess(ArrayList<Event> data) {
-//                for (Event event : data) {
-//                    if ()
-//                }
-////                events = data;
-//            }
-//
-//            @Override
-//            public void onReadMultipleFailure(Exception e) {
-//                Toast.makeText(EntrantHome.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
-//            }
-//        };
     }
 }
