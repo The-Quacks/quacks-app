@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/all_applicants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:foregroundTint="#D5B4B4"
+    android:visibility="visible"
+    tools:context=".AllApplicants">
+
+    <TextView
+            android:id="@+id/all_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="All Applicants"
+            android:textColor="@color/text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/all_notify_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:backgroundTint="@color/button"
+        android:text="NOTIFY ALL"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/all_app_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_title" />
+
+    <Button
+        android:id="@+id/all_select_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:backgroundTint="@color/button"
+        android:text="SELECT"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/all_app_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_title" />
+
+
+        <ListView
+            android:id="@+id/all_app_list"
+            android:layout_width="match_parent"
+            android:background="@color/base"
+            android:layout_height="635dp"
+            app:layout_constraintTop_toBottomOf = "@id/all_title"
+            android:layout_marginTop = "110dp"
+            android:layout_marginBottom = "35dp"
+            app:layout_constraintBottom_toTopOf = "@id/bottom_section">
+
+        </ListView>
+
+
+
+
+    <RelativeLayout
+        android:id = "@+id/bottom_section"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background = "@color/background"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id = "@+id/all_app_house"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src = "@drawable/image_163"
+            android:contentDescription="Button"
+            android:background="@color/background"
+            android:layout_alignParentLeft="true"
+            />
+
+        <ImageButton
+            android:id="@+id/all_app_search"
+            android:layout_width="54dp"
+            android:layout_height="48dp"
+            android:background="@color/background"
+            android:contentDescription="Button"
+            android:src="@drawable/image_164"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageButton
+            android:id = "@+id/all_app_person"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/background"
+            android:contentDescription="Button"
+            android:src = "@drawable/profile_icon_tiny"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
