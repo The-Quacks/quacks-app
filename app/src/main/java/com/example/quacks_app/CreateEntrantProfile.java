@@ -62,7 +62,7 @@ public class CreateEntrantProfile extends AppCompatActivity {
 
             UserProfile newProfile = new UserProfile(name.getText().toString(), email.getText().toString(), phoneNumber.getText().toString());
 
-            String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            newProfile.setEventList(new EventList());
             user.setUserProfile(newProfile);
 
             UpdateCallback updateCallback = new UpdateCallback() {

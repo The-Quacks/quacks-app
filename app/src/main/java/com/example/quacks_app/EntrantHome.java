@@ -105,6 +105,11 @@ public class EntrantHome extends AppCompatActivity {
                     });
         });
 
+
+        // Add list of events to entrant attributes (done)
+        // For this, get the list of events that match the array
+        // Then display the list on the next page
+
 //        ReadMultipleCallback<Event> eventsCallback = new ReadMultipleCallback<Event>() {
 //            @Override
 //            public void onReadMultipleSuccess(ArrayList<Event> data) {

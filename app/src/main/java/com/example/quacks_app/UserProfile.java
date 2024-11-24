@@ -9,6 +9,7 @@ public class UserProfile implements Serializable {
     private String email;
     private String phoneNumber;
     private String profilePicturePath;
+    private EventList eventList;
 
     // Required empty constructor for Firebase
     public UserProfile() {}
@@ -51,5 +52,26 @@ public class UserProfile implements Serializable {
 
     public void setProfilePicturePath(String profilePicturePath) {
         this.profilePicturePath = profilePicturePath;
+    }
+
+    public EventList getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(EventList eventList) {
+        this.eventList = eventList;
+    }
+
+    public void addEvent(Event event) {
+        if (eventList == null) {
+            eventList = new EventList();
+        }
+        eventList.addEvent(event);
+    }
+
+    public void removeEvent(Event event) {
+        if (eventList != null) {
+            eventList.removeEvent(event);
+        }
     }
 }
