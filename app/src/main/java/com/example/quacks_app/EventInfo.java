@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +32,12 @@ public class EventInfo extends AppCompatActivity {
     private ImageButton search;
     private ImageButton homepage;
     private Facility actual_facility;
-
+    private TextView eventname;
+    private TextView instructor_name;
+    private TextView waitlist_capacity;
+    private TextView registration_capacity;
+    private CheckBox geolocation;
     private User user;
-
-
     private Event event;
 
     @Override
@@ -56,12 +59,19 @@ public class EventInfo extends AppCompatActivity {
 
         user = (User) getIntent().getSerializableExtra("User");
 
-
+        //these are info fields
+        eventname = findViewById(R.id.event_name);
+        instructor_name = findViewById(R.id.instructor);
+        geolocation = findViewById(R.id.geolocation_status);
         date = findViewById(R.id.event_date);
         description = findViewById(R.id.event_description);
         facility = findViewById(R.id.event_facility);
         organizer = findViewById(R.id.event_organizer);
         id = findViewById(R.id.event_id);
+        waitlist_capacity = findViewById(R.id.waitlist_capacity);
+        registration_capacity = findViewById(R.id.class_capacity);
+
+        //these are buttons
         open_registration = findViewById(R.id.register);
         close_registration = findViewById(R.id.close);
         delete_event = findViewById(R.id.delete_button);
@@ -69,6 +79,13 @@ public class EventInfo extends AppCompatActivity {
 
 
         String text = event.getDescription();
+        geolocation.setChecked(event.getGeo());
+        geolocation.setClickable(false);
+        String waitlist_text = String.valueOf(event.getWaitlistCapacity());
+        String capacity_text = String.valueOf(event.getRegistrationCapacity());
+        String inst_name = event.getInstructor();
+        String event_name = event.getEventName();
+
         Date dated = event.getDateTime();
         Facility fac = actual_facility;
         String name = "";
@@ -76,6 +93,10 @@ public class EventInfo extends AppCompatActivity {
             name = fac.getName();
         }
         String organizerid = event.getOrganizerId();
+        eventname.setText(event_name);
+        instructor_name.setText(inst_name);
+        registration_capacity.setText(waitlist_text);
+        waitlist_capacity.setText(capacity_text);
 
         date.setText(dated.toString());
         description.setText(text);
@@ -96,7 +117,7 @@ public class EventInfo extends AppCompatActivity {
         close_registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventInfo.this, NotifyOptions.class);
+                Intent intent = new Intent(EventInfo.this, ApplicantOptions.class);
                 intent.putExtra("Event", event);
                 startActivity(intent);
 
@@ -106,7 +127,11 @@ public class EventInfo extends AppCompatActivity {
         entrant_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EventInfo.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show();
+                Intent intent  = new Intent(EventInfo.this, EditEvent.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", actual_facility);
+                startActivity(intent);
             }
         });
 
@@ -117,6 +142,7 @@ public class EventInfo extends AppCompatActivity {
                       @Override
                       public void onDeleteSuccess() {
                           Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                          finish();
                       }
 
                       @Override
@@ -166,6 +192,7 @@ public class EventInfo extends AppCompatActivity {
         });
 
     }
+
 }
 
 
