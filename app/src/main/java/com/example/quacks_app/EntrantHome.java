@@ -22,13 +22,13 @@ import java.util.Map;
 /**
  * The {@code EntrantHome} class is used on the home page for entrants. It includes buttons to
  * go to different parts of the app. Currently, the scan QR code button is implemented, which allows
- * the user to scan a QR code, see the event information, and join the waitlist. The profile button
- * also only lets users create a profile if they don't already have one.
+ * the user to scan a QR code, see the event information, and join the waitlist.
  */
 
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
     private User user;
+    private ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +78,9 @@ public class EntrantHome extends AppCompatActivity {
             }
         });
 
-//        waitlist.setOnClickListener(view -> {
-//            startActivity(new Intent(EntrantHome.this, Waitlist.class));
-//        });
+        waitlist.setOnClickListener(view -> {
+            startActivity(new Intent(EntrantHome.this, ViewEventsEntrant.class));
+        });
 
 //        notifications.setOnClickListener(view -> {
 //            startActivity(new Intent(EntrantHome.this, Notifications.class));
@@ -104,5 +104,20 @@ public class EntrantHome extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                     });
         });
+
+//        ReadMultipleCallback<Event> eventsCallback = new ReadMultipleCallback<Event>() {
+//            @Override
+//            public void onReadMultipleSuccess(ArrayList<Event> data) {
+//                for (Event event : data) {
+//                    if ()
+//                }
+////                events = data;
+//            }
+//
+//            @Override
+//            public void onReadMultipleFailure(Exception e) {
+//                Toast.makeText(EntrantHome.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
+//            }
+//        };
     }
 }
