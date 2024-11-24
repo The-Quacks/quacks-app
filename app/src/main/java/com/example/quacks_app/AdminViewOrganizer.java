@@ -10,17 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -29,15 +19,18 @@ This is the individual edit and delete screen to view events, can be multipurpos
  */
 
 public class AdminViewOrganizer extends AppCompatActivity {
+    String fieldOne;
+    String fieldTwo;
+    String fieldThree;
+    String fieldFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_admin);
         EdgeToEdge.enable(this);
-        ApplicantList testSingle;
 
         Bundle bundle = getIntent().getExtras();
-        Event editEvent = (Event) bundle.getSerializable("value");
+        Listable editEvent = (Listable) bundle.getSerializable("value");
         String id = bundle.getString("id");
 
         Button backButton = findViewById(R.id.back_button);
@@ -50,7 +43,6 @@ public class AdminViewOrganizer extends AppCompatActivity {
 
 
         Button delete = findViewById(R.id.delete_button);
-        Button edit = findViewById(R.id.edit_button);
 
         delete.setOnClickListener(view -> {
             DeleteCallback delCall = new DeleteCallback(){
@@ -66,38 +58,130 @@ public class AdminViewOrganizer extends AppCompatActivity {
                     System.err.println("Error deleting document: " + e.getMessage());
                 }
             };
-            CRUD.delete(id, Event.class, delCall);
-            CRUD.delete(editEvent.getApplicantList(), ApplicantList.class, delCall);
-        });
-
-
-        String appList = editEvent.getApplicantList();
-
-        CRUD.readLive(id, Event.class, new ReadCallback<Event>() {
-            @Override
-            public void onReadSuccess(Event data) {
-                //ApplicantList testSingle = document.toObject(ApplicantList.class);
-
-                EditText name = findViewById(R.id.Name);
-                EditText capacity = findViewById(R.id.capacity);
-                EditText available = findViewById(R.id.availability);
-                EditText location = findViewById(R.id.location);
-                String nameVal = "Name: " + data.getDescription();
-                String capval = "Capacity: "+ "";
-                String availval = "Availability: " + "";
-                String locVal = "Location: " + "";
-
-                name.setText(nameVal);
-                capacity.setText(capval);
-                available.setText(availval);
-                location.setText(locVal);
+            if (editEvent instanceof Event){
+                Event realEvent = (Event) editEvent;
+                CRUD.delete(id, Event.class, delCall);
+                CRUD.delete(realEvent.getApplicantList(), ApplicantList.class, delCall);
+            }
+            else if (editEvent instanceof User){
+                // todo if user, remove all mentions of user in applicantlists
+                // todo if Organzier, remove all events and applicantlists associated with it, alongside facilities
+                // todo if admin, remove user profile
             }
 
-            @Override
-            public void onReadFailure(Exception e) {
-                Log.d(TAG, "get failed with ", e);
+            else if (editEvent instanceof Facility) {
+                Facility realFacility = (Facility) editEvent;
+                CRUD.readLive(realFacility.getEventListId(), EventList.class, new ReadCallback<EventList>() {
+                    @Override
+                    public void onReadSuccess(EventList eventListData) {
+                        ArrayList<String> evIds = eventListData.getEventIds();
+                        for (String event : evIds){
+                            CRUD.readLive(event, Event.class, new ReadCallback<Event>() {
+                                @Override
+                                public void onReadSuccess(Event eventData) {
+                                    String appList = eventData.getApplicantList();
+                                    CRUD.delete(appList, ApplicantList.class, delCall);
+                                    CRUD.delete(eventData.getDocumentId(), Event.class, delCall);
+                                    CRUD.delete(realFacility.getEventListId(), EventList.class, delCall);
+                                    CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
+                                }
+
+                                @Override
+                                public void onReadFailure(Exception e) {
+                                    CRUD.delete(realFacility.getEventListId(), EventList.class, delCall);
+                                    CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
+
+                                }
+                            });
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
+
+                    }
+                });
 
             }
         });
+        if (editEvent instanceof Event){
+            CRUD.readLive(editEvent.getDocumentId(), Event.class, new ReadCallback<Event>() {
+                @Override
+                public void onReadSuccess(Event data) {
+                    Event specEvent = data;
+                    CRUD.readLive(specEvent.getApplicantList(), ApplicantList.class, new ReadCallback<ApplicantList>() {
+                        @Override
+                        public void onReadSuccess(ApplicantList appData) {
+                            CRUD.readLive(specEvent.getFacility(), Facility.class, new ReadCallback<Facility>() {
+                                @Override
+                                public void onReadSuccess(Facility facData) {
+                                    fieldOne = "Name: " + specEvent.getEventName();
+                                    fieldTwo = "Capacity: "+ appData.getLimit();
+                                    fieldThree = "Availability: " + (appData.getLimit() - appData.getApplicantIds().size());
+                                    fieldFour = "Location: " + facData.getLocation();
+
+                                    EditText name = findViewById(R.id.Name);
+                                    EditText capacity = findViewById(R.id.capacity);
+                                    EditText available = findViewById(R.id.availability);
+                                    EditText location = findViewById(R.id.location);
+
+                                    name.setText(fieldOne);
+                                    capacity.setText(fieldTwo);
+                                    available.setText(fieldThree);
+                                    location.setText(fieldFour);
+
+                                }
+                                @Override
+                                public void onReadFailure(Exception e) {
+
+                                }
+                            });
+
+                        }
+                        @Override
+                        public void onReadFailure(Exception e) {
+
+                        }
+                    });
+                }
+                @Override
+                public void onReadFailure(Exception e) {
+                    Log.d(TAG, "get failed with ", e);
+
+                }
+            });
+
+        }
+        else if (editEvent instanceof Facility){
+            Facility specFacility = (Facility) editEvent;
+            fieldOne = "Name: " + specFacility.getName();
+            fieldTwo = "Contact Info: "+  specFacility.getPhone();
+            fieldThree = "Location: " + specFacility.getLocation();
+            CRUD.readLive(specFacility.getOrganizerId(), User.class, new ReadCallback<User>() {
+                @Override
+                public void onReadSuccess(User specUser) {
+                    fieldFour = "Organizer: " + specUser.getUserProfile().getUserName();
+                    EditText name = findViewById(R.id.Name);
+                    EditText capacity = findViewById(R.id.capacity);
+                    EditText available = findViewById(R.id.availability);
+                    EditText location = findViewById(R.id.location);
+
+                    name.setText(fieldOne);
+                    capacity.setText(fieldTwo);
+                    available.setText(fieldThree);
+                    location.setText(fieldFour);
+                }
+
+                @Override
+                public void onReadFailure(Exception e) {
+
+                }
+            });
+
+        }
+
     }
 }

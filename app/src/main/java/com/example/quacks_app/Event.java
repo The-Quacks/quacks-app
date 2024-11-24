@@ -3,9 +3,9 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Event extends RepoModel implements Serializable {
-    private String eventName;
+public class Event extends RepoModel implements Serializable, Listable{
     private Date dateTime;
+    private String eventName;
     private String description;
     private String qrCodePath;
     private String applicantList;
@@ -18,7 +18,7 @@ public class Event extends RepoModel implements Serializable {
     private String instructorName;
     private Boolean geoRequired;
 
-    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
+    public Event(Date dateTime, String description, String applicantList, String facilityId, String organizerId) {
         // placeholder
     }
 
@@ -144,7 +144,7 @@ public class Event extends RepoModel implements Serializable {
      * @return A {@code String} representing the applicant list identifier.
      */
     public String getApplicantList() {
-        return applicantList;
+        return this.applicantList;
     }
 
     /**
