@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.mlkit.vision.barcode.common.Barcode;
@@ -37,7 +40,7 @@ public class EntrantHome extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         user = (User) getIntent().getSerializableExtra("User");
-        if (user.getUserProfile() != null) {
+        if (user != null && user.getUserProfile() != null) {
             hasProfile = true;
         }
 
@@ -47,21 +50,34 @@ public class EntrantHome extends AppCompatActivity {
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
         ImageButton switch_activity = findViewById(R.id.switch_activity_entrant);
 
-        switch_activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user.getRoles().contains(Role.ORGANIZER)) {
-                    Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
-                    intent.putExtra("User", user);
-                    startActivity(intent);
-                    finish();
+        // Set up the ActivityResultLauncher
+        ActivityResultLauncher<Intent> swapActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        // Get updated user and facility from the result
+                        user = (User) result.getData().getSerializableExtra("User");
+
+                        // Update the UI based on the new data
+                        updateUI(switch_activity);
+                    }
                 }
-                else if (user.getRoles().contains(Role.ADMIN)) {
-                    Intent intent = new Intent(EntrantHome.this, AdminHome.class);
-                    intent.putExtra("User", user);
-                    startActivity(intent);
-                    finish();
-                }
+        );
+
+        // Dynamically update the UI
+        updateUI(switch_activity);
+        setupRoleListener(switch_activity);
+
+        switch_activity.setOnClickListener(v -> {
+            if (user.getRoles().contains(Role.ORGANIZER)) {
+                Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
+                intent.putExtra("User", user);
+                swapActivityLauncher.launch(intent);
+            }
+            else if (user.getRoles().contains(Role.ADMIN)) {
+                Intent intent = new Intent(EntrantHome.this, AdminHome.class);
+                intent.putExtra("User", user);
+                swapActivityLauncher.launch(intent);
             }
         });
 
@@ -104,5 +120,33 @@ public class EntrantHome extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                     });
         });
+    }
+    /**
+     * Updates the UI dynamically based on the user's facility and role status.
+     */
+    private void updateUI(ImageButton switch_activity) {
+        // Hide Switch Activity button if role organizer or admin exists
+        if (user.getRoles().contains(Role.ORGANIZER) || user.getRoles().contains(Role.ADMIN)) {
+            switch_activity.setVisibility(View.VISIBLE);
+        } else {
+            switch_activity.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupRoleListener(ImageButton switch_activity) {
+        if (user != null && user.getDocumentId() != null) {
+            CRUD.readLive(user.getDocumentId(), User.class, new ReadCallback<User>() {
+                @Override
+                public void onReadSuccess(User updatedUser) {
+                    user = updatedUser; // Update the user object with new data
+                    updateUI(switch_activity); // Dynamically update the UI
+                }
+
+                @Override
+                public void onReadFailure(Exception e) {
+                    Toast.makeText(EntrantHome.this, "Failed to monitor user roles.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
