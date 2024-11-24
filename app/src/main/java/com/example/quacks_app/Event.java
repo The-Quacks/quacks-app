@@ -5,9 +5,7 @@ import java.util.Date;
 
 public class Event extends RepoModel implements Serializable, Listable{
     private Date dateTime;
-
     private String eventName;
-    private Date dateTime;
     private String description;
     private String qrCodePath;
     private String applicantList;
