@@ -39,6 +39,7 @@ public class ApplicantOptions extends AppCompatActivity {
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
         //otherwise
+
         all_applicants = findViewById(R.id.all_button);
         declined_applicants = findViewById(R.id.declined_button);
         accepted_applicants = findViewById(R.id.accepted_button);

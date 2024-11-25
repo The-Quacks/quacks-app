@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
-    private String eventName;
     private Date dateTime;
+    private String eventName;
     private String description;
     private String qrCodePath;
     private String applicantList;
@@ -144,7 +144,7 @@ public class Event extends RepoModel implements Serializable {
      * @return A {@code String} representing the applicant list identifier.
      */
     public String getApplicantList() {
-        return applicantList;
+        return this.applicantList;
     }
 
     /**

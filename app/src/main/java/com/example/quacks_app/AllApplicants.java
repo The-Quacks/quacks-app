@@ -32,15 +32,15 @@ public class AllApplicants extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_applicants);
 
-        if (getIntent().getSerializableExtra("Facility") == null){
+        if (getIntent().getSerializableExtra("Facility") == null) {
             Toast.makeText(AllApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
             finish();
         }
-        if (getIntent().getSerializableExtra("User") == null){
+        if (getIntent().getSerializableExtra("User") == null) {
             Toast.makeText(AllApplicants.this, "No User", Toast.LENGTH_SHORT).show();
             finish();
         }
-        if (getIntent().getSerializableExtra("Event") == null){
+        if (getIntent().getSerializableExtra("Event") == null) {
             Toast.makeText(AllApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -108,7 +108,6 @@ public class AllApplicants extends AppCompatActivity {
             public void onClick(View view) {
                 // set number of applicants then pool at random
                 Toast.makeText(AllApplicants.this, "Coming soon", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -123,7 +122,7 @@ public class AllApplicants extends AppCompatActivity {
         // Get the Event and ApplicantList ID
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
-        if (event == null|| event.getApplicantList() == null) {
+        if (event == null || event.getApplicantList() == null) {
             Toast.makeText(this, "Registration is not open yet.", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -131,5 +130,47 @@ public class AllApplicants extends AppCompatActivity {
 
         String applicantListId = event.getApplicantList();
 
+        // Load the applicants
+        CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
+            @Override
+            public void onReadSuccess(ApplicantList applicantList) {
+                if (applicantList != null) {
+
+                    userList.clear();
+
+                    for (String applicantId : applicantList.getApplicantIds()) {
+
+                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
+                            @Override
+                            public void onReadSuccess(User user) {
+                                if (user != null) {
+                                    real_user.add(user);
+                                    UserProfile profile = user.getUserProfile();
+                                    userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
+                                    userList.add(userdisplay);
+                                    applicantList.removeUser(user);
+                                }
+                                applicantArrayAdapter.notifyDataSetChanged();
+
+                            }
+
+                            @Override
+                            public void onReadFailure(Exception e) {
+                                Toast.makeText(AllApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } else {
+                    Toast.makeText(AllApplicants.this, "No applicant list found", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                Toast.makeText(AllApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     }
 }
