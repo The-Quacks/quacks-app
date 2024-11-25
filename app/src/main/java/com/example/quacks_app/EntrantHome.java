@@ -138,6 +138,7 @@ public class EntrantHome extends AppCompatActivity {
                         Intent switchActivityIntent = new Intent(getApplicationContext(),
                                 EventDescription.class);
                         switchActivityIntent.putExtra("id", id);
+                        switchActivityIntent.putExtra("User", user);
                         switchActivityIntent.putExtra("isRemoving", false);
                         startActivity(switchActivityIntent);
                     })

@@ -40,6 +40,8 @@ public class EventDescription extends AppCompatActivity {
         Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
 
         eventId = getIntent().getStringExtra("id");
+        currentUser = (User) getIntent().getSerializableExtra("User");
+        userId = currentUser.getDocumentId();
         isRemoving = getIntent().getBooleanExtra("isRemoving", false);
 
         if (isRemoving) {
@@ -76,82 +78,60 @@ public class EventDescription extends AppCompatActivity {
 
 
         joinWaitlist.setOnClickListener(v -> {
-            Map<String, Object> userQuery = new HashMap<>();
-            userQuery.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+            if (userId != null) {
+                ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList applicantList) {
+                        if (isRemoving) {
+                            if (applicantList.contains(userId)) {
+                                applicantList.removeUser(userId);
 
-            CRUD.readQueryStatic(userQuery, User.class, new ReadMultipleCallback<User>() {
-                @Override
-                public void onReadMultipleSuccess(ArrayList<User> data) {
-                    for (User u : data) {
-                        if (u.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
-                            userId = u.getDocumentId();
-                            currentUser = u;
-                            break;
+                                CRUD.update(applicantList, new UpdateCallback() {
+                                    @Override
+                                    public void onUpdateSuccess() {
+                                        removeEventFromUser(eventId);
+                                    }
+
+                                    @Override
+                                    public void onUpdateFailure(Exception e) {
+                                        Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(EventDescription.this, "You are not in the waitlist!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (applicantList.contains(userId)) {
+                                Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            applicantList.addUser(userId);
+
+                            CRUD.update(applicantList, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    addEventToUser(eventId);
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
 
-                    if (userId != null) {
-                        ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
-                            @Override
-                            public void onReadSuccess(ApplicantList applicantList) {
-                                if (isRemoving) {
-                                    if (applicantList.contains(userId)) {
-                                        applicantList.removeUser(userId);
-
-                                        CRUD.update(applicantList, new UpdateCallback() {
-                                            @Override
-                                            public void onUpdateSuccess() {
-                                                removeEventFromUser(eventId);
-                                            }
-
-                                            @Override
-                                            public void onUpdateFailure(Exception e) {
-                                                Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(EventDescription.this, "You are not in the waitlist!", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    if (applicantList.contains(userId)) {
-                                        Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                    applicantList.addUser(userId);
-
-                                    CRUD.update(applicantList, new UpdateCallback() {
-                                        @Override
-                                        public void onUpdateSuccess() {
-                                            addEventToUser(eventId);
-                                        }
-
-                                        @Override
-                                        public void onUpdateFailure(Exception e) {
-                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }
-
-                            @Override
-                            public void onReadFailure(Exception e) {
-                                Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                            }
-                        };
-
-                        CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
-                    } else {
-                        Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
                     }
-                }
+                };
 
-                @Override
-                public void onReadMultipleFailure(Exception e) {
-                    Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
-                }
-            });
+                CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
+            } else {
+                Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
+            }
         });
-
     }
 
     private void addEventToUser(String eventId) {
