@@ -145,12 +145,8 @@ public class EntrantHome extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                     });
         });
-
-
-        // Add list of eventIds to entrant attributes (done)
-        // For this, get the list of eventIds that match the array
-        // Then display the list on the next page
     }
+
     /**
      * Updates the UI dynamically based on the user's facility and role status.
      */
