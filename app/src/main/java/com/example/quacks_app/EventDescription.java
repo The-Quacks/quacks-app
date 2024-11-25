@@ -28,13 +28,24 @@ public class EventDescription extends AppCompatActivity {
     private String eventId;
     private String applicantListId;
     private User currentUser;
+    private boolean isRemoving;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_description);
 
+        ImageButton back = findViewById(R.id.backButton);
+        ImageButton home = findViewById(R.id.homeIcon);
+        Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
+
         eventId = getIntent().getStringExtra("id");
+        isRemoving = getIntent().getBooleanExtra("isRemoving", false);
+
+        if (isRemoving) {
+            joinWaitlist.setText("Leave Waitlist");
+        }
+
         ReadCallback<Event> readEventCallback = new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
@@ -54,10 +65,6 @@ public class EventDescription extends AppCompatActivity {
         };
 
         CRUD.readStatic(eventId, Event.class, readEventCallback);
-
-        ImageButton back = findViewById(R.id.backButton);
-        ImageButton home = findViewById(R.id.homeIcon);
-        Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
 
         back.setOnClickListener(v -> {
             finish();
@@ -87,23 +94,43 @@ public class EventDescription extends AppCompatActivity {
                         ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
                             @Override
                             public void onReadSuccess(ApplicantList applicantList) {
-                                if (applicantList.contains(userId)) {
-                                    Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
-                                    return;
+                                if (isRemoving) {
+                                    if (applicantList.contains(userId)) {
+                                        applicantList.removeUser(userId);
+
+                                        CRUD.update(applicantList, new UpdateCallback() {
+                                            @Override
+                                            public void onUpdateSuccess() {
+                                                removeEventFromUser(eventId);
+                                            }
+
+                                            @Override
+                                            public void onUpdateFailure(Exception e) {
+                                                Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(EventDescription.this, "You are not in the waitlist!", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    if (applicantList.contains(userId)) {
+                                        Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    applicantList.addUser(userId);
+
+                                    CRUD.update(applicantList, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            addEventToUser(eventId);
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
-                                applicantList.addUser(userId);
-
-                                CRUD.update(applicantList, new UpdateCallback() {
-                                    @Override
-                                    public void onUpdateSuccess() {
-                                        addEventToUser(eventId);
-                                    }
-
-                                    @Override
-                                    public void onUpdateFailure(Exception e) {
-                                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
                             }
 
                             @Override
@@ -124,6 +151,7 @@ public class EventDescription extends AppCompatActivity {
                 }
             });
         });
+
     }
 
     private void addEventToUser(String eventId) {
@@ -154,6 +182,34 @@ public class EventDescription extends AppCompatActivity {
                 });
             } else {
                 Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void removeEventFromUser(String eventId) {
+        if (currentUser != null) {
+            EventList userEvents = currentUser.getUserProfile().getEventList();
+            if (userEvents.contains(eventId)) {
+                userEvents.removeEvent(eventId);
+                currentUser.getUserProfile().setEventList(userEvents);
+
+                CRUD.update(currentUser, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        Toast.makeText(EventDescription.this, "Successfully left the waitlist", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+                        intent.putExtra("User", currentUser);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(EventDescription.this, "Event not found", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -85,10 +85,18 @@ public class EntrantHome extends AppCompatActivity {
                 query.put("eventId", eventId);
             }
 
-            CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
+            CRUD.readQueryStatic(query, Event.class, new ReadMultipleCallback<Event>() {
                 @Override
                 public void onReadMultipleSuccess(ArrayList<Event> data) {
                     events = data;
+                    if (!events.isEmpty()) {
+                        Intent entrantWaitlistIntent = new Intent(EntrantHome.this, ViewEventsEntrant.class);
+                        entrantWaitlistIntent.putExtra("User", user);
+                        entrantWaitlistIntent.putExtra("EventList", events);
+                        startActivity(entrantWaitlistIntent);
+                    } else {
+                        Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -96,11 +104,6 @@ public class EntrantHome extends AppCompatActivity {
                     Toast.makeText(EntrantHome.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            Intent entrantWaitlistIntent = new Intent(EntrantHome.this, ViewEventsEntrant.class);
-            entrantWaitlistIntent.putExtra("User", user);
-            entrantWaitlistIntent.putExtra("EventList", events);
-            startActivity(entrantWaitlistIntent);
         });
 
 //        notifications.setOnClickListener(view -> {
@@ -119,6 +122,7 @@ public class EntrantHome extends AppCompatActivity {
                         Intent switchActivityIntent = new Intent(getApplicationContext(),
                                 EventDescription.class);
                         switchActivityIntent.putExtra("id", id);
+                        switchActivityIntent.putExtra("isRemoving", false);
                         startActivity(switchActivityIntent);
                     })
                     .addOnCanceledListener(this::finish)

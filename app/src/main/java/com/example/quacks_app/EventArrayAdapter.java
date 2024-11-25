@@ -26,7 +26,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
     public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context, 0, events);
-        this.events = events;
+        this.events = (!events.isEmpty()) ? events : new ArrayList<>();
         this.context = context;
     }
 
@@ -50,6 +50,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         date.setText(event.getDescription());
         if (facility != null) {
             instructor.setText(facility.getName());
+        } else {
+            instructor.setVisibility(View.GONE);
         }
 
         return view;
