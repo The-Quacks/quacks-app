@@ -98,6 +98,11 @@
 
         <activity android:name=".AllApplicants"
             android:exported="true" />
+
+        <activity android:name=".DeclinedApplicants"
+            android:exported="true" />
+        <activity android:name=".AcceptedApplicants"
+            android:exported="true" />
         
         <meta-data
             android:name="preloaded_fonts"

@@ -21,6 +21,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Create Event allows the organizer to create an event and store it in the DB
@@ -212,7 +213,8 @@ public class CreateEvent extends AppCompatActivity {
                     event.setFacility(facility.getDocumentId());
                     event.setRegistrationCapacity(classes);
                     event.setWaitlistCapacity(classes_two);
-
+                    String uuid = UUID.randomUUID().toString();
+                    event.setDocumentId(uuid);
                     if (eventList != null) {
                         eventList.addEvent(event);
                     }

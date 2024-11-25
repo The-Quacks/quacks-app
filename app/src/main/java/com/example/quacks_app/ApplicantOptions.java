@@ -13,11 +13,25 @@ public class ApplicantOptions extends AppCompatActivity {
     private Button declined_applicants;
     private Button accepted_applicants;
     private Button back;
+    private Facility facility;
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.applicant_options);
+
+
+        if (getIntent().getSerializableExtra("Facility") == null){
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+
+        if (getIntent().getSerializableExtra("User")==null){
+            finish();
+        }
+        user = (User) getIntent().getSerializableExtra("User");
 
         if (getIntent().getSerializableExtra("Event") == null){
             finish();
@@ -25,7 +39,6 @@ public class ApplicantOptions extends AppCompatActivity {
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
         //otherwise
-
         all_applicants = findViewById(R.id.all_button);
         declined_applicants = findViewById(R.id.declined_button);
         accepted_applicants = findViewById(R.id.accepted_button);
@@ -44,6 +57,8 @@ public class ApplicantOptions extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ApplicantOptions.this, AllApplicants.class);
                 intent.putExtra("Event", event);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
                 startActivity(intent);
             }
         });
@@ -51,18 +66,23 @@ public class ApplicantOptions extends AppCompatActivity {
         declined_applicants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ApplicantOptions.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ApplicantOptions.this, DeclinedApplicants.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                startActivity(intent);
             }
         });
 
         accepted_applicants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ApplicantOptions.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ApplicantOptions.this, AcceptedApplicants.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                startActivity(intent);
             }
         });
-
-
-
     }
 }
