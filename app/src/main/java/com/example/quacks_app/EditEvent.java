@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -56,6 +57,14 @@ public class EditEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
+
+        String mode = getIntent().getStringExtra("mode");
+
+        // Update the title of the Activity based on the mode - Create Event / Edit Event
+        TextView title = findViewById(R.id.title);
+        if ("edit".equals(mode.trim())) { // Null-safe and trimmed comparison
+            title.setText(R.string.editing_event_details);
+        }
 
         //back and confirm buttons
         back = findViewById(R.id.back_button);

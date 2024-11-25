@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="Event Information"
+            android:text="@string/event_information"
             android:textColor="@color/text"
             android:textSize="35sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -189,10 +189,8 @@
 
     </LinearLayout>
 
-
-
     <Button
-        android:id="@+id/register"
+        android:id="@+id/register_button"
         android:layout_width="175dp"
         android:layout_height="175dp"
         android:elevation="10dp"
@@ -201,7 +199,7 @@
         android:backgroundTint="@color/button"
         android:drawableTop = "@drawable/profile_icon_med"
         android:fadingEdge="horizontal"
-        android:text="Open Registration"
+        android:text="@string/open_registration"
         android:textSize = "15sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
@@ -213,35 +211,31 @@
         android:id="@+id/close"
         android:layout_width="175dp"
         android:layout_height="175dp"
-
         android:elevation="10dp"
         android:stateListAnimator="@null"
-
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/button"
         android:drawableTop = "@drawable/email_icon_med"
         android:fadingEdge="horizontal"
-        android:text="Applicant Lists"
+        android:text="@string/close_registration"
         android:textSize ="15sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
         android:layout_marginEnd = "15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@id/event_box"
-        />
+        app:layout_constraintTop_toBottomOf = "@id/event_box" />
+
     <Button
-        android:id="@+id/delete_button"
+        android:id="@+id/edit_event_button"
         android:layout_width="175dp"
         android:layout_height="150dp"
-
         android:elevation="10dp"
         android:stateListAnimator="@null"
-
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/trash_icon_med"
+        android:drawableTop = "@drawable/create_event_resize"
         android:fadingEdge="horizontal"
-        android:text="Delete Event"
+        android:text="@string/edit_event"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
@@ -251,18 +245,16 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
-        android:id="@+id/map"
+        android:id="@+id/applicant_lists"
         android:layout_width="175dp"
         android:layout_height="150dp"
-
         android:elevation="10dp"
         android:stateListAnimator="@null"
-
         android:layout_marginTop="170dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/create_event_resize"
+        android:drawableTop = "@drawable/event_resize"
         android:fadingEdge="horizontal"
-        android:text="Edit Event"
+        android:text="@string/applicant_lists"
         android:textSize = "18sp"
         android:textColor="@color/black"
         app:cornerRadius="7dp"
