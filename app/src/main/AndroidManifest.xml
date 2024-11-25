@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
@@ -29,11 +31,6 @@
         <activity
             android:name=".WelcomeEntrant"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".OrganizerHomepage"
@@ -47,13 +44,21 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
         <activity
             android:name=".EntrantHome"
             android:exported="true" />
         <activity
             android:name=".AdminHome"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+
+        </activity>
         <activity android:name=".CreateFacility"
             android:exported="true" />
 
@@ -78,6 +83,9 @@
         <activity android:name=".EventInfo"
             android:exported="true" />
 
+        <activity android:name=".EditEvent"
+            android:exported="true" />
+
         <activity android:name=".OpenRegistration"
             android:exported="true" />
 
@@ -89,14 +97,20 @@
 
         <activity android:name=".PickApplicant"
             android:exported="true" />
+        <activity android:name=".ApplicantOptions"
+            android:exported="true" />
 
         <activity android:name=".ViewEventsEntrant"
             android:exported="true" />
 
 
+        <activity android:name=".AllApplicants"
+            android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

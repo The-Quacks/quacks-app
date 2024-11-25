@@ -3,7 +3,7 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Event extends RepoModel implements Serializable {
+public class Event extends RepoModel implements Serializable, Listable{
     private Date dateTime;
     private String eventName;
     private String description;
@@ -13,14 +13,93 @@ public class Event extends RepoModel implements Serializable {
     private String organizerId;
     private String QRCodeHash;
     private boolean geolocationRequired;
+    private int waitlist_capacity;
+    private int registration_capacity;
+    private String instructorName;
+    private Boolean geoRequired;
 
-    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
+    public Event(Date dateTime, String description, String applicantList, String facilityId, String organizerId) {
         // placeholder
     }
 
 
     public Event(){
         // need empty constructor for firebase
+    }
+
+    /**
+     * Set Geo Location
+     */
+    public void setGeo(Boolean decision) {
+        this.geoRequired = decision;
+    }
+
+    /**
+     * Gets the Geo Location
+     * @ return String geo
+     */
+    public Boolean getGeo() {
+        return this.geoRequired;
+    }
+
+    /**
+     * Sets the Instructor name
+     */
+    public void setInstructor(String name) {
+        this.instructorName = name;
+    }
+
+    /**
+     * Gets the instructor name
+     * @ return String name
+     */
+    public String getInstructor() {
+        return this.instructorName;
+    }
+
+    /**
+     * Sets the waitlist capacity for the event
+     */
+    public void setWaitlistCapacity(int number) {
+        this.waitlist_capacity = number;
+    }
+
+    /**
+     * Gets the waitlist capacity for the event
+     * @ return int capacity
+     */
+    public int getWaitlistCapacity(){
+        return this.waitlist_capacity;
+    }
+
+    /**
+     * Sets the registration Capacity
+     */
+    public void setRegistrationCapacity(int number){
+        this.registration_capacity = number;
+    }
+
+    /**
+     * Gets the registration Capacity
+     * @ return int number
+     */
+    public int getRegistrationCapacity(){
+       return this.registration_capacity;
+    }
+
+    /**
+     * Sets the name of the event
+     * @ return none
+     */
+    public void setEventName(String Name){
+        this.eventName = Name;
+    }
+    /**
+     * Gets the name of the event
+     * @ return String name
+     */
+    public String getEventName(){
+        return this.eventName;
     }
 
     /**
@@ -39,14 +118,6 @@ public class Event extends RepoModel implements Serializable {
      */
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
     }
 
     /**
@@ -73,7 +144,7 @@ public class Event extends RepoModel implements Serializable {
      * @return A {@code String} representing the applicant list identifier.
      */
     public String getApplicantList() {
-        return applicantList;
+        return this.applicantList;
     }
 
     /**
@@ -147,13 +218,5 @@ public class Event extends RepoModel implements Serializable {
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
-    }
-
-    public boolean getGeolocationRequired() {
-        return geolocationRequired;
-    }
-
-    public void setGeolocationRequired(boolean geolocationRequired) {
-        this.geolocationRequired = geolocationRequired;
     }
 }

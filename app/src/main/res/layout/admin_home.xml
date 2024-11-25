@@ -37,7 +37,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="21dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/qrCodesLayout"
+        app:layout_constraintBottom_toTopOf="@+id/facilitiesLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText">
 
@@ -64,16 +64,17 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:id="@+id/eventsLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/imagesLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
-        app:layout_constraintVertical_bias="0.958">
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/profilesLayout"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText">
 
         <ImageButton
             android:id="@+id/eventsButton"
@@ -101,10 +102,13 @@
         android:id="@+id/imagesLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/facilitiesLayout"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/facilitiesLayout"
+        app:layout_constraintTop_toBottomOf="@+id/eventsLayout">
 
         <ImageButton
             android:id="@+id/imagesButton"
@@ -129,44 +133,13 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/qrCodesLayout"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/facilitiesLayout"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageButton
-            android:id="@+id/qrCodesButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_admin_button"
-            android:padding="20dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_qr_code" />
-
-        <TextView
-            android:id="@+id/qrCodesButtonText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
-            android:text="QR Codes"
-            android:textColor="#000000" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/facilitiesLayout"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="352dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeText">
+        app:layout_constraintTop_toBottomOf="@+id/profilesLayout">
 
         <ImageButton
             android:id="@+id/facilitiesButton"

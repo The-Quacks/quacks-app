@@ -1,9 +1,9 @@
 package com.example.quacks_app;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,12 +20,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
-/**
- * Create Event allows the organizer to create an event and store it in the DB
- */
-public class CreateEvent extends AppCompatActivity {
-    private LocalDate startDate;
+
+public class EditEvent extends AppCompatActivity {
+    private LocalDate start_date;
     private EditText event_name;
     private EditText class_capacity;
     private EditText waitlist_capacity;
@@ -37,7 +36,7 @@ public class CreateEvent extends AppCompatActivity {
     private User user;
     private Button back;
     private Button confirm;
-    private Event event;
+    private Button upload_poster;
     private ImageButton search;
     private ImageButton profile;
     private ImageButton homepage;
@@ -46,34 +45,38 @@ public class CreateEvent extends AppCompatActivity {
     private boolean validEventName = false;
     private boolean wrong = false;
     private FirebaseFirestore db;
-    private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
-    private Button upload_button;
-
+    private Event old_event;
+    private int classes = 0;
+    private int classes_two = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
-        // buttons
-        upload_button = findViewById(R.id.upload_button);
+
+        //back and confirm buttons
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
-        if (getIntent().getSerializableExtra("Facility") == null) {
+        upload_poster = findViewById(R.id.upload_button);
+
+        if (getIntent().getSerializableExtra("Event") == null){
+            finish();
+        }
+        old_event = (Event) getIntent().getSerializableExtra("Event");
+
+        if (getIntent().getSerializableExtra("Facility") == null){
             finish();
         }
         facility = (Facility) getIntent().getSerializableExtra("Facility");
-        if (getIntent().getSerializableExtra("EventList") == null) {
+
+        if (getIntent().getSerializableExtra("User") == null){
             finish();
         }
-        eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
 
-
-
-        //Then we set them like in create profile
 
         //Finding the right text box
         event_name = findViewById(R.id.event_name);
@@ -85,15 +88,53 @@ public class CreateEvent extends AppCompatActivity {
         description = findViewById(R.id.description);
         eventtime = findViewById(R.id.event_time);
 
+        //Setting the textboxes with old data
+        event_name.setText(old_event.getEventName());
+        class_capacity.setText(String.valueOf(old_event.getRegistrationCapacity()));
+        waitlist_capacity.setText(String.valueOf(old_event.getWaitlistCapacity()));
+        instructor.setText(old_event.getInstructor());
+        description.setText(old_event.getDescription());
+        geolocation.setChecked(old_event.getGeo());
+
+
+        //getting the hour
+        Date date = old_event.getDateTime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        String day_display = String.format("%02d-%02d-%04d", day, month, year);
+        beginning.setText(day_display);
+
+
+        int hours = calendar.get(Calendar.HOUR_OF_DAY); //24 hr format
+        int minutes = calendar.get(Calendar.MINUTE);
+        String display = "";
+
+        if (hours > 12) {
+            hours -= 12;
+            display = String.format("%02d:%02dpm", hours, minutes);
+
+        } else {
+            display = String.format("%02d:%02dpm", hours, minutes);
+        }
+        eventtime.setText(display);
+
+
+        //getting the event time
 
 
         //buttons
-        upload_button.setOnClickListener(new View.OnClickListener() {
+        upload_poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(CreateEvent.this, "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditEvent.this, "Event Poster Coming Soon", Toast.LENGTH_SHORT).show();
             }
         });
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,21 +145,20 @@ public class CreateEvent extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //this checks the format of the **day** entered
-                try {
+                try{
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                    String startDateString = beginning.getText().toString().trim();
+                    String startdate = beginning.getText().toString().trim();
                     LocalDate current_date = LocalDate.now();
 
-                    startDate = LocalDate.parse(startDateString, formatter);
+                    start_date = LocalDate.parse(startdate, formatter);
 
-                    if (current_date.isBefore(startDate)) {
+
+                    if (current_date.isBefore(start_date)) {
                         validDate = true;
                         wrong = false;
                     }
                 } catch (Exception e) {
-                    Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -133,26 +173,25 @@ public class CreateEvent extends AppCompatActivity {
                         eventTime = LocalTime.parse(hour.toUpperCase(), formatted);
                     } catch (Exception E) {
                         wrong = true;
-                        Toast.makeText(CreateEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
                     }
 
                     if (wrong) {
                         validDate = false;
                     }
 
-                    if (startDate != null && eventTime != null) {
+                    if (start_date != null && eventTime != null) {
                         final_date_time = Date.from(
-                                startDate.atTime(eventTime)
+                                start_date.atTime(eventTime)
                                         .atZone(ZoneId.systemDefault())
                                         .toInstant()
                         );
                     } else {
-                        Toast.makeText(CreateEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
                     }
                 } catch(Exception E) {
                     validDate = false;
                 }
-
 
                 // this checks the format of the **class capacity**
 
@@ -161,18 +200,17 @@ public class CreateEvent extends AppCompatActivity {
                     classes = Integer.parseInt(class_capacity.getText().toString());
                 } catch(Exception e) {
                     wrong = true;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
                 }
 
                 //this checks the format of the **waitlist capacity**
-                int classes_two = 0;
                 try {
                     classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
-
-                }catch(Exception e){
+                } catch(Exception e) {
                     wrong = true;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error in format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
                 }
+
 
                 // this checks the format of the **instructor name**
                 String name = instructor.getText().toString();
@@ -181,12 +219,12 @@ public class CreateEvent extends AppCompatActivity {
                     wrong = false;
                     //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CreateEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
                 }
 
                 // this checks the format of the **Geolocation**
 
-                boolean geo = geolocation.isChecked();
+                Boolean geo = geolocation.isChecked();
 
                 // this checks the format of the **event name**
 
@@ -196,62 +234,46 @@ public class CreateEvent extends AppCompatActivity {
                     wrong = false;
                     //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CreateEvent.this, "Event name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditEvent.this, "Event Name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
                 }
                 String text = description.getText().toString();
 
-                if (!wrong && validDate && validInstructorName && validEventName) {
-                    event = new Event();
-                    event.setEventName(eventname);
-                    event.setDateTime(final_date_time);
-                    event.setDescription(text);
-                    event.setInstructor(name);
-                    event.setGeo(geo);
-                    event.setOrganizerId(user.getDocumentId());
-                    event.setFacility(facility.getDocumentId());
-                    event.setRegistrationCapacity(classes);
-                    event.setWaitlistCapacity(classes_two);
 
-                    if (eventList != null) {
-                        eventList.addEvent(event);
-                    }
+                //this is the case where all the tests pass
+                if (validDate && validInstructorName && validEventName && !wrong) {
+                    old_event.setEventName(eventname);
+                    old_event.setDateTime(final_date_time);
+                    old_event.setDescription(text);
+                    old_event.setInstructor(name);
+                    old_event.setGeo(geo);
+                    old_event.setOrganizerId(user.getDocumentId());
+                    old_event.setFacility(facility.getDocumentId());
+                    old_event.setRegistrationCapacity(classes);
+                    old_event.setWaitlistCapacity(classes_two);
 
+                    Event event = old_event;
 
-                    //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
-                    CRUD.create(event, new CreateCallback() {
+                    CRUD.createOrUpdate(event, new UpdateCallback() {
                         @Override
-                        public void onCreateSuccess() {
-                            Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 100, 100);
-                            String hash = QRCodeUtil.hash(qrcode);
-                            event.setQRCodeHash(hash);
-                            CRUD.update(event, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(CreateEvent.this, QRCodeGeneratorActivity.class);
-                                    intent.putExtra("EventList", eventList);
-                                    intent.putExtra("User", user);
-                                    intent.putExtra("Facility", facility);
-                                    intent.putExtra("Event", event);
-                                    startActivity(intent);
-                                    finish();
-                                }
+                        public void onUpdateSuccess() {
+                            Toast.makeText(EditEvent.this, "Event Updated", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(EditEvent.this, EventInfo.class);
+                            intent.putExtra("Facility", facility);
+                            intent.putExtra("Event", event);
+                            intent.putExtra("User", user);
+                            startActivity(intent);
 
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
                         }
 
                         @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(EditEvent.this, "Error creating user, please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
 
-                } else {
-                    Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(EditEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -266,18 +288,19 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Already here
-                Intent intent = new Intent(CreateEvent.this, OrganizerHomepage.class);
+                Intent intent = new Intent(EditEvent.this, OrganizerHomepage.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }
                 startActivity(intent);
+
             }
         });
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
+                Intent intent = new Intent(EditEvent.this, ViewOrganizer.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }
@@ -288,7 +311,7 @@ public class CreateEvent extends AppCompatActivity {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
+                Intent intent = new Intent(EditEvent.this, ViewOrganizer.class);
                 if (facility != null) {
                     intent.putExtra("Facility", facility);
                 }

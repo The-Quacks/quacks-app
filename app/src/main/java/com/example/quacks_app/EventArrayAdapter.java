@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class EventArrayAdapter extends ArrayAdapter<Event> {
@@ -40,19 +42,14 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         }
 
         Event event = events.get(position);
-
         TextView eventName = view.findViewById(R.id.event_text);
         TextView date = view.findViewById(R.id.date_text);
         TextView instructor = view.findViewById(R.id.instructor_text);
         //TextView class_capacity = view.findViewById(R.id.class_capacity);
 
-        eventName.setText(event.getDateTime().toString());
-        date.setText(event.getDescription());
-        if (facility != null) {
-            instructor.setText(facility.getName());
-        } else {
-            instructor.setVisibility(View.GONE);
-        }
+        eventName.setText(event.getEventName());
+        date.setText(event.getDateTime().toString());
+        instructor.setText(event.getDescription());
 
         return view;
     }
