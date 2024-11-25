@@ -15,12 +15,12 @@ import java.util.ArrayList;
 Custom ArrayAdapter so we can assign headings and subheadings, not just a single peice of text
  */
 
-public class CustomAdapter extends ArrayAdapter<Event> {
+public class CustomAdapter extends ArrayAdapter<Listable> {
     private Context mContext;
-    private ArrayList<Event> dataList;
+    private ArrayList<Listable> dataList;
     private int resource;
 
-    public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Event> dataList) {
+    public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Listable> dataList) {
         super(context, resource, dataList);
         this.mContext = context;
         this.resource = resource;
