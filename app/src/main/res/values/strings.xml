@@ -33,4 +33,11 @@
     <string name="home">Home</string>
     <string name="create_a_facility">Create a Facility</string>
     <string name="event_list">Event List</string>
+    <string name="applicant_lists">Applicant Lists</string>
+    <string name="open_registration">Open Registration</string>
+    <string name="edit_event">Edit Event</string>
+    <string name="close_registration">Close Registration</string>
+    <string name="event_information">Event Information</string>
+    <string name="create_an_event">Create An Event</string>
+    <string name="editing_event_details">Editing Event Details</string>
 </resources>

@@ -76,24 +76,6 @@ public class ViewEvents extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        eventList.setOnItemClickListener((adapterView, view, i, l) -> {
-//            Event clickedEvent = (Event) adapterView.getItemAtPosition(i);
-//            Intent intent = new Intent(ViewEvents.this, EventInfo.class);
-//
-//            intent.putExtra("Event", clickedEvent);
-//            if (evented != null) {
-//                intent.putExtra("EventList", evented);
-//            }
-//            if (facility != null){
-//                intent.putExtra("Facility", facility);
-//            }
-//            if (user != null) {
-//                intent.putExtra("User", user);
-//            }
-//            startActivity(intent);
-//        });
-
-
         //This is the bottom of the page directory
         ImageButton homepage = findViewById(R.id.house);
         ImageButton profile = findViewById(R.id.person);

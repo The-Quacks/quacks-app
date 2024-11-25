@@ -1,5 +1,6 @@
 package com.example.quacks_app;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -48,10 +49,10 @@ public class EventInfo extends AppCompatActivity {
         TextView registration_capacity = findViewById(R.id.class_capacity);
 
         // Buttons
-        Button open_registration = findViewById(R.id.register);
-        Button close_registration = findViewById(R.id.close);
-        Button delete_event = findViewById(R.id.delete_button);
-        Button entrant_map = findViewById(R.id.map);
+        Button open_registration_button = findViewById(R.id.register_button);
+        Button close_registration_button = findViewById(R.id.close);
+        Button edit_event_button = findViewById(R.id.edit_event_button);
+        Button applicant_lists_button = findViewById(R.id.applicant_lists);
 
         String text = event.getDescription();
         geolocation.setChecked(event.getGeo() != null && event.getGeo());
@@ -81,45 +82,43 @@ public class EventInfo extends AppCompatActivity {
         organizer.setText(organizerId);
         id.setText(event.getEventId());
 
-        open_registration.setOnClickListener(view -> {
+        open_registration_button.setOnClickListener(view -> {
             //makes an applicant list for that event.
             Intent intent = new Intent(EventInfo.this, OpenRegistration.class);
             intent.putExtra("Event", event);
             startActivity(intent);
         });
 
-        close_registration.setOnClickListener(view -> {
+        applicant_lists_button.setOnClickListener(view -> {
             Intent intent = new Intent(EventInfo.this, ApplicantOptions.class);
             intent.putExtra("Event", event);
             startActivity(intent);
 
         });
 
-        entrant_map.setOnClickListener(view -> {
+        edit_event_button.setOnClickListener(view -> {
             Intent intent  = new Intent(EventInfo.this, EditEvent.class);
+            intent.putExtra("mode", "edit");
             intent.putExtra("Event", event);
             intent.putExtra("User", user);
             intent.putExtra("Facility", actual_facility);
             startActivity(intent);
         });
 
-        delete_event.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                  CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
-                      @Override
-                      public void onDeleteSuccess() {
-                          Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
-                          finish();
-                      }
+        close_registration_button.setOnClickListener(view ->
+                        CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
+            @Override
+            public void onDeleteSuccess() {
+                Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                finish();
+            }
 
-                      @Override
-                      public void onDeleteFailure(Exception e) {
-                          Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
-                      }
-                  });
-              }
-          });
+            @Override
+            public void onDeleteFailure(Exception e) {
+                Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
+            }
+            })
+        );
 
         //This is the bottom of the page directory
         ImageButton homepage = findViewById(R.id.house);
