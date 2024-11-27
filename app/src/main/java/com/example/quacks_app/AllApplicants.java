@@ -47,6 +47,8 @@ public class AllApplicants extends AppCompatActivity {
 
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
+        // Get the Event and ApplicantList ID
+        Event event = (Event) getIntent().getSerializableExtra("Event");
 
 
         //Buttons
@@ -99,7 +101,12 @@ public class AllApplicants extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // this will go to the select applicant page
-                Toast.makeText(AllApplicants.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AllApplicants.this, NotifyOptions.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+
             }
         });
 
@@ -119,11 +126,8 @@ public class AllApplicants extends AppCompatActivity {
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
         applicantListView.setAdapter(applicantArrayAdapter);
 
-        // Get the Event and ApplicantList ID
-        Event event = (Event) getIntent().getSerializableExtra("Event");
-
-        if (event == null || event.getApplicantList() == null) {
-            Toast.makeText(this, "Registration is not open yet.", Toast.LENGTH_SHORT).show();
+        if (event == null) {
+            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -160,7 +164,8 @@ public class AllApplicants extends AppCompatActivity {
                             }
                         });
                     }
-                } else {
+                }
+                else {
                     Toast.makeText(AllApplicants.this, "No applicant list found", Toast.LENGTH_SHORT).show();
                 }
 
@@ -171,6 +176,8 @@ public class AllApplicants extends AppCompatActivity {
                 Toast.makeText(AllApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+
+        //Suggest here click into other peoples profiles?
+
     }
 }

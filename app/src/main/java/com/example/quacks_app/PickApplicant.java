@@ -30,6 +30,7 @@ public class PickApplicant extends AppCompatActivity {
     int success = 0;
     int fail = 0;
     int total;
+    private Button back;
 
     /*
     Selecting applicants from listview
@@ -40,6 +41,7 @@ public class PickApplicant extends AppCompatActivity {
         setContentView(R.layout.pick_applicants);
 
         select = findViewById(R.id.select_button);
+        back = findViewById(R.id.pick_back_button);
 
 
         applicantListView = findViewById(R.id.app_list);
@@ -119,6 +121,13 @@ public class PickApplicant extends AppCompatActivity {
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +162,7 @@ public class PickApplicant extends AppCompatActivity {
                 }
             }
         });
+
     }
 }
 

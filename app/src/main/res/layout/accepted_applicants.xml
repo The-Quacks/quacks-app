@@ -40,7 +40,7 @@
         android:layout_height="48dp"
         android:backgroundTint="@color/button"
         android:gravity="center"
-        android:text="SELECT"
+        android:text="NOTIFY OPTIONS"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/accepted_app_list"
         app:layout_constraintEnd_toStartOf="@+id/accepted_notify_button"

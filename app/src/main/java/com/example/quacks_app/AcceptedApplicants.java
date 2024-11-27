@@ -17,7 +17,8 @@ public class AcceptedApplicants extends AppCompatActivity {
     private Facility facility;
     private User user;
     private Event event;
-    private EventList eventList;
+    private Button select;
+    private Button notify_all;
     /**
      * This is the list that holds all accepted applicants
      *
@@ -49,6 +50,28 @@ public class AcceptedApplicants extends AppCompatActivity {
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
+
+        select = findViewById(R.id.accepted_select_button);
+        notify_all = findViewById(R.id.accepted_notify_button);
+
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AcceptedApplicants.this, NotifyOptions.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+            }
+        });
+
+        notify_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(AcceptedApplicants.this, "This feature is coming soon!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         back = findViewById(R.id.accepted_back_button);
         search = findViewById(R.id.accepted_app_search);

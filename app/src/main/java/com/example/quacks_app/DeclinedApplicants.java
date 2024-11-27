@@ -16,6 +16,9 @@ public class DeclinedApplicants extends AppCompatActivity {
     private ImageButton homepage;
     private Facility facility;
     private User user;
+    private Button notify_all;
+    private Button notify_options;
+    private Event event;
 
     /**
      * This is the list that holds all declined applicants
@@ -43,6 +46,28 @@ public class DeclinedApplicants extends AppCompatActivity {
 
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
+        event = (Event) getIntent().getSerializableExtra("Event");
+
+        notify_all = findViewById(R.id.declined_notify_button);
+        notify_options = findViewById(R.id.declined_select_button);
+
+        notify_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DeclinedApplicants.this, "This feature is coming soon!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        notify_options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DeclinedApplicants.this, NotifyOptions.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+            }
+        });
 
         search = findViewById(R.id.declined_app_search);
         homepage = findViewById(R.id.declined_app_house);
