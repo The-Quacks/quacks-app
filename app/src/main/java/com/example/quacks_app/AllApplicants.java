@@ -1,8 +1,10 @@
 package com.example.quacks_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,22 +20,93 @@ public class AllApplicants extends AppCompatActivity {
     private ApplicantArrayAdapter applicantArrayAdapter;
     private Button select;
     private Button notify_all;
+    private ImageButton search;
+    private ImageButton homepage;
+    private ImageButton profile;
+    private Facility facility;
+    private User user;
+    private Button back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_applicants);
 
+        if (getIntent().getSerializableExtra("Facility") == null) {
+            Toast.makeText(AllApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        if (getIntent().getSerializableExtra("User") == null) {
+            Toast.makeText(AllApplicants.this, "No User", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        if (getIntent().getSerializableExtra("Event") == null) {
+            Toast.makeText(AllApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+        user = (User) getIntent().getSerializableExtra("User");
+        // Get the Event and ApplicantList ID
+        Event event = (Event) getIntent().getSerializableExtra("Event");
+
+
         //Buttons
         select = findViewById(R.id.all_select_button);
         notify_all = findViewById(R.id.all_notify_button);
 
+        search = findViewById(R.id.all_app_search);
+        homepage = findViewById(R.id.all_app_house);
+        profile = findViewById(R.id.all_app_person);
 
+        back = findViewById(R.id.all_back_button);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AllApplicants.this, OrganizerHomepage.class);
+                intent.putExtra("Facility", facility);
+                startActivity(intent);
+            }
+        });
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AllApplicants.this, ViewOrganizer.class);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
+                startActivity(intent);
+            }
+        });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Already here
+                Intent intent = new Intent(AllApplicants.this, ViewEvents.class);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
+                startActivity(intent);
+            }
+        });
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // this will go to the select applicant page
-                Toast.makeText(AllApplicants.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AllApplicants.this, NotifyOptions.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+
             }
         });
 
@@ -45,6 +118,7 @@ public class AllApplicants extends AppCompatActivity {
             }
         });
 
+        //setting up list
 
         applicantListView = findViewById(R.id.all_app_list);
         real_user = new ArrayList<User>();
@@ -52,11 +126,8 @@ public class AllApplicants extends AppCompatActivity {
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
         applicantListView.setAdapter(applicantArrayAdapter);
 
-        // Get the Event and ApplicantList ID
-        Event event = (Event) getIntent().getSerializableExtra("Event");
-
-        if (event == null|| event.getApplicantList() == null) {
-            Toast.makeText(this, "Registration is not open yet.", Toast.LENGTH_SHORT).show();
+        if (event == null) {
+            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -105,5 +176,8 @@ public class AllApplicants extends AppCompatActivity {
                 Toast.makeText(AllApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //Suggest here click into other peoples profiles?
+
     }
 }
