@@ -31,8 +31,10 @@
         <activity
             android:name=".WelcomeEntrant"
             android:exported="true">
-
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".OrganizerHomepage"
@@ -45,22 +47,16 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
 
         <activity
             android:name=".EntrantHome"
             android:exported="true" />
         <activity
             android:name=".AdminHome"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-
-        </activity>
         <activity android:name=".CreateFacility"
             android:exported="true" />
 
@@ -104,11 +100,17 @@
 
         <activity android:name=".AllApplicants"
             android:exported="true" />
-        
+
+        <activity android:name=".DeclinedApplicants"
+            android:exported="true" />
+        <activity android:name=".AcceptedApplicants"
+            android:exported="true" />
+        <activity android:name=".SelectAtRandom"
+            android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

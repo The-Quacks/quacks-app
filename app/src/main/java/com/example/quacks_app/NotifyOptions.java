@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,7 +27,11 @@ public class NotifyOptions extends AppCompatActivity {
         select_applicants = findViewById(R.id.pick_button);
         back =findViewById(R.id.back_button);
 
-        Event event = (Event) getIntent().getSerializableExtra("Event");
+        if (getIntent().getSerializableExtra("Event") == null){
+            Toast.makeText(NotifyOptions.this, "No Event Passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        event = (Event) getIntent().getSerializableExtra("Event");
 
         pool_applicants.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,8 +39,6 @@ public class NotifyOptions extends AppCompatActivity {
                 Intent intent = new Intent(NotifyOptions.this, SelectAtRandom.class);
                 intent.putExtra("Event", event);
                 startActivity(intent);
-
-
             }
         });
 

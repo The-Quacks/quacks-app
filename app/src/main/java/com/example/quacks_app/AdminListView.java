@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /*
 This is a general list screen that displays the entire databases entries depending on what the user
@@ -46,8 +47,8 @@ public class AdminListView extends AppCompatActivity {
                 public void onReadMultipleSuccess(ArrayList<Event> data) {
                     queryList.clear();
                     testarr.clear();
-                    queryList.addAll(data);
-                    testarr.addAll(data);
+                    //queryList.addAll(data);
+                    //testarr.addAll(data);
                     genAdapter = new CustomAdapter(AdminListView.this, R.layout.admin_profile_content, testarr);
                     genList.setAdapter(genAdapter);
 
