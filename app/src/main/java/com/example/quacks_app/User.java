@@ -77,6 +77,5 @@ public class User extends RepoModel implements Serializable,Listable {
         this.userProfile = userProfile;
     }
 
-    }
-
+}
 

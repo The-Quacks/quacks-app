@@ -1,20 +1,26 @@
 package com.example.quacks_app;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,6 +46,7 @@ public class CreateEvent extends AppCompatActivity {
     private Date final_date_time;
     private CheckBox geolocation;
     private EventList eventList;
+    private ImageView eventPoster;
 
     private Facility facility;
     private User user;
@@ -49,6 +56,10 @@ public class CreateEvent extends AppCompatActivity {
     private boolean validInstructorName = false;
     private boolean validEventName = false;
     private boolean wrong = false;
+
+    // ActivityResultLauncher for handling the photo picker
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private static final int STORAGE_PERMISSION_CODE = 101;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -70,16 +81,18 @@ public class CreateEvent extends AppCompatActivity {
         geolocation = findViewById(R.id.geolocation);
         description = findViewById(R.id.description);
         eventTime = findViewById(R.id.event_time);
+        eventPoster = findViewById(R.id.eventPoster);
 
         // Initialize other necessary objects
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
+        initializePickImageLauncher();
 
         // On Click Listeners for Buttons
-        upload_button.setOnClickListener(view ->
-                Toast.makeText(CreateEvent.this, "Feature Coming Soon", Toast.LENGTH_SHORT).show()
+        upload_button.setOnClickListener(v ->
+                requestStoragePermissionAndOpenGallery()
         );
 
         back.setOnClickListener(view -> finish());
@@ -229,4 +242,56 @@ public class CreateEvent extends AppCompatActivity {
 
         });
     }
+
+    private void initializePickImageLauncher() {
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+
+                        // Display the selected image on the ImageView
+                        eventPoster.setImageURI(imageUri);
+
+                        // Upload the image to Firebase
+
+                    } else {
+                        Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    /**
+     * Requests storage permission and opens the gallery if granted.
+     */
+    private void requestStoragePermissionAndOpenGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ImageUpload.openGallery(pickImageLauncher);
+        } else {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+            } else {
+                ImageUpload.openGallery(pickImageLauncher);
+            }
+        }
+    }
+
+//    private void saveUserProfileToFirestore() {
+//        if (user != null && user.getDeviceId() != null && userProfile != null) {
+//            user.setUserProfile(userProfile);
+//            CRUD.update(user, new UpdateCallback() {
+//                @Override
+//                public void onUpdateSuccess() {
+//                    Toast.makeText(ProfileActivity.this, "Profile picture updated in Firestore", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onUpdateFailure(Exception e) {
+//                    Toast.makeText(ProfileActivity.this, "Failed to update profile picture in Firestore", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//    }
+
 }
