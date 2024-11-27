@@ -152,7 +152,6 @@ public class AllApplicants extends AppCompatActivity {
                                     UserProfile profile = user.getUserProfile();
                                     userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
                                     userList.add(userdisplay);
-                                    applicantList.removeUser(user);
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
 
