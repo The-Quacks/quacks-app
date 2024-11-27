@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.RequiresPermission;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -305,6 +307,18 @@ public class CRUD {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
         StorageReference imageRef = storageRef.child(uniquePath);
+        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+            @Override
+            public void onReadSuccess(ImageList data) {
+                data.addImage(uniquePath);
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+
+            }
+        });
+
 
         UploadTask uploadTask = imageRef.putFile(uri);
         uploadTask
@@ -343,6 +357,28 @@ public class CRUD {
     public static void removeImage(String imagePath, DeleteCallback callback) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child(imagePath);
+        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+            @Override
+            public void onReadSuccess(ImageList data) {
+                data.removeImage(imagePath);
+                CRUD.update(data, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+
+            }
+        });
 
         imageRef.delete()
                 .addOnSuccessListener(aVoid -> callback.onDeleteSuccess())

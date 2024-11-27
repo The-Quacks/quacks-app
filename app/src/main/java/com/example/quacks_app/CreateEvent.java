@@ -202,19 +202,34 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
-                    event.setEventName(eventname);
-                    event.setDateTime(final_date_time);
-                    event.setDescription(text);
-                    event.setInstructor(name);
-                    event.setGeo(geo);
-                    event.setOrganizerId(user.getDocumentId());
-                    event.setFacility(facility.getDocumentId());
-                    event.setRegistrationCapacity(classes);
-                    event.setWaitlistCapacity(classes_two);
+                    ApplicantList appList = new ApplicantList();
+                    appList.setLimit(classes);
+                    int anonClasses = classes;
+                    int anonClassesTwo = classes;
+                    CRUD.create(appList, new CreateCallback() {
+                        @Override
+                        public void onCreateSuccess() {
+                            event.setEventName(eventname);
+                            event.setDateTime(final_date_time);
+                            event.setDescription(text);
+                            event.setInstructor(name);
+                            event.setGeo(geo);
+                            event.setOrganizerId(user.getDocumentId());
+                            event.setFacility(facility.getDocumentId());
+                            event.setRegistrationCapacity(anonClasses);
+                            event.setWaitlistCapacity(anonClassesTwo);
+                            event.setApplicantList(appList.getDocumentId());
 
-                    if (eventList != null) {
-                        eventList.addEvent(event);
-                    }
+                            if (eventList != null) {
+                                eventList.addEvent(event);
+                            }
+                        }
+
+                        @Override
+                        public void onCreateFailure(Exception e) {
+                            Toast.makeText(CreateEvent.this, "database failure", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();

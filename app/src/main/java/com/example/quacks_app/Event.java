@@ -12,6 +12,7 @@ public class Event extends RepoModel implements Serializable, Listable{
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private String posterId;
     private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
@@ -41,6 +42,15 @@ public class Event extends RepoModel implements Serializable, Listable{
     public Boolean getGeo() {
         return this.geoRequired;
     }
+
+    public String getPosterId() {
+        return posterId;
+    }
+
+    public void setPosterId(String posterId) {
+        this.posterId = posterId;
+    }
+
 
     /**
      * Sets the Instructor name

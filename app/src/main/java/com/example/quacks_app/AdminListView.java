@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,6 +95,20 @@ public class AdminListView extends AppCompatActivity {
                 @Override
                 public void onReadMultipleFailure(Exception e) {
 
+                }
+            });
+        }
+        else if (viewType.equals("Images")) {
+            ImageList imgList = new ImageList();
+            CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>() {
+                @Override
+                public void onReadSuccess(ImageList data) {
+
+                }
+
+                @Override
+                public void onReadFailure(Exception e) {
+                    Toast.makeText(AdminListView.this, "Lol, Lmao even", Toast.LENGTH_SHORT).show();
                 }
             });
         }
