@@ -26,7 +26,6 @@ public class User extends RepoModel implements Serializable {
         roles = new ArrayList<>();
     }
 
-
     public String getDeviceId() {
         return deviceId;
     }
@@ -61,18 +60,5 @@ public class User extends RepoModel implements Serializable {
         this.userProfile = userProfile;
     }
 
-    }
-    /*
-    public String getDisplay() {
-        return userProfile.getUserName();
-    }
-
-    public String getSubDisplay() {
-        String roleStr = "";
-        for (Role role:roles){
-            roleStr += (role.name() +"/");
-        }
-        return roleStr;
-    }
-     */
+}
 

@@ -40,4 +40,6 @@
     <string name="event_information">Event Information</string>
     <string name="create_an_event">Create An Event</string>
     <string name="editing_event_details">Editing Event Details</string>
+    <string name="eventPoster">Event Poster</string>
+    <string name="upload_event_poster">Upload Event Poster</string>
 </resources>
