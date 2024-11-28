@@ -3,6 +3,7 @@ package com.example.quacks_app;
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -38,6 +39,7 @@ public class NotificationHandler {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void sendNotification(Context context, String title, String messageShort, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
@@ -51,6 +53,7 @@ public class NotificationHandler {
         newNotifID += 1;
     }
 
+    @SuppressLint("MissingPermission")
     public void sendNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
@@ -66,6 +69,7 @@ public class NotificationHandler {
         newNotifID += 1;
     }
 
+    @SuppressLint("MissingPermission")
     public void sendActionedNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
