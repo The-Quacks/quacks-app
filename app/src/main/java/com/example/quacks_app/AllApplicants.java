@@ -123,7 +123,6 @@ public class AllApplicants extends AppCompatActivity {
             }
         });
 
-        //setting up list
 
         applicantListView = findViewById(R.id.all_app_list);
         real_user = new ArrayList<User>();
