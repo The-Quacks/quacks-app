@@ -21,6 +21,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.UUID;
+
 /**
  * Create Event allows the organizer to create an event and store it in the DB
  */
@@ -202,35 +204,30 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
-                    ApplicantList appList = new ApplicantList();
-                    appList.setLimit(classes);
-                    int anonClasses = classes;
-                    int anonClassesTwo = classes;
-                    CRUD.create(appList, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-                            event.setEventName(eventname);
-                            event.setDateTime(final_date_time);
-                            event.setDescription(text);
-                            event.setInstructor(name);
-                            event.setGeo(geo);
-                            event.setOrganizerId(user.getDocumentId());
-                            event.setFacility(facility.getDocumentId());
-                            event.setRegistrationCapacity(anonClasses);
-                            event.setWaitlistCapacity(anonClassesTwo);
-                            event.setApplicantList(appList.getDocumentId());
+                    event.setEventName(eventname);
+                    event.setDateTime(final_date_time);
+                    event.setDescription(text);
+                    event.setInstructor(name);
+                    event.setGeo(geo);
+                    event.setOrganizerId(user.getDocumentId());
+                    event.setFacility(facility.getDocumentId());
+                    event.setRegistrationCapacity(classes);
+                    event.setWaitlistCapacity(classes_two);
 
-                            if (eventList != null) {
-                                eventList.addEvent(event);
-                            }
-                        }
+                    //Setting the notification list
+                    String notificationListId = UUID.randomUUID().toString();
+                    NotificationList notificationList = new NotificationList();
+                    notificationList.setNotificationListId(notificationListId);
+                    event.setNotificationList(notificationList);
 
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "database failure", Toast.LENGTH_SHORT).show();
-                        }
-                    });
 
+                    String uuid = UUID.randomUUID().toString();
+                    event.setDocumentId(uuid);
+                    if (eventList != null) {
+                        eventList.addEvent(event);
+                    }
+
+                    notificationList.setNotificationEventId(event.getEventId());
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(event, new CreateCallback() {

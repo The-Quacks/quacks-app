@@ -1,19 +1,22 @@
 package com.example.quacks_app;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,8 @@ public class WelcomeEntrant extends AppCompatActivity {
     private User user;
     private Facility facility;
     private ActivityResultLauncher<Intent> resultLauncher;
+    private static final int REQUEST_CODE = 1;
+    private NotificationHandler nHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,9 @@ public class WelcomeEntrant extends AppCompatActivity {
         Button welcomeHome = findViewById(R.id.welcome_home);
         Button createFacility = findViewById(R.id.CREATE_FACILITY);
         ImageButton homeIcon = findViewById(R.id.homeIcon);
+        nHandler = new NotificationHandler();
+        NotificationHandler.askForPermission(this);
+        NotificationHandler.createChannel(this);
 
         welcomeHome.setOnClickListener(view -> {
             if (user != null) {
@@ -154,5 +162,53 @@ public class WelcomeEntrant extends AppCompatActivity {
 //        createFacility.setOnClickListener(view -> {
 //            Go to create facility page
 //        }
+    }
+
+    //Separate overidden function outside onCreate
+    //This function responds with a Snackbar if notifications are enabled/disabled
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //call super
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //Define Snackbar
+        Snackbar resultSnackbar;
+        //Build Alert to prompt permission change via Settings.
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Change Permissions in Settings");
+        alertDialogBuilder
+                .setTitle("Change Notification Permissions")
+                .setMessage("\nClick SETTINGS to manually set permissions.")
+                .setCancelable(false)
+                //If user wants to change, send to Settings App, in notification settings for this app.
+                .setPositiveButton("SETTINGS", (dialog, id) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri URI = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(URI);
+                    startActivity(intent);
+                })
+                //If not, just cancel the alert dialog box.
+                .setNegativeButton("CANCEL", (dialog, id) -> {
+                    dialog.cancel();
+                });
+        // If initally asking for notification permissions (aka request code matches):
+        if (requestCode == REQUEST_CODE) {
+            // If granted, from now on show Snackbar that says "Notifications Enabled", with option to change permissions.
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                resultSnackbar = Snackbar.make(this, this.findViewById(R.id.welcome_home).getRootView(), "Notifications Enabled", Snackbar.LENGTH_LONG);
+                resultSnackbar.setAction("EDIT", view -> {
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+                });
+                resultSnackbar.show();
+                // If denied, from now on show Snackbar that says "Notifications Disabled", with option to change permissions.
+            } else {
+                resultSnackbar = Snackbar.make(this, this.findViewById(R.id.welcome_home).getRootView(), "Notifications Disabled", Snackbar.LENGTH_LONG);
+                resultSnackbar.setAction("EDIT", view -> {
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+                });
+                resultSnackbar.show();
+            }
+        }
     }
 }

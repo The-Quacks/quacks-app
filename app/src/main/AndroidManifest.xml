@@ -56,7 +56,6 @@
         <activity
             android:name=".AdminHome"
             android:exported="true" />
-
         <activity android:name=".CreateFacility"
             android:exported="true" />
 
