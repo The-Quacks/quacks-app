@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.UUID;
+
 public class OpenRegistration  extends AppCompatActivity {
     private Button back;
     private Button confirm;
@@ -17,6 +19,8 @@ public class OpenRegistration  extends AppCompatActivity {
     private Event event;
     private int flagger = 0;
     private int old;
+    private Facility facility;
+    private User user;
 
     /*
     Opens Registration for applicants
@@ -36,10 +40,18 @@ public class OpenRegistration  extends AppCompatActivity {
             finish();
         }
         event = (Event) getIntent().getSerializableExtra("Event");
+        if (getIntent().getSerializableExtra("Facility") == null){
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+        if (getIntent().getSerializableExtra("User") == null){
+            finish();
+        }
+        user = (User) getIntent().getSerializableExtra("User");
 
 
         //check if there is an applicant list already made
-        if (event.getApplicantList() != null){
+        if (!event.getApplicantList().equals("0")){
             Toast.makeText(OpenRegistration.this, "This event is already Open!!", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -77,8 +89,11 @@ public class OpenRegistration  extends AppCompatActivity {
                     capacity.setText(value);
 
                     ApplicantList app = new ApplicantList();
-
                     app.setLimit(parsedValue);
+                    event.setWaitlistCapacity(parsedValue);
+                    String randomId = UUID.randomUUID().toString();
+                    app.setDocumentId(randomId);
+
                     CRUD.create(app, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
@@ -87,7 +102,11 @@ public class OpenRegistration  extends AppCompatActivity {
                                 @Override
                                 public void onUpdateSuccess() {
                                     Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                    Intent intent = new Intent(OpenRegistration.this, EventInfo.class);
+                                    intent.putExtra("Event", event);
+                                    intent.putExtra("Facility", facility);
+                                    intent.putExtra("User", user);
+                                    startActivity(intent);
                                 }
                                 @Override
                                 public void onUpdateFailure(Exception e) {
