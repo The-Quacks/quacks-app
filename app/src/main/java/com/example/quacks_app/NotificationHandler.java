@@ -13,9 +13,19 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.ArrayList;
+
 public class NotificationHandler {
     public static final String EVENTS_CHANNEL_ID = "events_channel";
     private static final int REQUEST_CODE = 1;
+    private ArrayList<Integer> notifIDs;
+    private int newNotifID;
+
+    public NotificationHandler() {
+        this.newNotifID = 1;
+        notifIDs = new ArrayList<>();
+    }
+
     public static void createChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -28,7 +38,7 @@ public class NotificationHandler {
         }
     }
 
-    public static void sendNotification(Context context, String title, String messageShort, int icon) {
+    public void sendNotification(Context context, String title, String messageShort, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
@@ -36,10 +46,12 @@ public class NotificationHandler {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(10, builder.build());
+        notificationManagerCompat.notify(newNotifID, builder.build());
+        notifIDs.add(newNotifID);
+        newNotifID += 1;
     }
 
-    public static void sendNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon) {
+    public void sendNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
@@ -49,10 +61,12 @@ public class NotificationHandler {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(10, builder.build());
+        notificationManagerCompat.notify(newNotifID, builder.build());
+        notifIDs.add(newNotifID);
+        newNotifID += 1;
     }
 
-    public static void sendActionedNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon, Intent intent) {
+    public void sendActionedNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, EVENTS_CHANNEL_ID)
                 .setSmallIcon(icon)
                 .setContentTitle(title)
@@ -62,7 +76,9 @@ public class NotificationHandler {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(10, builder.build());
+        notificationManagerCompat.notify(newNotifID, builder.build());
+        notifIDs.add(newNotifID);
+        newNotifID += 1;
     }
 
     public static void askForPermission(Activity activity) {
