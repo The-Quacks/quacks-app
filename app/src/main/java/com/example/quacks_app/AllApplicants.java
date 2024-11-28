@@ -50,6 +50,11 @@ public class AllApplicants extends AppCompatActivity {
         // Get the Event and ApplicantList ID
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
+        assert event != null;
+        if (event.getApplicantList().equals("0")){
+            Toast.makeText(AllApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         //Buttons
         select = findViewById(R.id.all_select_button);

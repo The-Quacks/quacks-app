@@ -9,6 +9,7 @@ public class Event extends RepoModel implements Serializable {
     private String description;
     private String qrCodePath;
     private String applicantList;
+    private NotificationList notificationList;
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
@@ -144,7 +145,10 @@ public class Event extends RepoModel implements Serializable {
      * @return A {@code String} representing the applicant list identifier.
      */
     public String getApplicantList() {
-        return this.applicantList;
+        if (this.applicantList != null) {
+            return this.applicantList;
+        }
+        return "0";
     }
 
     /**
@@ -218,5 +222,13 @@ public class Event extends RepoModel implements Serializable {
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
+    }
+
+    public void setNotificationList(NotificationList list){
+        this.notificationList = list;
+    }
+
+    public NotificationList getNotificationList(){
+        return this.notificationList;
     }
 }

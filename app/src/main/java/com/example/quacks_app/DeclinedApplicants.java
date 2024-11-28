@@ -56,6 +56,13 @@ public class DeclinedApplicants extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
 
+        assert event != null;
+        if (event.getApplicantList().equals("0")){
+            Toast.makeText(DeclinedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+            finish();
+
+        }
+
         notify_all = findViewById(R.id.declined_notify_button);
         notify_options = findViewById(R.id.declined_select_button);
 

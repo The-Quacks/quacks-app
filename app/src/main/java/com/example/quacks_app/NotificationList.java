@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class NotificationList extends RepoModel implements Serializable {
     private ArrayList<Notification> notifications;
     private String eventId;
+    private String notificationListId;
 
     /**
      * Creates a NotificationList for an event
@@ -58,6 +59,13 @@ public class NotificationList extends RepoModel implements Serializable {
      */
     public void removeNotification(Notification notification){
         notifications.remove(notification);
+    }
+
+    public void setNotificationListId(String id){
+        this.notificationListId = id;
+    }
+    public String getNotificationListId(){
+        return this.notificationListId;
     }
 
 }

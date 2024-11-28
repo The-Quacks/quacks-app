@@ -51,7 +51,7 @@ public class OpenRegistration  extends AppCompatActivity {
 
 
         //check if there is an applicant list already made
-        if (event.getApplicantList() != null){
+        if (!event.getApplicantList().equals("0")){
             Toast.makeText(OpenRegistration.this, "This event is already Open!!", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -90,6 +90,7 @@ public class OpenRegistration  extends AppCompatActivity {
 
                     ApplicantList app = new ApplicantList();
                     app.setLimit(parsedValue);
+                    event.setWaitlistCapacity(parsedValue);
                     String randomId = UUID.randomUUID().toString();
                     app.setDocumentId(randomId);
 

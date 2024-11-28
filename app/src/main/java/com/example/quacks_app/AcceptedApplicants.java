@@ -58,7 +58,11 @@ public class AcceptedApplicants extends AppCompatActivity {
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
-
+        assert event != null;
+        if (event.getApplicantList().equals("0")){
+            Toast.makeText(AcceptedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         select = findViewById(R.id.accepted_select_button);
         notify_all = findViewById(R.id.accepted_notify_button);
 
