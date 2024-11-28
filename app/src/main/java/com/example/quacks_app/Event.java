@@ -3,12 +3,13 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Event extends RepoModel implements Serializable, Listable{
+public class Event extends RepoModel implements Serializable {
     private Date dateTime;
     private String eventName;
     private String description;
     private String qrCodePath;
     private String applicantList;
+    private NotificationList notificationList;
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
@@ -18,7 +19,7 @@ public class Event extends RepoModel implements Serializable, Listable{
     private String instructorName;
     private Boolean geoRequired;
 
-    public Event(Date dateTime, String description, String applicantList, String facilityId, String organizerId) {
+    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
     }
 
@@ -144,7 +145,10 @@ public class Event extends RepoModel implements Serializable, Listable{
      * @return A {@code String} representing the applicant list identifier.
      */
     public String getApplicantList() {
-        return this.applicantList;
+        if (this.applicantList != null) {
+            return this.applicantList;
+        }
+        return "0";
     }
 
     /**
@@ -218,5 +222,13 @@ public class Event extends RepoModel implements Serializable, Listable{
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
+    }
+
+    public void setNotificationList(NotificationList list){
+        this.notificationList = list;
+    }
+
+    public NotificationList getNotificationList(){
+        return this.notificationList;
     }
 }

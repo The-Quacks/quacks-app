@@ -27,7 +27,7 @@ public class EventInfo extends AppCompatActivity {
     private Button open_registration;
     private Button close_registration;
     private Button delete_event;
-    private Button entrant_map;
+    private Button applicant_lists;
     private ImageButton profile;
     private ImageButton search;
     private ImageButton homepage;
@@ -51,12 +51,14 @@ public class EventInfo extends AppCompatActivity {
         } else {
             event = (Event) getIntent().getSerializableExtra("Event");
         }
-
-
+        if (getIntent().getSerializableExtra("User") == null){
+            finish();
+        }
         if (getIntent().getSerializableExtra("Facility") != null) {
             actual_facility = (Facility) getIntent().getSerializableExtra("Facility");
         }
 
+        //eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
 
         //these are info fields
@@ -75,7 +77,7 @@ public class EventInfo extends AppCompatActivity {
         open_registration = findViewById(R.id.register);
         close_registration = findViewById(R.id.close);
         delete_event = findViewById(R.id.delete_button);
-        entrant_map = findViewById(R.id.map);
+        applicant_lists = findViewById(R.id.map);
 
 
         String text = event.getDescription();
@@ -110,6 +112,8 @@ public class EventInfo extends AppCompatActivity {
                 //makes an applicant list for that event.
                 Intent intent = new Intent(EventInfo.this, OpenRegistration.class);
                 intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", actual_facility);
                 startActivity(intent);
             }
         });
@@ -119,12 +123,14 @@ public class EventInfo extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(EventInfo.this, ApplicantOptions.class);
                 intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", actual_facility);
                 startActivity(intent);
 
             }
         });
 
-        entrant_map.setOnClickListener(new View.OnClickListener() {
+        applicant_lists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent  = new Intent(EventInfo.this, EditEvent.class);

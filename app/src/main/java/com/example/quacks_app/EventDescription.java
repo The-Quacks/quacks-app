@@ -1,5 +1,6 @@
 package com.example.quacks_app;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,6 +30,7 @@ public class EventDescription extends AppCompatActivity {
     private String applicantListId;
     private User currentUser;
     private boolean isRemoving;
+    private boolean geolocationRequired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +54,12 @@ public class EventDescription extends AppCompatActivity {
             @Override
             public void onReadSuccess(Event data) {
                 TextView eventTitle = findViewById(R.id.eventTitle);
-                eventTitle.setText(data.getDescription());
+                eventTitle.setText(data.getEventName());
                 // This will need to be updated after merging with the full Event implementation
 //                eventDescription.setText(String.format("Capacity: %s\nRegistration open until: %s\nClass Duration: %s\nInstructor: %s\nGeolocation Requirement: %s", data.getClass_capacity(), data.getStartDateTime().toString(), data.getEndDateTime().toString(), data.getInstructor(), data.getGeolocation()));
                 TextView eventDescription = findViewById(R.id.eventDescription);
-                eventDescription.setText(String.format("Applicant List: %s\nDateTime: %s\nFacility: %s\nOrganizer: %s", data.getApplicantList(), data.getDateTime(), data.getFacility(), data.getOrganizerId()));
+                eventDescription.setText(String.format("Applicant List: %s\nStart Time: %s\nDescription: %s\nFacility: %s\nOrganizer: %s\nGeolocation Required: %s", data.getApplicantList(), data.getDateTime(), data.getDescription(), data.getFacility(), data.getOrganizerId(), data.getGeo()));
+                geolocationRequired = data.getGeo();
                 applicantListId = data.getApplicantList();
             }
 
@@ -66,7 +69,7 @@ public class EventDescription extends AppCompatActivity {
             }
         };
 
-        CRUD.readStatic(eventId, Event.class, readEventCallback);
+        CRUD.readLive(eventId, Event.class, readEventCallback);
 
         back.setOnClickListener(v -> {
             finish();
@@ -127,7 +130,24 @@ public class EventDescription extends AppCompatActivity {
                     }
                 };
 
-                CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
+                if (geolocationRequired) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EventDescription.this);
+                    builder.setTitle("Geolocation is required to join the waitlist for this event");
+                    builder.setMessage("Would you like to continue?");
+
+                    builder.setPositiveButton("Yes", (dialog, which) -> {
+                        CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
+                    });
+
+                    builder.setNegativeButton("Cancel", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
+                }
             } else {
                 Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
             }

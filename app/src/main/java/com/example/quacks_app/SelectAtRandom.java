@@ -5,12 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.ListenerRegistration;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 /*
 Selecting a specified number of participants per notification round
  */
@@ -18,27 +25,43 @@ public class SelectAtRandom extends AppCompatActivity {
     private EditText capacity;
     private Button back;
     private Button confirm;
+    private Event event;
+    private String applicantListId;
+    private NotificationList notificationList;
     private ArrayList<String> Tracker;
+    private ImageButton home;
+    private ImageButton search;
+    private ImageButton profile;
+    private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selected_random_applicants);
 
-        Tracker = new ArrayList<>();
-        capacity = findViewById(R.id.amount);
-        back = findViewById(R.id.back_button);
-        confirm = findViewById(R.id.confirm_button);
+        capacity = findViewById(R.id.random_amount);
+        back = findViewById(R.id.random_back_button);
+        confirm = findViewById(R.id.random_confirm_button);
 
-        if (getIntent().getSerializableExtra("Event") == null) {
+        if (getIntent().getSerializableExtra("Event") == null){
+            Toast.makeText(SelectAtRandom.this, "No event was passed", Toast.LENGTH_SHORT).show();
             finish();
         }
-        Event event = (Event) getIntent().getSerializableExtra("Event");
+        event = (Event) getIntent().getSerializableExtra("Event");
+        applicantListId = "";
+        int waitlist_capacity = 0;
 
-        if (event.getApplicantList() == null) {
-            Toast.makeText(SelectAtRandom.this, "Error loading applicant list ID", Toast.LENGTH_SHORT).show();
+        try{
+            assert event != null;
+            applicantListId = event.getApplicantList();
+            waitlist_capacity = event.getRegistrationCapacity();
+        } catch(Exception E){
+            Toast.makeText(SelectAtRandom.this, "The applicant list or waitlist capacity is not set", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        capacity.setText(String.valueOf(waitlist_capacity));
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,11 +73,10 @@ public class SelectAtRandom extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String applicantListId = event.getApplicantList();
 
                 if (applicantListId == null || applicantListId.isEmpty()) {
                     Toast.makeText(SelectAtRandom.this, "Applicant List ID is invalid.", Toast.LENGTH_SHORT).show();
-                    return;
+                    finish();
                 }
 
                 CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
@@ -66,9 +88,10 @@ public class SelectAtRandom extends AppCompatActivity {
                             try {
                                 limit = Integer.parseInt(capacity.getText().toString());
                                 if (limit <= 0 || limit > applicantList.getApplicantIds().size()) {
-                                    Toast.makeText(SelectAtRandom.this, "Invalid number of applicants", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SelectAtRandom.this, "Number of applicants chosen exceeds amount in waitlist", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
                             } catch (NumberFormatException e) {
                                 Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
                                 return;
@@ -81,10 +104,24 @@ public class SelectAtRandom extends AppCompatActivity {
                                     @Override
                                     public void onReadSuccess(User user) {
                                         if (user != null) {
+
                                             UserProfile profile = user.getUserProfile();
-                                            Notification notify = new Notification(user.getDeviceId());
-                                            notify.setNotification(event);
-                                            applicantList.removeUser(user);
+                                            Notification notify = new Notification(user, applicantListId, event.getEventId(), "Unknown", "Not Sent");
+
+                                            //Looks at the NotificationList Id and decides whether it needs to create a new one
+                                            if (event.getNotificationList() == null){//creates one
+                                                String notificationListId = UUID.randomUUID().toString();
+                                                notificationList = new NotificationList();
+                                                notificationList.setDocumentId(notificationListId);
+                                                event.setNotificationList(notificationList);
+                                                notificationList.setNotificationEventId(event.getEventId());
+                                            }
+                                            else{
+                                                notificationList = event.getNotificationList();
+                                            }
+                                            //otherwise event.getNotificationList returns the list associated to the event
+                                            //we add the new notification to the list
+                                            notificationList.addNotification(notify);
 
                                         }
 
@@ -125,6 +162,7 @@ public class SelectAtRandom extends AppCompatActivity {
         });
     }
 }
+
 
 
 

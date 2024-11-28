@@ -21,6 +21,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.UUID;
+
 /**
  * Create Event allows the organizer to create an event and store it in the DB
  */
@@ -212,10 +214,20 @@ public class CreateEvent extends AppCompatActivity {
                     event.setRegistrationCapacity(classes);
                     event.setWaitlistCapacity(classes_two);
 
+                    //Setting the notification list
+                    String notificationListId = UUID.randomUUID().toString();
+                    NotificationList notificationList = new NotificationList();
+                    notificationList.setNotificationListId(notificationListId);
+                    event.setNotificationList(notificationList);
+
+
+                    String uuid = UUID.randomUUID().toString();
+                    event.setDocumentId(uuid);
                     if (eventList != null) {
                         eventList.addEvent(event);
                     }
 
+                    notificationList.setNotificationEventId(event.getEventId());
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(event, new CreateCallback() {
