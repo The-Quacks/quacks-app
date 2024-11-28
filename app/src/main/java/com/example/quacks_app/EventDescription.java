@@ -101,26 +101,54 @@ public class EventDescription extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Toast.makeText(EventDescription.this, "You are not in the waitlist!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EventDescription.this, "Error: You are not in the waitlist!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             if (applicantList.contains(userId)) {
                                 Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            applicantList.addUser(userId);
 
-                            CRUD.update(applicantList, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    addEventToUser(eventId);
-                                }
+                            if (geolocationRequired) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EventDescription.this);
+                                builder.setTitle("Geolocation is required to join the waitlist for this event");
+                                builder.setMessage("Would you like to continue?");
 
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                builder.setPositiveButton("Yes", (dialog, which) -> {
+                                    applicantList.addUser(userId);
+                                    CRUD.update(applicantList, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            addEventToUser(eventId);
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                });
+
+                                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                                    dialog.dismiss();
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            } else {
+                                applicantList.addUser(userId);
+                                CRUD.update(applicantList, new UpdateCallback() {
+                                    @Override
+                                    public void onUpdateSuccess() {
+                                        addEventToUser(eventId);
+                                    }
+
+                                    @Override
+                                    public void onUpdateFailure(Exception e) {
+                                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
                     }
 
@@ -130,24 +158,7 @@ public class EventDescription extends AppCompatActivity {
                     }
                 };
 
-                if (geolocationRequired) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EventDescription.this);
-                    builder.setTitle("Geolocation is required to join the waitlist for this event");
-                    builder.setMessage("Would you like to continue?");
-
-                    builder.setPositiveButton("Yes", (dialog, which) -> {
-                        CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
-                    });
-
-                    builder.setNegativeButton("Cancel", (dialog, which) -> {
-                        dialog.dismiss();
-                    });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {
-                    CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
-                }
+                CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
             } else {
                 Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
             }

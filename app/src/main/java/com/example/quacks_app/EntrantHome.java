@@ -96,9 +96,24 @@ public class EntrantHome extends AppCompatActivity {
         });
 
         waitlist.setOnClickListener(view -> {
+            if (!hasProfile) {
+                Toast.makeText(EntrantHome.this, "Please create a profile first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (eventIds == null) {
+                Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Map<String, Object> query = new HashMap<>();
             for (String eventId : eventIds.getEventIds()) {
                 query.put("eventId", eventId);
+            }
+
+            if (query.isEmpty()) {
+                Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             CRUD.readQueryStatic(query, Event.class, new ReadMultipleCallback<Event>() {
