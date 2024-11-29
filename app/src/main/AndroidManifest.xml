@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
@@ -96,6 +95,10 @@
             android:exported="true" />
         <activity android:name=".ApplicantOptions"
             android:exported="true" />
+
+        <activity android:name=".ViewEventsEntrant"
+            android:exported="true" />
+
 
         <activity android:name=".AllApplicants"
             android:exported="true" />
