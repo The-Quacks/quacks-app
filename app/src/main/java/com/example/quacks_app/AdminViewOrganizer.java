@@ -149,7 +149,9 @@ public class AdminViewOrganizer extends AppCompatActivity {
                         @Override
                         public void onReadMultipleSuccess(ArrayList<Facility> facData) {
                             for (Facility fac : facData) {
-                                deleteFacility(fac, delCall);
+                                if (fac.getOrganizerId() == realUser.getDocumentId()) {
+                                    deleteFacility(fac, delCall);
+                                }
                             }
                         }
                         @Override
@@ -198,7 +200,7 @@ public class AdminViewOrganizer extends AppCompatActivity {
                             }
                             title = "View Event";
 
-                            fieldOne = "Name: " + specEvent.getEventName();
+                            fieldOne = "Name: " + specEvent.getDisplay();
                             fieldTwo = "Capacity: "+ appData.getLimit();
                             fieldThree = "Availability: " + (appData.getLimit() - appData.getApplicantIds().size());
                             fieldFour = "Location: " + facData.getLocation();
@@ -273,7 +275,7 @@ public class AdminViewOrganizer extends AppCompatActivity {
 
                     @Override
                     public void onReadFailure(Exception e) {
-                        Toast.makeText(AdminViewOrganizer.this, "lol", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdminViewOrganizer.this, "Image Does Not Exist", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

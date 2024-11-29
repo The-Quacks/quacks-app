@@ -284,6 +284,18 @@ public class CRUD {
         String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
         StorageReference imageRef = storageRef.child(uniquePath);
 
+        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+            @Override
+            public void onReadSuccess(ImageList data) {
+                data.addImage(uniquePath);
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+
+            }
+        });
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();

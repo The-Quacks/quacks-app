@@ -23,7 +23,7 @@
 
 
     <ImageView
-        android:id="@+id/ellipse"
+        android:id="@+id/prof_pic"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="25dp"
@@ -32,13 +32,6 @@
         app:layout_constraintBottom_toTopOf="@id/text_box"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
-    <ImageView
-        android:id="@+id/prof_pic"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="75dp"
-        android:paddingTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <LinearLayout
         android:id="@+id/text_box"
@@ -46,7 +39,7 @@
         android:layout_height="wrap_content"
         android:background="@color/base"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/ellipse"
+        app:layout_constraintTop_toBottomOf="@id/prof_pic"
         tools:ignore="MissingConstraints">
 
         <EditText

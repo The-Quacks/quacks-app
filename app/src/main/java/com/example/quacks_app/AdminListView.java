@@ -47,8 +47,8 @@ public class AdminListView extends AppCompatActivity {
                 public void onReadMultipleSuccess(ArrayList<Event> data) {
                     queryList.clear();
                     testarr.clear();
-                    //queryList.addAll(data);
-                    //testarr.addAll(data);
+                    queryList.addAll(data);
+                    testarr.addAll(data);
                     genAdapter = new CustomAdapter(AdminListView.this, R.layout.admin_profile_content, testarr);
                     genList.setAdapter(genAdapter);
 
@@ -96,20 +96,6 @@ public class AdminListView extends AppCompatActivity {
                 @Override
                 public void onReadMultipleFailure(Exception e) {
 
-                }
-            });
-        }
-        else if (viewType.equals("Images")) {
-            ImageList imgList = new ImageList();
-            CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>() {
-                @Override
-                public void onReadSuccess(ImageList data) {
-
-                }
-
-                @Override
-                public void onReadFailure(Exception e) {
-                    Toast.makeText(AdminListView.this, "Lol, Lmao even", Toast.LENGTH_SHORT).show();
                 }
             });
         }
