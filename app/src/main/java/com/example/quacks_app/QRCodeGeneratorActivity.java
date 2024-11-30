@@ -25,7 +25,6 @@ public class QRCodeGeneratorActivity extends AppCompatActivity {
 
         event = (Event) getIntent().getSerializableExtra("Event");
         user = (User) getIntent().getSerializableExtra("User");
-        eventList = (EventList) getIntent().getSerializableExtra("EventList");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 1000, 1000);
 
@@ -38,7 +37,6 @@ public class QRCodeGeneratorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(QRCodeGeneratorActivity.this, UploadPosterActivity.class);
-                intent.putExtra("EventList", eventList);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);

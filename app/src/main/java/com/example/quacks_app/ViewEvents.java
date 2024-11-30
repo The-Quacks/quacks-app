@@ -35,7 +35,6 @@ public class ViewEvents extends AppCompatActivity {
     private ArrayList<Event> eventDataList;
     private EventArrayAdapter eventArrayAdapter;
     private ArrayList<Listable> dataList;
-    private EventList evented;
     private User user;
     private ListenerRegistration listenerRegistration;
 
