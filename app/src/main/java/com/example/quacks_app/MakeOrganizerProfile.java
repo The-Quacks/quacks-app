@@ -1,9 +1,9 @@
 package com.example.quacks_app;
 
-import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,13 +11,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.firestore.GeoPoint;
+
+
+import java.io.IOException;
+
+import java.util.List;
+import java.util.Locale;
+
 
 public class MakeOrganizerProfile extends AppCompatActivity {// or the correct XML layout file
     private Button back;
@@ -67,7 +69,7 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
 
         // Setting with prior data
         bussiness_name.setText(new_facility.getName());
-        location.setText(new_facility.getLocation());
+        location.setText(new_facility.getGeoPointString(MakeOrganizerProfile.this));
         phone_number.setText(new_facility.getPhone());
         facility_deets.setText(new_facility.getDetails());
         accessibility.setText(new_facility.getAccessible());
@@ -103,12 +105,34 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
                 }
 
 
-                String test_2 = location.getText().toString();
-                if (test_2.length() <= 0){
+                String address = location.getText().toString().trim();
+                if (address.length() <= 0){
                     Toast.makeText(MakeOrganizerProfile.this, "Please enter a location", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     round_two = 1;
+                }
+
+//              Geocoding functionality:
+                Geocoder geocoder = new Geocoder(MakeOrganizerProfile.this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocationName(address, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address addressObj = addresses.get(0);
+                        double latitude = addressObj.getLatitude();
+                        double longitude = addressObj.getLongitude();
+
+                        GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+
+                        new_facility.setGeoPoint(geoPoint);
+
+//                        Toast.makeText(MakeOrganizerProfile.this, "Geocoded Location: Latitude " + latitude + ", Longitude " + longitude, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MakeOrganizerProfile.this, "Address not found. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.getMessage();
+                    Toast.makeText(MakeOrganizerProfile.this, "Failed to find coordinates: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -182,7 +206,6 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
                 if (round_one == 1 && round_two == 1 && round_three == 1 && round_four == 1 && round_five == 1 && round_six == 1 &&round_7 == 1 && round_8 == 1) {
 
                     new_facility.setName(test_1);
-                    new_facility.setLocation(test_2);
                     new_facility.setContactInfo(test_3);
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);

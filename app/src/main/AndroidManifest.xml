@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -114,6 +116,8 @@
         <activity android:name=".AcceptedApplicants"
             android:exported="true" />
         <activity android:name=".SelectAtRandom"
+            android:exported="true" />
+        <activity android:name=".DummyLocationTest"
             android:exported="true" />
 
         <meta-data
