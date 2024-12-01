@@ -49,7 +49,7 @@ public class AllApplicants extends AppCompatActivity {
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
         assert event != null;
-        if (!event.getRegistration()){
+        if (event.getRegistration() == false){
             Toast.makeText(AllApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
         }
