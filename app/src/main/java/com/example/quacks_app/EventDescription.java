@@ -3,19 +3,15 @@ package com.example.quacks_app;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.firebase.firestore.GeoPoint;
 
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
@@ -31,6 +27,7 @@ public class EventDescription extends AppCompatActivity {
     private User currentUser;
     private boolean isRemoving;
     private boolean geolocationRequired;
+    private Geolocation geolocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +82,10 @@ public class EventDescription extends AppCompatActivity {
                 ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
                     @Override
                     public void onReadSuccess(ApplicantList applicantList) {
+                        if (applicantList == null) {
+                            Toast.makeText(EventDescription.this, "Registration has not yet opened for this event", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
                         if (isRemoving) {
                             if (applicantList.contains(userId)) {
                                 applicantList.removeUser(userId);
@@ -115,18 +116,31 @@ public class EventDescription extends AppCompatActivity {
                                 builder.setMessage("Would you like to continue?");
 
                                 builder.setPositiveButton("Yes", (dialog, which) -> {
-                                    applicantList.addUser(userId);
-                                    CRUD.update(applicantList, new UpdateCallback() {
+                                    geolocation = new Geolocation(EventDescription.this, EventDescription.this);
+                                    geolocation.setLocationCallback(new Geolocation.LocationCallback() {
                                         @Override
-                                        public void onUpdateSuccess() {
-                                            addEventToUser(eventId);
+                                        public void onLocationReceived(double latitude, double longitude) {
+                                            currentUser.setGeoPoint(new GeoPoint(latitude, longitude));
+                                            applicantList.addUser(userId);
+                                            CRUD.update(applicantList, new UpdateCallback() {
+                                                @Override
+                                                public void onUpdateSuccess() {
+                                                    addEventToUser(eventId);
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+                                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         }
 
                                         @Override
-                                        public void onUpdateFailure(Exception e) {
-                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                        public void onLocationError(String error) {
+                                            Toast.makeText(EventDescription.this, "Error: " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     });
+                                    geolocation.requestLocationPermissions();
                                 });
 
                                 builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -223,5 +237,11 @@ public class EventDescription extends AppCompatActivity {
                 Toast.makeText(EventDescription.this, "Event not found", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        geolocation.handlePermissionResult(requestCode, permissions, grantResults);
     }
 }

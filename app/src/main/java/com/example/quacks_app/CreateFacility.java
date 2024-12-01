@@ -2,8 +2,9 @@ package com.example.quacks_app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +12,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.GeoPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class CreateFacility extends AppCompatActivity {
     private EditText bussiness_name;
@@ -170,7 +176,26 @@ public class CreateFacility extends AppCompatActivity {
                     new_facility = new Facility();
 
                     new_facility.setName(test_1);
-                    new_facility.setLocation(test_2);
+
+                    Geocoder geocoder = new Geocoder(CreateFacility.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(test_2, 1);
+                        if (addresses != null && !addresses.isEmpty()) {
+                            Address addressObj = addresses.get(0);
+                            double latitude = addressObj.getLatitude();
+                            double longitude = addressObj.getLongitude();
+
+                            GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+
+                            new_facility.setGeoPoint(geoPoint);
+                        } else {
+                            Toast.makeText(CreateFacility.this, "Address not found. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.getMessage();
+                        Toast.makeText(CreateFacility.this, "Geocoding failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
                     new_facility.setContactInfo(test_3);
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);

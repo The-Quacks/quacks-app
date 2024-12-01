@@ -46,97 +46,6 @@ public class ImageUpload {
     }
 
     /**
-     * Uploads an image to Firebase and updates the ImageView on success.
-     *
-     * @param context       The context for showing messages.
-     * @param imageUri      The URI of the image to upload.
-     * @param imageView     The ImageView to update with the uploaded image.
-     * @param userProfile   The UserProfile object to update with the image path.
-     * @param onSaveCallback A callback to save the updated profile after uploading.
-     */
-    public static void uploadImageToFirebase(Context context, Uri imageUri, ImageView imageView, UserProfile userProfile, Runnable onSaveCallback) {
-        CRUD.storeImage(imageUri, new ReadCallback<String>() {
-            @Override
-            public void onReadSuccess(String path) {
-                userProfile.setProfilePicturePath(path);
-
-                CRUD.downloadImage(path, new ReadCallback<Bitmap>() {
-                    @Override
-                    public void onReadSuccess(Bitmap data) {
-                        imageView.setImageBitmap(data);
-                        Toast.makeText(context, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
-                        if (onSaveCallback != null) {
-                            onSaveCallback.run();
-                        }
-                    }
-
-                    @Override
-                    public void onReadFailure(Exception e) {
-                        Toast.makeText(context, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onReadFailure(Exception e) {
-                Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * Generates a default profile picture bitmap with initials.
-     *
-     * @param userName The user's name to generate initials from.
-     * @return A Bitmap containing the profile picture.
-     */
-    public static Bitmap generateDefaultProfilePicture(String userName) {
-        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
-        // Set background color
-        canvas.drawColor(Color.LTGRAY);
-
-        // Draw initials
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(80);
-        paint.setTextAlign(Paint.Align.CENTER);
-
-        // Extract initials
-        String initials = getInitials(userName);
-        canvas.drawText(initials, 100, 120, paint);
-
-        return bitmap;
-    }
-
-    /**
-     * Extracts initials from a full name.
-     *
-     * @param name The full name.
-     * @return A string with the initials.
-     */
-    private static String getInitials(String name) {
-        if (name == null || name.isEmpty()) return "U";
-        String[] words = name.split(" ");
-        StringBuilder initials = new StringBuilder();
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                initials.append(word.charAt(0));
-            }
-        }
-        return initials.toString().toUpperCase();
-    }
-
-    /**
-     * Removes the profile picture and sets a default one.
-     *
-     * @param context       The context for showing messages.
-     * @param userProfile   The UserProfile object to update.
-     * @param imageView     The ImageView to update with the default image.
-     * @param onRemoveCallback A callback to handle post-removal actions.
-     */
-    /**
      * Removes the profile picture and sets a default one.
      *
      * @param context       The context for showing messages.
@@ -186,4 +95,119 @@ public class ImageUpload {
         });
     }
 
+    /**
+     * Generates a default profile picture bitmap with initials.
+     *
+     * @param userName The user's name to generate initials from.
+     * @return A Bitmap containing the profile picture.
+     */
+    public static Bitmap generateDefaultProfilePicture(String userName) {
+        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Set background color
+        canvas.drawColor(Color.LTGRAY);
+
+        // Draw initials
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(80);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        // Extract initials
+        String initials = getInitials(userName);
+        canvas.drawText(initials, 100, 120, paint);
+
+        return bitmap;
+    }
+
+    /**
+     * Extracts initials from a full name.
+     *
+     * @param name The full name.
+     * @return A string with the initials.
+     */
+    private static String getInitials(String name) {
+        if (name == null || name.isEmpty()) return "U";
+        String[] words = name.split(" ");
+        StringBuilder initials = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                initials.append(word.charAt(0));
+            }
+        }
+        return initials.toString().toUpperCase();
+    }
+
+    /**
+     * Uploads an image to Firebase and updates the ImageView on success.
+     *
+     * @param context       The context for showing messages.
+     * @param imageUri      The URI of the image to upload.
+     * @param imageView     The ImageView to update with the uploaded image.
+     * @param userProfile   The UserProfile object to update with the image path.
+     * @param onSaveCallback A callback to save the updated profile after uploading.
+     */
+    public static void uploadImageToFirebase(Context context, Uri imageUri,
+                                             ImageView imageView, UserProfile userProfile, Runnable onSaveCallback
+    ) {
+        CRUD.storeImage(imageUri, new ReadCallback<String>() {
+            @Override
+            public void onReadSuccess(String path) {
+                userProfile.setProfilePicturePath(path);
+
+                CRUD.downloadImage(path, new ReadCallback<Bitmap>() {
+                    @Override
+                    public void onReadSuccess(Bitmap data) {
+                        imageView.setImageBitmap(data);
+                        Toast.makeText(context, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                        if (onSaveCallback != null) {
+                            onSaveCallback.run();
+                        }
+                    }
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(context, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Uploads an event poster to Firebase and updates the event object with the poster path.
+     *
+     * @param context        The context for showing messages.
+     * @param imageUri       The URI of the image to upload.
+     * @param event          The Event object to update with the image path.
+     * @param onSaveCallback A callback to save the updated event after uploading.
+     */
+    public static void uploadEventPosterToFirebase(Context context, Uri imageUri, Event event, Runnable onSaveCallback) {
+        CRUD.storeImage(imageUri, new ReadCallback<String>() {
+            @Override
+            public void onReadSuccess(String path) {
+                // Set the event poster path
+                Log.d("EditEvent", "Uploaded image path: " + path);
+                event.setEventPosterPath(path);
+                Log.d("EditEvent", "reached here"+ path);
+
+                // Call the save callback to persist the event
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
+
+                Toast.makeText(context, "Event poster updated successfully", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                Toast.makeText(context, "Failed to upload event poster", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

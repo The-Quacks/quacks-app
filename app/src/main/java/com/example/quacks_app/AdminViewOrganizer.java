@@ -191,7 +191,7 @@ public class AdminViewOrganizer extends AppCompatActivity {
                             fieldOne = "Name: " + specEvent.getDisplay();
                             fieldTwo = "Capacity: "+ appData.getLimit();
                             fieldThree = "Availability: " + (appData.getLimit() - appData.getApplicantIds().size());
-                            fieldFour = "Location: " + facData.getLocation();
+                            fieldFour = "Location: " + facData.getGeoPointString(AdminViewOrganizer.this);
 
                             TextView titleText = findViewById(R.id.title);
                             EditText name = findViewById(R.id.Name);
@@ -225,7 +225,7 @@ public class AdminViewOrganizer extends AppCompatActivity {
             title = "View Facility";
             fieldOne = "Name: " + specFacility.getName();
             fieldTwo = "Contact Info: "+  specFacility.getPhone();
-            fieldThree = "Location: " + specFacility.getLocation();
+            fieldThree = "Location: " + specFacility.getGeoPointString(AdminViewOrganizer.this);
             CRUD.readLive(specFacility.getOrganizerId(), User.class, new ReadCallback<User>() {
                 @Override
                 public void onReadSuccess(User specUser) {

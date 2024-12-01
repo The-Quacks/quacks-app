@@ -13,12 +13,14 @@ public class Event extends RepoModel implements Serializable, Listable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private String instructorName;
     private String eventPosterPath;
+    private Boolean geoRequired = false; // Default to false
+    private String posterId;
     private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
-    private String instructorName;
-    private Boolean geoRequired;
+
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -233,6 +235,15 @@ public class Event extends RepoModel implements Serializable, Listable {
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
     }
+
+    public String getEventPosterPath() {
+        return eventPosterPath;
+    }
+
+    public void setEventPosterPath(String eventPosterPath) {
+        this.eventPosterPath = eventPosterPath;
+    }
+
 
     public void setNotificationList(NotificationList list){
         this.notificationList = list;
