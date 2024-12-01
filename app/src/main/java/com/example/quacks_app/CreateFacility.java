@@ -175,20 +175,6 @@ public class CreateFacility extends AppCompatActivity {
                     new_facility.setDetails(test_4);
                     new_facility.setaccessibilityStat(test_5);
 
-                    EventList eventList = new EventList();
-
-                    CRUD.create(eventList, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-
-                        }
-
-                        @Override
-                        public void onCreateFailure(Exception e) {
-
-                        }
-                    });
-
                     UserProfile userProfile = new UserProfile(test_6, test_7, test_3); // Example user profile
                     ArrayList<Role> roles = new ArrayList<>();
                     roles.add(Role.ORGANIZER);

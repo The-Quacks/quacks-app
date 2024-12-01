@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,8 +47,8 @@ public class AdminListView extends AppCompatActivity {
                 public void onReadMultipleSuccess(ArrayList<Event> data) {
                     queryList.clear();
                     testarr.clear();
-                    //queryList.addAll(data);
-                    //testarr.addAll(data);
+                    queryList.addAll(data);
+                    testarr.addAll(data);
                     genAdapter = new CustomAdapter(AdminListView.this, R.layout.admin_profile_content, testarr);
                     genList.setAdapter(genAdapter);
 

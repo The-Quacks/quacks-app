@@ -19,11 +19,17 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
     private Context context;
     private Facility facility;
 
-    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility){
+    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility) {
         super(context, 0, events);
         this.events = events;
         this.context = context;
         this.facility = facility;
+    }
+
+    public EventArrayAdapter(Context context, ArrayList<Event> events) {
+        super(context, 0, events);
+        this.events = (!events.isEmpty()) ? events : new ArrayList<>();
+        this.context = context;
     }
 
     @NonNull
@@ -37,7 +43,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         Event event = events.get(position);
         TextView eventName = view.findViewById(R.id.event_text);
-        TextView date= view.findViewById(R.id.date_text);
+        TextView date = view.findViewById(R.id.date_text);
         TextView instructor = view.findViewById(R.id.instructor_text);
         //TextView class_capacity = view.findViewById(R.id.class_capacity);
 

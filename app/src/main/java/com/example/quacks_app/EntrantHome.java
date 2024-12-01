@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -30,15 +29,20 @@ import java.util.Map;
 /**
  * The {@code EntrantHome} class is used on the home page for entrants. It includes buttons to
  * go to different parts of the app. Currently, the scan QR code button is implemented, which allows
- * the user to scan a QR code, see the event information, and join the waitlist. The profile button
- * also only lets users create a profile if they don't already have one.
+ * the user to scan a QR code, see the event information, and join the waitlist.
  */
 
 public class EntrantHome extends AppCompatActivity {
     static boolean hasProfile = false;
     private User user;
+
     private static final int REQUEST_CODE = 1;
     private NotificationHandler nHandler;
+
+    private EventList eventIds;
+    private ArrayList<Event> events;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class EntrantHome extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         if (user != null && user.getUserProfile() != null) {
             hasProfile = true;
+            eventIds = user.getUserProfile().getEventList();
         }
 
         ImageButton profile = findViewById(R.id.profileButton);
@@ -104,9 +109,47 @@ public class EntrantHome extends AppCompatActivity {
             }
         });
 
-//        waitlist.setOnClickListener(view -> {
-//            startActivity(new Intent(EntrantHome.this, Waitlist.class));
-//        });
+        waitlist.setOnClickListener(view -> {
+            if (!hasProfile) {
+                Toast.makeText(EntrantHome.this, "Please create a profile first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (eventIds == null) {
+                Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Map<String, Object> query = new HashMap<>();
+            for (String eventId : eventIds.getEventIds()) {
+                query.put("eventId", eventId);
+            }
+
+            if (query.isEmpty()) {
+                Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            CRUD.readQueryStatic(query, Event.class, new ReadMultipleCallback<Event>() {
+                @Override
+                public void onReadMultipleSuccess(ArrayList<Event> data) {
+                    events = data;
+                    if (!events.isEmpty()) {
+                        Intent entrantWaitlistIntent = new Intent(EntrantHome.this, ViewEventsEntrant.class);
+                        entrantWaitlistIntent.putExtra("User", user);
+                        entrantWaitlistIntent.putExtra("EventList", events);
+                        startActivity(entrantWaitlistIntent);
+                    } else {
+                        Toast.makeText(EntrantHome.this, "No events found in waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onReadMultipleFailure(Exception e) {
+                    Toast.makeText(EntrantHome.this, "Failed to load events.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
 //        notifications.setOnClickListener(view -> {
 //            startActivity(new Intent(EntrantHome.this, Notifications.class));
@@ -124,6 +167,8 @@ public class EntrantHome extends AppCompatActivity {
                         Intent switchActivityIntent = new Intent(getApplicationContext(),
                                 EventDescription.class);
                         switchActivityIntent.putExtra("id", id);
+                        switchActivityIntent.putExtra("User", user);
+                        switchActivityIntent.putExtra("isRemoving", false);
                         startActivity(switchActivityIntent);
                     })
                     .addOnCanceledListener(this::finish)
@@ -131,6 +176,7 @@ public class EntrantHome extends AppCompatActivity {
                     });
         });
     }
+
     /**
      * Updates the UI dynamically based on the user's facility and role status.
      */

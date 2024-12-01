@@ -3,7 +3,7 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Event extends RepoModel implements Serializable {
+public class Event extends RepoModel implements Serializable, Listable {
     private Date dateTime;
     private String eventName;
     private String description;
@@ -13,6 +13,7 @@ public class Event extends RepoModel implements Serializable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private String posterId;
     private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
@@ -42,6 +43,15 @@ public class Event extends RepoModel implements Serializable {
     public Boolean getGeo() {
         return this.geoRequired;
     }
+
+    public String getPosterId() {
+        return posterId;
+    }
+
+    public void setPosterId(String posterId) {
+        this.posterId = posterId;
+    }
+
 
     /**
      * Sets the Instructor name
