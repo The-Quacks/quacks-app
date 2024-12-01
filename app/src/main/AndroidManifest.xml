@@ -119,6 +119,10 @@
             android:exported="true" />
         <activity android:name=".DummyLocationTest"
             android:exported="true" />
+        <activity android:name=".EntrantsMapActivity"
+            android:exported="true" />
+        <activity android:name=".SelectMapEvent"
+            android:exported="true"/>
 
         <meta-data
             android:name="preloaded_fonts"
