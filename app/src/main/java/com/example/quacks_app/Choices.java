@@ -139,10 +139,12 @@ public class Choices extends AppCompatActivity {
                                                                 }
                                                             });
                                                         }
-                                                        break;
                                                     }
+                                                    break;
                                                 }
-                                                if (!found) {
+                                            }
+                                        }
+                                        if (!found) {
                                                     Notification notify = new Notification();
 
                                                     CRUD.create(notify, new CreateCallback() {
@@ -199,8 +201,6 @@ public class Choices extends AppCompatActivity {
                                                     });
                                                 }
                                             }
-                                        }
-                                    }
 
                                     @Override
                                     public void onReadFailure(Exception e) {

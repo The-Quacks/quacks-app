@@ -133,7 +133,6 @@ public class LastChoice extends AppCompatActivity {
                                                     }
                                                 }
                                             }
-
                                         }
 
                                         @Override
