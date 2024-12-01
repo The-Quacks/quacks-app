@@ -24,13 +24,8 @@ import java.util.Map;
 public class OrganizerHomepage extends AppCompatActivity {
     private FirebaseFirestore db;
     private Button profile;
-    private Button view_events;
-    private Button create_events;
-    private Button entrant_map;
-    private ImageButton switch_activity;
     private Facility facility;
     private User current;
-    private EventList eventList;
 
     /**
      * This is the Organizer Homepage: they can choose out of the four options
@@ -43,35 +38,25 @@ public class OrganizerHomepage extends AppCompatActivity {
         setContentView(R.layout.organizer_homepage);// or the correct XML layout file
 
         //event = new ArrayList<Event>();
-        eventList = new EventList();
-
         profile = findViewById(R.id.organizer_profile_button);
-        view_events = findViewById(R.id.view_events);
-        create_events = findViewById(R.id.create_event);
-        entrant_map = findViewById(R.id.map);
-        switch_activity = findViewById(R.id.switch_activity_organizer);
+        Button view_events = findViewById(R.id.view_events);
+        Button create_events = findViewById(R.id.create_event);
+        Button entrant_map = findViewById(R.id.map);
+        ImageButton switch_activity = findViewById(R.id.switch_activity_organizer);
 
         current = (User) getIntent().getSerializableExtra("User");
 
-
-
-
-        switch_activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (current.getRoles().contains(Role.ADMIN)) {
-                    Intent intent = new Intent(OrganizerHomepage.this, AdminHome.class);
-                    intent.putExtra("User", current);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Intent intent = new Intent(OrganizerHomepage.this, EntrantHome.class);
-                    intent.putExtra("User", current);
-                    startActivity(intent);
-                    finish();
-                }
+        switch_activity.setOnClickListener(v -> {
+            Intent intent;
+            if (current.getRoles().contains(Role.ADMIN)) {
+                intent = new Intent(OrganizerHomepage.this, AdminHome.class);
             }
+            else {
+                intent = new Intent(OrganizerHomepage.this, EntrantHome.class);
+            }
+            intent.putExtra("User", current);
+            startActivity(intent);
+            finish();
         });
 
         ReadMultipleCallback<Facility> readMultipleCallback = new ReadMultipleCallback<Facility>() {
@@ -115,21 +100,27 @@ public class OrganizerHomepage extends AppCompatActivity {
         view_events.setOnClickListener(view -> {
             Intent intent = new Intent(OrganizerHomepage.this, ViewEvents.class);
             intent.putExtra("User", current);
-            intent.putExtra("EventList", eventList);
             intent.putExtra("Facility", facility);
             startActivity(intent);
         });
+
         create_events.setOnClickListener(view -> {
             Intent intent =new Intent(OrganizerHomepage.this, CreateEvent.class);
+            // mode = create, as we're creating the event
+            intent.putExtra("mode", "create");
+
             intent.putExtra("User", current);
-            intent.putExtra("EventList", eventList);
             intent.putExtra("Facility", facility);
             startActivity(intent);
         });
 
 
-        entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
-
+        entrant_map.setOnClickListener(view -> {
+            Intent intent = new Intent(OrganizerHomepage.this, SelectMapEvent.class);
+            intent.putExtra("User", current);
+            intent.putExtra("Facility", facility);
+            startActivity(intent);
+        });
     }
 
     /**
@@ -148,7 +139,6 @@ public class OrganizerHomepage extends AppCompatActivity {
                 if (current == null || facility == null) {
                     Toast.makeText(OrganizerHomepage.this, "Error: Facility and Current are Null", Toast.LENGTH_SHORT).show();
                 }
-                return;
             }
         }
     }

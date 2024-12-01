@@ -48,10 +48,9 @@ public class CreateEvent extends AppCompatActivity {
     private boolean validEventName = false;
     private boolean wrong = false;
     private FirebaseFirestore db;
-    private EventList eventList;
     private EditText eventtime;
     private Date final_date_time;
-    private Button upload_button;
+    private ApplicantList appList;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -59,18 +58,13 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
-        // buttons
-        upload_button = findViewById(R.id.upload_button);
+
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
         facility = (Facility) getIntent().getSerializableExtra("Facility");
-        if (getIntent().getSerializableExtra("EventList") == null) {
-            finish();
-        }
-        eventList = (EventList) getIntent().getSerializableExtra("EventList");
         user = (User) getIntent().getSerializableExtra("User");
 
 
@@ -88,14 +82,6 @@ public class CreateEvent extends AppCompatActivity {
         eventtime = findViewById(R.id.event_time);
 
 
-
-        //buttons
-        upload_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(CreateEvent.this, "Feature Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,6 +190,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
+                    appList = new ApplicantList();
+                    appList.setLimit(classes);
                     event.setEventName(eventname);
                     event.setDateTime(final_date_time);
                     event.setDescription(text);
@@ -257,88 +245,57 @@ public class CreateEvent extends AppCompatActivity {
 
                     String uuid = UUID.randomUUID().toString();
                     event.setDocumentId(uuid);
-                    if (eventList != null) {
-                        eventList.addEvent(event);
-                    }
 
                     notificationList.setNotificationEventId(event.getEventId());
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
-                    CRUD.create(event, new CreateCallback() {
+                    CRUD.create(appList, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
-                            Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 100, 100);
-                            String hash = QRCodeUtil.hash(qrcode);
-                            event.setQRCodeHash(hash);
-                            CRUD.update(event, new UpdateCallback() {
+                            event.setApplicantList(appList.getDocumentId());
+                            CRUD.create(event, new CreateCallback() {
                                 @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(CreateEvent.this, QRCodeGeneratorActivity.class);
-                                    intent.putExtra("EventList", eventList);
-                                    intent.putExtra("User", user);
-                                    intent.putExtra("Facility", facility);
-                                    intent.putExtra("Event", event);
-                                    startActivity(intent);
-                                    finish();
+                                public void onCreateSuccess() {
+                                    Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 100, 100);
+                                    String hash = QRCodeUtil.hash(qrcode);
+                                    event.setQRCodeHash(hash);
+                                    CRUD.update(event, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            Toast.makeText(CreateEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(CreateEvent.this, QRCodeGeneratorActivity.class);
+                                            intent.putExtra("User", user);
+                                            intent.putExtra("Facility", facility);
+                                            intent.putExtra("Event", event);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+                                            Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
 
                                 @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
+                                public void onCreateFailure(Exception e) {
+                                    Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
 
                         @Override
                         public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
+
                         }
                     });
+
 
                 } else {
                     Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
                 }
 
-            }
-        });
-
-        //This is the bottom of the page directory
-        homepage = findViewById(R.id.house);
-        profile = findViewById(R.id.person);
-        search = findViewById(R.id.search);
-
-        homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Already here
-                Intent intent = new Intent(CreateEvent.this, OrganizerHomepage.class);
-                if (facility != null) {
-                    intent.putExtra("Facility", facility);
-                }
-                startActivity(intent);
-            }
-        });
-
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
-                if (facility != null) {
-                    intent.putExtra("Facility", facility);
-                }
-                startActivity(intent);
-            }
-        });
-
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CreateEvent.this, ViewOrganizer.class);
-                if (facility != null) {
-                    intent.putExtra("Facility", facility);
-                }
-                startActivity(intent);
             }
         });
     }

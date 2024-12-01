@@ -10,8 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class EventArrayAdapter extends ArrayAdapter<Event> {
@@ -19,11 +17,17 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
     private Context context;
     private Facility facility;
 
-    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility){
+    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility) {
         super(context, 0, events);
         this.events = events;
         this.context = context;
         this.facility = facility;
+    }
+
+    public EventArrayAdapter(Context context, ArrayList<Event> events) {
+        super(context, 0, events);
+        this.events = (!events.isEmpty()) ? events : new ArrayList<>();
+        this.context = context;
     }
 
     @NonNull
@@ -36,14 +40,15 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         }
 
         Event event = events.get(position);
+
         TextView eventName = view.findViewById(R.id.event_text);
-        TextView date= view.findViewById(R.id.date_text);
-        TextView instructor = view.findViewById(R.id.instructor_text);
+        TextView eventDate = view.findViewById(R.id.date_text);
+        TextView eventInstructor = view.findViewById(R.id.instructor_text);
         //TextView class_capacity = view.findViewById(R.id.class_capacity);
 
         eventName.setText(event.getEventName());
-        date.setText(event.getDateTime().toString());
-        instructor.setText(event.getDescription());
+        eventDate.setText(event.getDateTime().toString());
+        eventInstructor.setText(event.getDescription());
 
         return view;
     }

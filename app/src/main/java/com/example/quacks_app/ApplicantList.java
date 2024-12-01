@@ -128,4 +128,7 @@ public class ApplicantList extends RepoModel implements Serializable {
         return this.applicantIds; // placeholder
     }
 
+    public boolean contains(String userId) {
+        return applicantIds.contains(userId);
+    }
 }

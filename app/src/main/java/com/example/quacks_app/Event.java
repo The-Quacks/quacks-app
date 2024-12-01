@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Event extends RepoModel implements Serializable {
+public class Event extends RepoModel implements Serializable, Listable {
     private Date dateTime;
     private String eventName;
     private String description;
@@ -14,11 +14,13 @@ public class Event extends RepoModel implements Serializable {
     private String facilityId;
     private String organizerId;
     private String QRCodeHash;
+    private String instructorName;
+    private String eventPosterPath;
+    private Boolean geoRequired = false; // Default to false
+    private String posterId;
     private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
-    private String instructorName;
-    private Boolean geoRequired;
     private ApplicantList final_list;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
@@ -44,6 +46,15 @@ public class Event extends RepoModel implements Serializable {
     public Boolean getGeo() {
         return this.geoRequired;
     }
+
+    public String getEventPosterPath() {
+        return eventPosterPath;
+    }
+
+    public void setEventPosterPath(String posterId) {
+        this.eventPosterPath = posterId;
+    }
+
 
     /**
      * Sets the Instructor name

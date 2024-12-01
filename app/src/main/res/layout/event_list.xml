@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Event List"
+        android:text="@string/event_list"
         android:textColor="@color/text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/event_list"
+        android:id="@+id/list_of_events"
         android:layout_width="match_parent"
         android:background="@color/base"
         android:layout_height="635dp"
@@ -52,7 +52,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src = "@drawable/image_163"
-            android:contentDescription="Button"
+            android:contentDescription="@string/home"
             android:background="@color/background"
             android:layout_alignParentLeft="true"
             />
@@ -62,7 +62,7 @@
             android:layout_width="54dp"
             android:layout_height="48dp"
             android:background="@color/background"
-            android:contentDescription="Button"
+            android:contentDescription="@string/common_signin_button_text"
             android:src="@drawable/image_164"
             android:layout_centerHorizontal="true"
             />

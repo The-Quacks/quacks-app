@@ -91,4 +91,8 @@ public class EventList extends RepoModel implements Serializable {
             eventIds.add(event.getDocumentId());
         }
     }
+
+    public boolean contains(String eventId) {
+        return eventIds.contains(eventId);
+    }
 }

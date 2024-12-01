@@ -1,0 +1,62 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:foregroundTint="#D5B4B4"
+    android:visibility="visible"
+    android:descendantFocusability="blocksDescendants"
+    tools:context=".ViewEvents">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Waitlisted Events"
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/base"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf = "@id/title"
+        android:layout_marginTop = "100dp"
+        android:layout_marginBottom = "50dp"
+        app:layout_constraintBottom_toTopOf = "@id/bottomNavigationView">
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_home" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -58,7 +58,7 @@ public class AdminHome extends AppCompatActivity {
         });
 
         Images.setOnClickListener(view -> {
-            Intent myIntent = new Intent(AdminHome.this, AdminListView.class);
+            Intent myIntent = new Intent(AdminHome.this, AdminImageListView.class);
             bundle.putString("viewType", "Images");
             myIntent.putExtras(bundle);
             startActivity(myIntent);
