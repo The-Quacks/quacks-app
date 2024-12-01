@@ -40,7 +40,6 @@ public class ViewOrganizer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_organizer_profile);// or the correct XML layout file
 
-
         current = (User) getIntent().getSerializableExtra("User");
 
         name = findViewById(R.id.Name);
@@ -54,19 +53,16 @@ public class ViewOrganizer extends AppCompatActivity {
         edit = findViewById(R.id.edit_button);
         back = findViewById(R.id.back_button);
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //back to homepage
-                finish();
-            }
+        back.setOnClickListener(view -> {
+            //back to homepage
+            finish();
         });
 
 
 
         Map<String, Object> query = new HashMap<>();
         query.put("organizerId", current.getDocumentId());
-        CRUD.readQueryStatic(query, Facility.class, new ReadMultipleCallback<Facility>() {
+        CRUD.readQueryLive(query, Facility.class, new ReadMultipleCallback<Facility>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Facility> data) {
                 if (data.isEmpty()) {
@@ -79,7 +75,7 @@ public class ViewOrganizer extends AppCompatActivity {
                     facility = data.get(0);
 
                     name.setText(facility.getName());
-                    location.setText(facility.getLocation());
+                    location.setText(facility.getGeoPointString(ViewOrganizer.this));
                     contact_info.setText(facility.getPhone());
                     details.setText(facility.getDetails());
                     accessibility.setText(facility.getAccessible());
@@ -90,15 +86,12 @@ public class ViewOrganizer extends AppCompatActivity {
                     }
 
 
-                    edit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //this is the edit function
-                            Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
-                            intent.putExtra("Facility", facility);
-                            intent.putExtra("User", current);
-                            startActivity(intent);
-                        }
+                    edit.setOnClickListener(view -> {
+                        //this is the edit function
+                        Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
+                        intent.putExtra("Facility", facility);
+                        intent.putExtra("User", current);
+                        startActivity(intent);
                     });
 
                 }

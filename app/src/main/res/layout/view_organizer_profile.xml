@@ -72,6 +72,8 @@
             android:id = "@+id/location"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textSize = "20sp"
             android:autofillHints="yes"
             android:text  ="@string/location"/>
