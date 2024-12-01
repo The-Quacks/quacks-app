@@ -1,7 +1,10 @@
 package com.example.quacks_app;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +13,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,27 +34,29 @@ import java.util.UUID;
  */
 public class CreateEvent extends AppCompatActivity {
     private LocalDate startDate;
+
     private EditText event_name;
     private EditText class_capacity;
     private EditText waitlist_capacity;
     private EditText beginning;
     private EditText instructor;
-    private CheckBox geolocation;
     private EditText description;
+    private EditText eventTime;
+
+    private Date final_date_time;
+    private CheckBox geolocation;
+    private EventList eventList;
+
     private Facility facility;
     private User user;
-    private Button back;
-    private Button confirm;
     private Event event;
+
     private boolean validDate = false;
     private boolean validInstructorName = false;
     private boolean validEventName = false;
     private boolean wrong = false;
-    private FirebaseFirestore db;
-    private EventList eventList;
-    private EditText eventtime;
-    private Date final_date_time;
 
+    private FirebaseFirestore db;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -63,8 +72,8 @@ public class CreateEvent extends AppCompatActivity {
         deleteEventButton.setVisibility(View.GONE);
 
         // buttons
-        back = findViewById(R.id.back_button);
-        confirm = findViewById(R.id.confirm_button);
+        Button back = findViewById(R.id.back_button);
+        Button confirm = findViewById(R.id.confirm_button);
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
@@ -77,9 +86,7 @@ public class CreateEvent extends AppCompatActivity {
 
 
 
-        //Then we set them like in create profile
-
-        //Finding the right text box
+        // Finding the right text box
         event_name = findViewById(R.id.event_name);
         class_capacity = findViewById(R.id.class_capacity);
         waitlist_capacity = findViewById(R.id.waitlist_capacity);
@@ -87,8 +94,13 @@ public class CreateEvent extends AppCompatActivity {
         instructor = findViewById(R.id.instructor);
         geolocation = findViewById(R.id.geolocation);
         description = findViewById(R.id.description);
-        eventtime = findViewById(R.id.event_time);
+        eventTime = findViewById(R.id.event_time);
 
+        // Initialize other necessary objects
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+        eventList = (EventList) getIntent().getSerializableExtra("EventList");
+        user = (User) getIntent().getSerializableExtra("User");
+        event = (Event) getIntent().getSerializableExtra("Event");
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,116 +109,107 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        confirm.setOnClickListener(view -> {
+            // Check the format of the day entered
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                String startDateString = beginning.getText().toString().trim();
+                LocalDate current_date = LocalDate.now();
 
-                //this checks the format of the **day** entered
+                startDate = LocalDate.parse(startDateString, formatter);
+
+                if (current_date.isBefore(startDate)) {
+                    validDate = true;
+                    wrong = false;
+                }
+            } catch (Exception e) {
+                Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+            }
+
+
+            // Check the format of the time entered
+            try {
+                String hour = eventTime.getText().toString().trim();
+                DateTimeFormatter formatted = DateTimeFormatter.ofPattern("h:mma");
+
+                LocalTime eventTime = null;
+
                 try {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                    String startDateString = beginning.getText().toString().trim();
-                    LocalDate current_date = LocalDate.now();
-
-                    startDate = LocalDate.parse(startDateString, formatter);
-
-                    if (current_date.isBefore(startDate)) {
-                        validDate = true;
-                        wrong = false;
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(CreateEvent.this, "Format Dates dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+                    eventTime = LocalTime.parse(hour.toUpperCase(), formatted);
+                } catch (Exception E) {
+                    wrong = true;
+                    Toast.makeText(CreateEvent.this, "Format Event Time 4:00PM", Toast.LENGTH_SHORT).show();
                 }
 
-
-                // this checks the format of the **time** entered
-                try {
-                    String hour = eventtime.getText().toString().trim();
-                    DateTimeFormatter formatted = DateTimeFormatter.ofPattern("h:mma");
-
-                    LocalTime eventTime = null;
-
-                    try {
-                        eventTime = LocalTime.parse(hour.toUpperCase(), formatted);
-                    } catch (Exception E) {
-                        wrong = true;
-                        Toast.makeText(CreateEvent.this, "Format Event Time 4:00pm", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (wrong) {
-                        validDate = false;
-                    }
-
-                    if (startDate != null && eventTime != null) {
-                        final_date_time = Date.from(
-                                startDate.atTime(eventTime)
-                                        .atZone(ZoneId.systemDefault())
-                                        .toInstant()
-                        );
-                    } else {
-                        Toast.makeText(CreateEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
-                    }
-                } catch(Exception E) {
+                if (wrong) {
                     validDate = false;
                 }
 
-
-                // this checks the format of the **class capacity**
-
-                int classes = 0;
-                try {
-                    classes = Integer.parseInt(class_capacity.getText().toString());
-                } catch(Exception e) {
-                    wrong = true;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
-                }
-
-                //this checks the format of the **waitlist capacity**
-                int classes_two = 0;
-                try {
-                    classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
-
-                }catch(Exception e){
-                    wrong = true;
-                    Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
-                }
-
-                // this checks the format of the **instructor name**
-                String name = instructor.getText().toString();
-                if (name.length() >= 1 && name.length() <= 40 ) {
-                    validInstructorName = true;
-                    wrong = false;
-                    //Toast.makeText(CreateEvent.this, "6 passed", Toast.LENGTH_SHORT).show();
+                if (startDate != null && eventTime != null) {
+                    final_date_time = Date.from(
+                            startDate.atTime(eventTime)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toInstant()
+                    );
                 } else {
-                    Toast.makeText(CreateEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "Invalid date or time input.", Toast.LENGTH_SHORT).show();
                 }
+            } catch(Exception E) {
+                validDate = false;
+            }
 
-                // this checks the format of the **Geolocation**
+            // Check the format of the **class capacity**
+            int classes = 0;
+            try {
+                classes = Integer.parseInt(class_capacity.getText().toString());
+            } catch(Exception e) {
+                wrong = true;
+                Toast.makeText(CreateEvent.this, "Error in Format for Class Capacity", Toast.LENGTH_SHORT).show();
+            }
 
-                boolean geo = geolocation.isChecked();
+            // Check the format of the **waitlist capacity**
+            int classes_two = 0;
+            try {
+                classes_two = Integer.parseInt(waitlist_capacity.getText().toString());
 
-                // this checks the format of the **event name**
+            }catch(Exception e){
+                wrong = true;
+                Toast.makeText(CreateEvent.this, "Error in Format for Waitlist Capacity", Toast.LENGTH_SHORT).show();
+            }
 
-                String eventname = event_name.getText().toString();
-                if (eventname.length() <= 40) {
-                    validEventName = true;
-                    wrong = false;
-                    //Toast.makeText(CreateEvent.this, "8 passed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(CreateEvent.this, "Event name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
-                }
-                String text = description.getText().toString();
+            // Check the format of the **instructor name**
+            String name = instructor.getText().toString();
+            if (!name.isEmpty() && name.length() <= 40 ) {
+                validInstructorName = true;
+                wrong = false;
+            } else {
+                Toast.makeText(CreateEvent.this, "Error: Instructor name needs to be between 1-40 characters", Toast.LENGTH_SHORT).show();
+            }
 
-                if (!wrong && validDate && validInstructorName && validEventName) {
-                    event = new Event();
-                    event.setEventName(eventname);
-                    event.setDateTime(final_date_time);
-                    event.setDescription(text);
-                    event.setInstructor(name);
-                    event.setGeo(geo);
-                    event.setOrganizerId(user.getDocumentId());
-                    event.setFacility(facility.getDocumentId());
-                    event.setRegistrationCapacity(classes);
-                    event.setWaitlistCapacity(classes_two);
+            // Check the format of the **Geolocation**
+            boolean geo = geolocation.isChecked();
+
+            // Check the format of the **event name**
+            String eventname = event_name.getText().toString();
+            if (eventname.length() <= 40) {
+                validEventName = true;
+                wrong = false;
+            } else {
+                Toast.makeText(CreateEvent.this, "Event name needs to be less than 40 characters", Toast.LENGTH_SHORT).show();
+            }
+            String text = description.getText().toString();
+
+            if (!wrong && validDate && validInstructorName && validEventName) {
+                event = new Event();
+                event.setEventName(eventname);
+                event.setDateTime(final_date_time);
+                event.setDescription(text);
+                event.setInstructor(name);
+                event.setGeo(geo);
+                event.setOrganizerId(user.getDocumentId());
+                event.setFacility(facility.getDocumentId());
+                event.setRegistrationCapacity(classes);
+                event.setWaitlistCapacity(classes_two);
 
 //                    //Setting the notification list
 //                    String notificationListId = UUID.randomUUID().toString();
@@ -243,23 +246,21 @@ public class CreateEvent extends AppCompatActivity {
                                     finish();
                                 }
 
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                            @Override
+                            public void onUpdateFailure(Exception e) {
+                                Toast.makeText(CreateEvent.this, "Failed to store qr code hash event.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    @Override
+                    public void onCreateFailure(Exception e) {
+                        Toast.makeText(CreateEvent.this, "Failed to create event.", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                } else {
-                    Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
-                }
-
+            } else {
+                Toast.makeText(CreateEvent.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
     }

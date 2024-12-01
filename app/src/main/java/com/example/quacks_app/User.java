@@ -26,7 +26,6 @@ public class User extends RepoModel implements Serializable, Listable {
         roles = new ArrayList<>();
     }
 
-
     public String getDeviceId() {
         return deviceId;
     }
