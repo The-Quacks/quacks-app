@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is the activity when an entrant presses the Waitlists button.
+ * It displays all events where the user has joined the waitlist.
+ * Selecting an event displays information about the event, and allows the user to
+ * leave that waitlist.
+ */
 public class ViewEventsEntrant extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +49,9 @@ public class ViewEventsEntrant extends AppCompatActivity {
         });
 
         home.setOnClickListener(v -> {
-            startActivity(new Intent(this, EntrantHome.class));
+            Intent intent = new Intent(ViewEventsEntrant.this, EntrantHome.class);
+            intent.putExtra("User", getIntent().getSerializableExtra("User"));
+            startActivity(intent);
         });
     }
 }

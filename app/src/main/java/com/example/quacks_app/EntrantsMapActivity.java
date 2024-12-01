@@ -13,6 +13,10 @@ import org.osmdroid.views.MapView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code EntrantsMapActivity} class populates the entrants for a given event on the map, and
+ * uses the {@code EntrantsMap} class to do so.
+ */
 public class EntrantsMapActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

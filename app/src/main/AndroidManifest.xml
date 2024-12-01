@@ -117,8 +117,6 @@
             android:exported="true" />
         <activity android:name=".SelectAtRandom"
             android:exported="true" />
-        <activity android:name=".DummyLocationTest"
-            android:exported="true" />
         <activity android:name=".EntrantsMapActivity"
             android:exported="true" />
         <activity android:name=".SelectMapEvent"

@@ -15,9 +15,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
- * It also includes the option to join the waitlist for that event. The information displayed will
- * be changed in future implementations, when more functionality is completed. Additionally, the
- * code to join the waitlist will be improved in the future.
+ * It also includes the option to join the waitlist for that event.
  */
 
 public class EventDescription extends AppCompatActivity {
@@ -52,8 +50,6 @@ public class EventDescription extends AppCompatActivity {
             public void onReadSuccess(Event data) {
                 TextView eventTitle = findViewById(R.id.eventTitle);
                 eventTitle.setText(data.getEventName());
-                // This will need to be updated after merging with the full Event implementation
-//                eventDescription.setText(String.format("Capacity: %s\nRegistration open until: %s\nClass Duration: %s\nInstructor: %s\nGeolocation Requirement: %s", data.getClass_capacity(), data.getStartDateTime().toString(), data.getEndDateTime().toString(), data.getInstructor(), data.getGeolocation()));
                 TextView eventDescription = findViewById(R.id.eventDescription);
                 eventDescription.setText(String.format("Applicant List: %s\nStart Time: %s\nDescription: %s\nFacility: %s\nOrganizer: %s\nGeolocation Required: %s", data.getApplicantList(), data.getDateTime(), data.getDescription(), data.getFacility(), data.getOrganizerId(), data.getGeo()));
                 geolocationRequired = data.getGeo();
@@ -73,9 +69,10 @@ public class EventDescription extends AppCompatActivity {
         });
 
         home.setOnClickListener(v -> {
-            startActivity(new Intent(this, EntrantHome.class));
+            Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+            intent.putExtra("User", currentUser);
+            startActivity(intent);
         });
-
 
         joinWaitlist.setOnClickListener(v -> {
             if (userId != null) {
@@ -179,6 +176,10 @@ public class EventDescription extends AppCompatActivity {
         });
     }
 
+    /**
+     * This function adds the event id to the user's event list attribute.
+     * @param eventId The current event id
+     */
     private void addEventToUser(String eventId) {
         if (currentUser != null) {
             EventList userEvents = currentUser.getUserProfile().getEventList();
@@ -211,6 +212,10 @@ public class EventDescription extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function removes an event id from the user when they leave the waitlist.
+     * @param eventId The event to leave
+     */
     private void removeEventFromUser(String eventId) {
         if (currentUser != null) {
             EventList userEvents = currentUser.getUserProfile().getEventList();
