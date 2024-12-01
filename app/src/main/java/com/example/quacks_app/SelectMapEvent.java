@@ -39,7 +39,7 @@ public class SelectMapEvent extends AppCompatActivity {
             finish();
         }
 
-        eventList = findViewById(R.id.event_list);
+        eventList = findViewById(R.id.list_of_events);
 
         eventDataList = new ArrayList<>();
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList, facility);

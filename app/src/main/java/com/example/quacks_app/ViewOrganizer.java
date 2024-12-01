@@ -53,12 +53,9 @@ public class ViewOrganizer extends AppCompatActivity {
         edit = findViewById(R.id.edit_button);
         back = findViewById(R.id.back_button);
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //back to homepage
-                finish();
-            }
+        back.setOnClickListener(view -> {
+            //back to homepage
+            finish();
         });
 
 
@@ -89,15 +86,12 @@ public class ViewOrganizer extends AppCompatActivity {
                     }
 
 
-                    edit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //this is the edit function
-                            Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
-                            intent.putExtra("Facility", facility);
-                            intent.putExtra("User", current);
-                            startActivity(intent);
-                        }
+                    edit.setOnClickListener(view -> {
+                        //this is the edit function
+                        Intent intent = new Intent(ViewOrganizer.this, MakeOrganizerProfile.class);
+                        intent.putExtra("Facility", facility);
+                        intent.putExtra("User", current);
+                        startActivity(intent);
                     });
 
                 }

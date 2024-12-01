@@ -4,55 +4,45 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ViewEvents extends AppCompatActivity {
-    private ImageButton homepage;
-    private ImageButton profile;
-    private ImageButton search;
     private Facility facility;
-    private ListView eventList;
     private ArrayList<Event> eventDataList;
     private EventArrayAdapter eventArrayAdapter;
-    private ArrayList<Listable> dataList;
     private EventList evented;
     private User user;
-    private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list);
-        dataList = new ArrayList<>();
+        ArrayList<Listable> dataList = new ArrayList<>();
 
         if (getIntent().getSerializableExtra("Facility")==null){
             finish();
         }
-
+        evented = (EventList) getIntent().getSerializableExtra("EventList");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
 
-        eventList = findViewById(R.id.event_list);
+        if (evented == null || facility == null || user == null) {
+            Toast.makeText(this, "Missing required data. Exiting.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        ListView eventList = findViewById(R.id.list_of_events);
 
         eventDataList = new ArrayList<>();
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList, facility);
@@ -60,7 +50,7 @@ public class ViewEvents extends AppCompatActivity {
 
         Map<String, Object> query = new HashMap<>();
         query.put("organizerId", user.getDocumentId());
-        listenerRegistration = CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
+        ListenerRegistration listenerRegistration = CRUD.readQueryLive(query, Event.class, new ReadMultipleCallback<Event>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Event> data) {
                 eventDataList.clear();
@@ -74,56 +64,47 @@ public class ViewEvents extends AppCompatActivity {
             }
         });
 
-        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Event clickedEvent = (Event) adapterView.getItemAtPosition(i);
-
-                Intent intent = new Intent(ViewEvents.this, EventInfo.class);
-                intent.putExtra("Event", clickedEvent);
-
-                if (facility != null){
-                    intent.putExtra("Facility", facility);
-                }
-                if (user != null) {
-                    intent.putExtra("User", user);
-                }
-                startActivity(intent);
+        // Handle list item clicks
+        eventList.setOnItemClickListener((adapterView, view, i, l) -> {
+            Event clickedEvent = (Event) eventArrayAdapter.getItem(i); // Use adapter's `getItem` method to retrieve data
+            if (clickedEvent == null) {
+                Toast.makeText(ViewEvents.this, "Error: Event not found.", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Intent intent = new Intent(ViewEvents.this, EventInfo.class);
+            intent.putExtra("Event", clickedEvent);
+            intent.putExtra("EventList", evented);
+            if (facility != null){
+                intent.putExtra("Facility", facility);
+            }
+            if (user != null) {
+                intent.putExtra("User", user);
+            }
+            startActivity(intent);
         });
-
 
         //This is the bottom of the page directory
-        homepage = findViewById(R.id.house);
-        profile = findViewById(R.id.person);
-        search = findViewById(R.id.search);
+        ImageButton homepage = findViewById(R.id.house);
+        ImageButton profile = findViewById(R.id.person);
+        ImageButton search = findViewById(R.id.search);
 
-        homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ViewEvents.this, OrganizerHomepage.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                startActivity(intent);
-            }
+        homepage.setOnClickListener(view -> {
+            Intent intent = new Intent(ViewEvents.this, OrganizerHomepage.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            startActivity(intent);
         });
 
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ViewEvents.this, ViewOrganizer.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                startActivity(intent);
-            }
+        profile.setOnClickListener(view -> {
+            Intent intent = new Intent(ViewEvents.this, ViewOrganizer.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            startActivity(intent);
         });
 
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Already here
-                Toast.makeText(ViewEvents.this, "Already On Searchpage!", Toast.LENGTH_SHORT).show();
-            }
+        search.setOnClickListener(view -> {
+            //Already here
+            Toast.makeText(ViewEvents.this, "Already On Search Page!", Toast.LENGTH_SHORT).show();
         });
     }
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class User extends RepoModel implements Serializable,Listable {
+public class User extends RepoModel implements Serializable, Listable {
     private String deviceId;
     private ArrayList<Role> roles; // Note: Firebase does not like enum sets
     private UserProfile userProfile;
@@ -32,7 +32,6 @@ public class User extends RepoModel implements Serializable,Listable {
         this.deviceId = deviceId;
         roles = new ArrayList<>();
     }
-
 
     public String getDeviceId() {
         return deviceId;
@@ -127,5 +126,4 @@ public class User extends RepoModel implements Serializable,Listable {
         }
     }
 }
-
 

@@ -77,7 +77,7 @@
         android:layout_marginEnd = "15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf = "@id/titlea"
-         />
+        />
     <Button
         android:id="@+id/create_event"
         android:layout_width="175dp"
