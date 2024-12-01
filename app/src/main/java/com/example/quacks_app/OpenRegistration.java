@@ -51,7 +51,7 @@ public class OpenRegistration  extends AppCompatActivity {
 
 
         //check if there is an applicant list already made
-        if (!event.getApplicantList().equals("0")){
+        if (event.getRegistration()){
             Toast.makeText(OpenRegistration.this, "This event is already Open!", Toast.LENGTH_SHORT).show();
             finish();
         }

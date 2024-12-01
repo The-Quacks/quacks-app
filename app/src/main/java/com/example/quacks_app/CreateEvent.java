@@ -190,8 +190,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
-                    appList = new ApplicantList();
-                    appList.setLimit(classes);
+                    //appList = new ApplicantList();
+                    //appList.setLimit(classes);
                     event.setEventName(eventname);
                     event.setDateTime(final_date_time);
                     event.setDescription(text);
@@ -219,7 +219,7 @@ public class CreateEvent extends AppCompatActivity {
                                     CRUD.update(event, new UpdateCallback() {
                                         @Override
                                         public void onUpdateSuccess() {
-                                            Toast.makeText(CreateEvent.this, "Notification List created successfully", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(CreateEvent.this, "Notification List created successfully", Toast.LENGTH_SHORT).show();
                                         }
 
                                         @Override
@@ -245,10 +245,11 @@ public class CreateEvent extends AppCompatActivity {
 
                     String uuid = UUID.randomUUID().toString();
                     event.setDocumentId(uuid);
+                    event.setRegistration(false);
 
                     notificationList.setNotificationEventId(event.getEventId());
 
-                    //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(appList, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {

@@ -33,11 +33,11 @@ public class ViewEvents extends AppCompatActivity {
         if (getIntent().getSerializableExtra("Facility")==null){
             finish();
         }
-        evented = (EventList) getIntent().getSerializableExtra("EventList");
+        //evented = (EventList) getIntent().getSerializableExtra("EventList");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
 
-        if (evented == null || facility == null || user == null) {
+        if (facility == null || user == null) {
             Toast.makeText(this, "Missing required data. Exiting.", Toast.LENGTH_SHORT).show();
             finish();
             return;

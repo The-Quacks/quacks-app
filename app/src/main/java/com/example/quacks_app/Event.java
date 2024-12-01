@@ -22,6 +22,7 @@ public class Event extends RepoModel implements Serializable, Listable {
     private int waitlist_capacity;
     private int registration_capacity;
     private ApplicantList final_list;
+    private boolean closed_open;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -259,5 +260,13 @@ public class Event extends RepoModel implements Serializable, Listable {
             return null;
         }
         return this.final_list;
+    }
+
+    public void setRegistration(boolean status){
+        this.closed_open = status;
+    }
+
+    public boolean getRegistration(){
+        return this.closed_open;
     }
 }
