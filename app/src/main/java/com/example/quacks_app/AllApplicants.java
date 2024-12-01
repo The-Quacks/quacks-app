@@ -181,6 +181,5 @@ public class AllApplicants extends AppCompatActivity {
         });
 
         //Suggest here click into other peoples profiles?
-
     }
 }

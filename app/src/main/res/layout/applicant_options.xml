@@ -32,7 +32,7 @@
         android:focusable="true"
         android:stateListAnimator="@null"
 
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="100dp"
         android:backgroundTint="@color/button"
         android:fadingEdge="horizontal"
         android:text="View All Applicants"
@@ -45,6 +45,27 @@
         app:layout_constraintTop_toBottomOf="@id/Welcome" />
 
     <Button
+        android:id="@+id/chosen_button"
+        android:layout_width="300dp"
+        android:layout_height="79dp"
+
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/button"
+
+        android:clickable="true"
+        android:elevation="10dp"
+        android:fadingEdge="horizontal"
+        android:focusable="true"
+        android:stateListAnimator="@null"
+        android:text="View Chosen Applicants"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:cornerRadius="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/all_button"/>
+
+    <Button
         android:id="@+id/declined_button"
         android:layout_width="300dp"
         android:textSize = "18sp"
@@ -54,9 +75,9 @@
         android:elevation="10dp"
         android:stateListAnimator="@null"
         android:backgroundTint="@color/button"
-        android:text="View Declined Applicants"
+        android:text="View Cancelled Applicants"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/all_button"
+        app:layout_constraintTop_toBottomOf="@id/chosen_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"
@@ -71,7 +92,7 @@
         android:elevation="10dp"
         android:stateListAnimator="@null"
         android:backgroundTint="@color/button"
-        android:text="View Accepted Applicants"
+        android:text="View Enrolled Applicants"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/declined_button"
         app:layout_constraintStart_toStartOf="parent"

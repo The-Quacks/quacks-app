@@ -9,10 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ApplicantOptions extends AppCompatActivity {
-    private Button all_applicants;
-    private Button declined_applicants;
-    private Button accepted_applicants;
-    private Button back;
     private Facility facility;
     private User user;
 
@@ -40,50 +36,45 @@ public class ApplicantOptions extends AppCompatActivity {
 
         //otherwise
 
-        all_applicants = findViewById(R.id.all_button);
-        declined_applicants = findViewById(R.id.declined_button);
-        accepted_applicants = findViewById(R.id.accepted_button);
-        back = findViewById(R.id.applicant_back_button);
+        Button all_applicants = findViewById(R.id.all_button);
+        Button chosen_applicants = findViewById(R.id.chosen_button);
+        Button declined_applicants = findViewById(R.id.declined_button);
+        Button accepted_applicants = findViewById(R.id.accepted_button);
+        Button back = findViewById(R.id.applicant_back_button);
 
         //create buttons
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        back.setOnClickListener(view -> finish());
+
+        all_applicants.setOnClickListener(view -> {
+            Intent intent = new Intent(ApplicantOptions.this, AllApplicants.class);
+            intent.putExtra("Event", event);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
 
-        all_applicants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ApplicantOptions.this, AllApplicants.class);
-                intent.putExtra("Event", event);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                startActivity(intent);
-            }
+        chosen_applicants.setOnClickListener(view -> {
+            Intent intent = new Intent(ApplicantOptions.this, ChosenApplicantActivity.class);
+            intent.putExtra("Event", event);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
 
-        declined_applicants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ApplicantOptions.this, DeclinedApplicants.class);
-                intent.putExtra("Event", event);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                startActivity(intent);
-            }
+        declined_applicants.setOnClickListener(view -> {
+            Intent intent = new Intent(ApplicantOptions.this, DeclinedApplicants.class);
+            intent.putExtra("Event", event);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
 
-        accepted_applicants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ApplicantOptions.this, AcceptedApplicants.class);
-                intent.putExtra("Event", event);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                startActivity(intent);
-            }
+        accepted_applicants.setOnClickListener(view -> {
+            Intent intent = new Intent(ApplicantOptions.this, AcceptedApplicants.class);
+            intent.putExtra("Event", event);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
     }
 }

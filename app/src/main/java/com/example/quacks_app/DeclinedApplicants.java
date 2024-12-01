@@ -148,8 +148,6 @@ public class DeclinedApplicants extends AppCompatActivity {
         });
 
 
-
-
         search = findViewById(R.id.declined_app_search);
         homepage = findViewById(R.id.declined_app_house);
         profile = findViewById(R.id.declined_app_person);
