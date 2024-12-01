@@ -79,7 +79,6 @@ public class PickApplicant extends AppCompatActivity {
                                     UserProfile profile = user.getUserProfile();
                                     userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
                                     userList.add(userdisplay);
-                                    applicantList.removeUser(user);
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
 
@@ -143,8 +142,9 @@ public class PickApplicant extends AppCompatActivity {
                     if (user.Carted()) {
                         String deviceId = user.getSubDisplay();
                         if (deviceId != null) {
-                            Notification noted = new Notification(deviceId);
-                            noted.setNotification(event);
+                            //if the deviceId is found, then we create a notification with the user selected
+                            //Notification noted = new Notification(user, );
+                           // noted.setNotification(event);
                             ++success;
                         } else {
                             continue;

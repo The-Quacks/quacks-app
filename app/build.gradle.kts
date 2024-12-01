@@ -39,6 +39,7 @@ dependencies {
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.google.zxing:javase:3.5.1")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

@@ -17,11 +17,17 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
     private Context context;
     private Facility facility;
 
-    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility){
+    public EventArrayAdapter(Context context,ArrayList<Event> events, Facility facility) {
         super(context, 0, events);
         this.events = events;
         this.context = context;
         this.facility = facility;
+    }
+
+    public EventArrayAdapter(Context context, ArrayList<Event> events) {
+        super(context, 0, events);
+        this.events = (!events.isEmpty()) ? events : new ArrayList<>();
+        this.context = context;
     }
 
     @NonNull

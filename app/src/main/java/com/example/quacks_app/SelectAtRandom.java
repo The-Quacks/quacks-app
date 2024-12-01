@@ -10,8 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.ListenerRegistration;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 /*
 Selecting a specified number of participants per notification round
  */
@@ -21,10 +27,12 @@ public class SelectAtRandom extends AppCompatActivity {
     private Button confirm;
     private Event event;
     private String applicantListId;
+    private NotificationList notificationList;
     private ArrayList<String> Tracker;
     private ImageButton home;
     private ImageButton search;
     private ImageButton profile;
+    private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,7 @@ public class SelectAtRandom extends AppCompatActivity {
                                     Toast.makeText(SelectAtRandom.this, "Number of applicants chosen exceeds amount in waitlist", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
                             } catch (NumberFormatException e) {
                                 Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
                                 return;
@@ -95,10 +104,24 @@ public class SelectAtRandom extends AppCompatActivity {
                                     @Override
                                     public void onReadSuccess(User user) {
                                         if (user != null) {
+
                                             UserProfile profile = user.getUserProfile();
-                                            Notification notify = new Notification(user.getDeviceId());
-                                            notify.setNotification(event);
-                                            applicantList.removeUser(user);
+                                            Notification notify = new Notification(user, applicantListId, event.getEventId(), "Unknown", "Not Sent");
+
+                                            //Looks at the NotificationList Id and decides whether it needs to create a new one
+                                            if (event.getNotificationList() == null){//creates one
+                                                String notificationListId = UUID.randomUUID().toString();
+                                                notificationList = new NotificationList();
+                                                notificationList.setDocumentId(notificationListId);
+                                                event.setNotificationList(notificationList);
+                                                notificationList.setNotificationEventId(event.getEventId());
+                                            }
+                                            else{
+                                                notificationList = event.getNotificationList();
+                                            }
+                                            //otherwise event.getNotificationList returns the list associated to the event
+                                            //we add the new notification to the list
+                                            notificationList.addNotification(notify);
 
                                         }
 

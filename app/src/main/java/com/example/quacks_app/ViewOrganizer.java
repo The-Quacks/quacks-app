@@ -40,7 +40,6 @@ public class ViewOrganizer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_organizer_profile);// or the correct XML layout file
 
-
         current = (User) getIntent().getSerializableExtra("User");
 
         name = findViewById(R.id.Name);
@@ -63,7 +62,7 @@ public class ViewOrganizer extends AppCompatActivity {
 
         Map<String, Object> query = new HashMap<>();
         query.put("organizerId", current.getDocumentId());
-        CRUD.readQueryStatic(query, Facility.class, new ReadMultipleCallback<Facility>() {
+        CRUD.readQueryLive(query, Facility.class, new ReadMultipleCallback<Facility>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Facility> data) {
                 if (data.isEmpty()) {
@@ -76,7 +75,7 @@ public class ViewOrganizer extends AppCompatActivity {
                     facility = data.get(0);
 
                     name.setText(facility.getName());
-                    location.setText(facility.getLocation());
+                    location.setText(facility.getGeoPointString(ViewOrganizer.this));
                     contact_info.setText(facility.getPhone());
                     details.setText(facility.getDetails());
                     accessibility.setText(facility.getAccessible());

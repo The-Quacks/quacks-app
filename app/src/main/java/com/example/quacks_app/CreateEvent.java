@@ -13,12 +13,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -199,23 +195,23 @@ public class CreateEvent extends AppCompatActivity {
             }
             String text = description.getText().toString();
 
-            if (!wrong && validDate && validInstructorName && validEventName) {
-                event = new Event();
-                event.setEventName(eventname);
-                event.setDateTime(final_date_time);
-                event.setDescription(text);
-                event.setInstructor(name);
-                event.setGeo(geo);
-                event.setOrganizerId(user.getDocumentId());
-                event.setFacility(facility.getDocumentId());
-                event.setRegistrationCapacity(classes);
-                event.setWaitlistCapacity(classes_two);
+                if (!wrong && validDate && validInstructorName && validEventName) {
+                    event = new Event();
+                    event.setEventName(eventname);
+                    event.setDateTime(final_date_time);
+                    event.setDescription(text);
+                    event.setInstructor(name);
+                    event.setGeo(geo);
+                    event.setOrganizerId(user.getDocumentId());
+                    event.setFacility(facility.getDocumentId());
+                    event.setRegistrationCapacity(classes);
+                    event.setWaitlistCapacity(classes_two);
 
-//                    //Setting the notification list
-//                    String notificationListId = UUID.randomUUID().toString();
-//                    NotificationList notificationList = new NotificationList();
-//                    notificationList.setNotificationListId(notificationListId);
-//                    event.setNotificationList(notificationList);
+                    //Setting the notification list
+                    String notificationListId = UUID.randomUUID().toString();
+                    NotificationList notificationList = new NotificationList();
+                    notificationList.setNotificationListId(notificationListId);
+                    event.setNotificationList(notificationList);
 
 
                     String uuid = UUID.randomUUID().toString();
@@ -224,7 +220,7 @@ public class CreateEvent extends AppCompatActivity {
                         eventList.addEvent(event);
                     }
 
-//                    notificationList.setNotificationEventId(event.getEventId());
+                    notificationList.setNotificationEventId(event.getEventId());
 
                     //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(event, new CreateCallback() {

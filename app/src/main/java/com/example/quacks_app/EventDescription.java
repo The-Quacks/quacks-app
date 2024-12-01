@@ -1,19 +1,17 @@
 package com.example.quacks_app;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.firestore.GeoPoint;
 
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
@@ -24,38 +22,51 @@ import java.util.Map;
 
 public class EventDescription extends AppCompatActivity {
     private String userId;
+    private String eventId;
     private String applicantListId;
-
     private User currentUser;
+    private boolean isRemoving;
+    private boolean geolocationRequired;
+    private Geolocation geolocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_description);
 
-        String id = getIntent().getStringExtra("id");
+        ImageButton back = findViewById(R.id.backButton);
+        ImageButton home = findViewById(R.id.homeIcon);
+        Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
+
+        eventId = getIntent().getStringExtra("id");
+        currentUser = (User) getIntent().getSerializableExtra("User");
+        userId = currentUser.getDocumentId();
+        isRemoving = getIntent().getBooleanExtra("isRemoving", false);
+
+        if (isRemoving) {
+            joinWaitlist.setText("Leave Waitlist");
+        }
+
         ReadCallback<Event> readEventCallback = new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
                 TextView eventTitle = findViewById(R.id.eventTitle);
-                eventTitle.setText(data.getDescription());
+                eventTitle.setText(data.getEventName());
                 // This will need to be updated after merging with the full Event implementation
 //                eventDescription.setText(String.format("Capacity: %s\nRegistration open until: %s\nClass Duration: %s\nInstructor: %s\nGeolocation Requirement: %s", data.getClass_capacity(), data.getStartDateTime().toString(), data.getEndDateTime().toString(), data.getInstructor(), data.getGeolocation()));
                 TextView eventDescription = findViewById(R.id.eventDescription);
-                eventDescription.setText(String.format("Applicant List: %s\nDateTime: %s\nFacility: %s\nOrganizer: %s", data.getApplicantList(), data.getDateTime(), data.getFacility(), data.getOrganizerId()));
+                eventDescription.setText(String.format("Applicant List: %s\nStart Time: %s\nDescription: %s\nFacility: %s\nOrganizer: %s\nGeolocation Required: %s", data.getApplicantList(), data.getDateTime(), data.getDescription(), data.getFacility(), data.getOrganizerId(), data.getGeo()));
+                geolocationRequired = data.getGeo();
                 applicantListId = data.getApplicantList();
             }
+
             @Override
             public void onReadFailure(Exception e) {
                 Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
             }
         };
 
-        CRUD.readStatic(id, Event.class, readEventCallback);
-
-        ImageButton back = findViewById(R.id.backButton);
-        ImageButton home = findViewById(R.id.homeIcon);
-        Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
+        CRUD.readLive(eventId, Event.class, readEventCallback);
 
         back.setOnClickListener(v -> {
             finish();
@@ -67,59 +78,170 @@ public class EventDescription extends AppCompatActivity {
 
 
         joinWaitlist.setOnClickListener(v -> {
-            // **This code needs a LOT of refactoring**
-                Map<String, Object> user = new HashMap<>();
-                user.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                CRUD.readQueryStatic(user, User.class, new ReadMultipleCallback<User>() {
+            if (userId != null) {
+                ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
                     @Override
-                    public void onReadMultipleSuccess(ArrayList<User> data) {
-                        for (User u : data) {
-                            if (u.getDeviceId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID))) {
-                                userId = u.getDocumentId();
-                                currentUser = u;
-                                Log.d("User ID", userId);
-                            }
+                    public void onReadSuccess(ApplicantList applicantList) {
+                        if (applicantList == null) {
+                            Toast.makeText(EventDescription.this, "Registration has not yet opened for this event", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-                        if (userId != null) {
-                            ReadCallback<ApplicantList> readAppListCallback = new ReadCallback<ApplicantList>() {
-                                @Override
-                                public void onReadSuccess(ApplicantList data) {
-                                    data.addUser(userId);
-                                    CRUD.update(data, new UpdateCallback() {
+                        if (isRemoving) {
+                            if (applicantList.contains(userId)) {
+                                applicantList.removeUser(userId);
+
+                                CRUD.update(applicantList, new UpdateCallback() {
+                                    @Override
+                                    public void onUpdateSuccess() {
+                                        removeEventFromUser(eventId);
+                                    }
+
+                                    @Override
+                                    public void onUpdateFailure(Exception e) {
+                                        Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(EventDescription.this, "Error: You are not in the waitlist!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (applicantList.contains(userId)) {
+                                Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if (geolocationRequired) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EventDescription.this);
+                                builder.setTitle("Geolocation is required to join the waitlist for this event");
+                                builder.setMessage("Would you like to continue?");
+
+                                builder.setPositiveButton("Yes", (dialog, which) -> {
+                                    geolocation = new Geolocation(EventDescription.this, EventDescription.this);
+                                    geolocation.setLocationCallback(new Geolocation.LocationCallback() {
                                         @Override
-                                        public void onUpdateSuccess() {
-                                            Toast.makeText(EventDescription.this, "Successfully joined waitlist", Toast.LENGTH_LONG).show();
-                                            Intent intent = new Intent(EventDescription.this, EntrantHome.class);
-                                            intent.putExtra("User", currentUser);
-                                            startActivity(intent);
-                                            finish();
+                                        public void onLocationReceived(double latitude, double longitude) {
+                                            currentUser.setGeoPoint(new GeoPoint(latitude, longitude));
+                                            applicantList.addUser(userId);
+                                            CRUD.update(applicantList, new UpdateCallback() {
+                                                @Override
+                                                public void onUpdateSuccess() {
+                                                    addEventToUser(eventId);
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+                                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         }
 
                                         @Override
-                                        public void onUpdateFailure(Exception e) {
-                                            Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                        public void onLocationError(String error) {
+                                            Toast.makeText(EventDescription.this, "Error: " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                                }
+                                    geolocation.requestLocationPermissions();
+                                });
 
-                                @Override
-                                public void onReadFailure(Exception e) {
-                                    Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
-                                }
-                            };
-                            CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
-                        }
-                        else {
-                            Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
+                                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                                    dialog.dismiss();
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            } else {
+                                applicantList.addUser(userId);
+                                CRUD.update(applicantList, new UpdateCallback() {
+                                    @Override
+                                    public void onUpdateSuccess() {
+                                        addEventToUser(eventId);
+                                    }
+
+                                    @Override
+                                    public void onUpdateFailure(Exception e) {
+                                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
                     }
 
                     @Override
-                    public void onReadMultipleFailure(Exception e) {
-                        Toast.makeText(EventDescription.this, "Could not connect to database", Toast.LENGTH_SHORT).show();
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error connecting to database", Toast.LENGTH_SHORT).show();
                     }
-                });
+                };
+
+                CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
+            } else {
+                Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
+    private void addEventToUser(String eventId) {
+        if (currentUser != null) {
+            EventList userEvents = currentUser.getUserProfile().getEventList();
+            if (userEvents == null) {
+                userEvents = new EventList();
+            }
+            if (!userEvents.contains(eventId)) {
+                userEvents.addEvent(eventId);
+                currentUser.getUserProfile().setEventList(userEvents);
+
+                CRUD.update(currentUser, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        Toast.makeText(EventDescription.this, "Successfully joined waitlist", Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+                        intent.putExtra("User", currentUser);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error updating", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(EventDescription.this, "You are already in the waitlist!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void removeEventFromUser(String eventId) {
+        if (currentUser != null) {
+            EventList userEvents = currentUser.getUserProfile().getEventList();
+            if (userEvents.contains(eventId)) {
+                userEvents.removeEvent(eventId);
+                currentUser.getUserProfile().setEventList(userEvents);
+
+                CRUD.update(currentUser, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        Toast.makeText(EventDescription.this, "Successfully left the waitlist", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+                        intent.putExtra("User", currentUser);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        Toast.makeText(EventDescription.this, "Error leaving waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(EventDescription.this, "Event not found", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        geolocation.handlePermissionResult(requestCode, permissions, grantResults);
+    }
 }

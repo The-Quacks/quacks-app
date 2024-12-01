@@ -27,8 +27,11 @@ public class ViewEvents extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list);
-
         ArrayList<Listable> dataList = new ArrayList<>();
+
+        if (getIntent().getSerializableExtra("Facility")==null){
+            finish();
+        }
         evented = (EventList) getIntent().getSerializableExtra("EventList");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
@@ -71,8 +74,12 @@ public class ViewEvents extends AppCompatActivity {
             Intent intent = new Intent(ViewEvents.this, EventInfo.class);
             intent.putExtra("Event", clickedEvent);
             intent.putExtra("EventList", evented);
-            intent.putExtra("Facility", facility);
-            intent.putExtra("User", user);
+            if (facility != null){
+                intent.putExtra("Facility", facility);
+            }
+            if (user != null) {
+                intent.putExtra("User", user);
+            }
             startActivity(intent);
         });
 
