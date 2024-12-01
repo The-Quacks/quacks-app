@@ -151,6 +151,24 @@ public class ImageUpload {
     public static void uploadImageToFirebase(Context context, Uri imageUri,
                                              ImageView imageView, UserProfile userProfile, Runnable onSaveCallback
     ) {
+        // Check if a profile picture path already exists
+        String oldImagePath = userProfile.getProfilePicturePath();
+        if (oldImagePath != null && !oldImagePath.isEmpty()) {
+            // Delete the old image from Firebase
+            CRUD.removeImage(oldImagePath, new DeleteCallback() {
+                @Override
+                public void onDeleteSuccess() {
+                    Log.d("ImageUpload", "Old Profile Pic successfully deleted");
+                    userProfile.setProfilePicturePath(null);
+                }
+
+                @Override
+                public void onDeleteFailure(Exception e) {
+                    Log.e("ImageUpload", "Failed to delete old image: " + e.getMessage());
+                    Toast.makeText(context, "Failed to remove old image", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         CRUD.storeImage(imageUri, new ReadCallback<String>() {
             @Override
             public void onReadSuccess(String path) {
@@ -187,7 +205,25 @@ public class ImageUpload {
      * @param event          The Event object to update with the image path.
      * @param onSaveCallback A callback to save the updated event after uploading.
      */
-    public static void uploadEventPosterToFirebase(Context context, Uri imageUri, Event event, Runnable onSaveCallback) {
+    public static void uploadEventPosterToFirebase(Context context, Uri imageUri,
+                                                   Event event, Runnable onSaveCallback) {
+        // Check if a event poster path already exists
+        String oldImagePath = event.getEventPosterPath();
+        if (oldImagePath != null && !oldImagePath.isEmpty()) {
+            // Delete the old image from Firebase
+            CRUD.removeImage(oldImagePath, new DeleteCallback() {
+                @Override
+                public void onDeleteSuccess() {
+                    Log.d("ImageUpload", "Old Event Poster successfully deleted");
+                    event.setEventPosterPath(null);
+                }
+
+                @Override
+                public void onDeleteFailure(Exception e) {
+                    Log.e("ImageUpload", "Failed to delete old image: " + e.getMessage());
+                }
+            });
+        }
         CRUD.storeImage(imageUri, new ReadCallback<String>() {
             @Override
             public void onReadSuccess(String path) {
