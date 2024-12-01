@@ -46,12 +46,12 @@ public class Event extends RepoModel implements Serializable, Listable {
         return this.geoRequired;
     }
 
-    public String getPosterId() {
-        return posterId;
+    public String getEventPosterPath() {
+        return eventPosterPath;
     }
 
-    public void setPosterId(String posterId) {
-        this.posterId = posterId;
+    public void setEventPosterPath(String posterId) {
+        this.eventPosterPath = posterId;
     }
 
 
@@ -235,15 +235,6 @@ public class Event extends RepoModel implements Serializable, Listable {
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
     }
-
-    public String getEventPosterPath() {
-        return eventPosterPath;
-    }
-
-    public void setEventPosterPath(String eventPosterPath) {
-        this.eventPosterPath = eventPosterPath;
-    }
-
 
     public void setNotificationList(NotificationList list){
         this.notificationList = list;

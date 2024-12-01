@@ -26,7 +26,6 @@ public class OrganizerHomepage extends AppCompatActivity {
     private Button profile;
     private Facility facility;
     private User current;
-    private EventList eventList;
 
     /**
      * This is the Organizer Homepage: they can choose out of the four options
@@ -39,8 +38,6 @@ public class OrganizerHomepage extends AppCompatActivity {
         setContentView(R.layout.organizer_homepage);// or the correct XML layout file
 
         //event = new ArrayList<Event>();
-        eventList = new EventList();
-
         profile = findViewById(R.id.organizer_profile_button);
         Button view_events = findViewById(R.id.view_events);
         Button create_events = findViewById(R.id.create_event);
@@ -103,7 +100,6 @@ public class OrganizerHomepage extends AppCompatActivity {
         view_events.setOnClickListener(view -> {
             Intent intent = new Intent(OrganizerHomepage.this, ViewEvents.class);
             intent.putExtra("User", current);
-            intent.putExtra("EventList", eventList);
             intent.putExtra("Facility", facility);
             startActivity(intent);
         });
@@ -114,7 +110,6 @@ public class OrganizerHomepage extends AppCompatActivity {
             intent.putExtra("mode", "create");
 
             intent.putExtra("User", current);
-            intent.putExtra("EventList", eventList);
             intent.putExtra("Facility", facility);
             startActivity(intent);
         });

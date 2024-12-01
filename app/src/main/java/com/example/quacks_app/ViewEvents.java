@@ -20,6 +20,7 @@ public class ViewEvents extends AppCompatActivity {
     private Facility facility;
     private ArrayList<Event> eventDataList;
     private EventArrayAdapter eventArrayAdapter;
+    private ArrayList<Listable> dataList;
     private EventList evented;
     private User user;
 
