@@ -236,15 +236,6 @@ public class Event extends RepoModel implements Serializable, Listable {
         this.qrCodePath = qrCodePath;
     }
 
-    public String getEventPosterPath() {
-        return eventPosterPath;
-    }
-
-    public void setEventPosterPath(String eventPosterPath) {
-        this.eventPosterPath = eventPosterPath;
-    }
-
-
     public void setNotificationList(NotificationList list){
         this.notificationList = list;
     }

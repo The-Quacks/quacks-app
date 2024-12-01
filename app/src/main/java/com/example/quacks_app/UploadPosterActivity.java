@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,48 +20,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class UploadPosterActivity extends AppCompatActivity {
-    private Event event;
-    private User user;
-    private Facility facility;
-    private EventList eventList;
-    private ImageView eventPoster;
-
-    private static final int STORAGE_PERMISSION_CODE = 101;
-
     // ActivityResultLauncher for handling the photo picker
     private ActivityResultLauncher<Intent> pickImageLauncher;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.upload_poster);
-
-        event = (Event) getIntent().getSerializableExtra("Event");
-        user = (User) getIntent().getSerializableExtra("User");
-        facility = (Facility) getIntent().getSerializableExtra("Facility");
-
-        initializePickImageLauncher();
-
-        eventPoster = findViewById(R.id.poster);
-        eventPoster.setOnClickListener(v ->
-            requestStoragePermissionAndOpenGallery()
-        );
-        Button next = findViewById(R.id.next_button_poster);
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UploadPosterActivity.this, ViewEvents.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-                finish();
-
-        });
-    }
-
     private void initializePickImageLauncher() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -125,4 +86,47 @@ public class UploadPosterActivity extends AppCompatActivity {
         pickImageLauncher.launch(intent);
     }
 
+
+    private Event event;
+    private User user;
+    private Facility facility;
+    private EventList eventList;
+    private ImageView eventPoster;
+
+    private static final int STORAGE_PERMISSION_CODE = 101;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.upload_poster);
+
+        event = (Event) getIntent().getSerializableExtra("Event");
+        user = (User) getIntent().getSerializableExtra("User");
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+
+        initializePickImageLauncher();
+
+        eventPoster = findViewById(R.id.poster);
+        eventPoster.setOnClickListener(v ->
+            requestStoragePermissionAndOpenGallery()
+        );
+        Button next = findViewById(R.id.next_button_poster);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UploadPosterActivity.this, ViewEvents.class);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+                finish();
+            }
+
+            });
+    }
 }
+
+
+
+
