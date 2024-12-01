@@ -188,8 +188,6 @@ public class CreateFacility extends AppCompatActivity {
                             GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
                             new_facility.setGeoPoint(geoPoint);
-
-//                        Toast.makeText(MakeOrganizerProfile.this, "Geocoded Location: Latitude " + latitude + ", Longitude " + longitude, Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(CreateFacility.this, "Address not found. Please try again.", Toast.LENGTH_SHORT).show();
                         }

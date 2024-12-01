@@ -125,8 +125,6 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
                         GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 
                         new_facility.setGeoPoint(geoPoint);
-
-//                        Toast.makeText(MakeOrganizerProfile.this, "Geocoded Location: Latitude " + latitude + ", Longitude " + longitude, Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(MakeOrganizerProfile.this, "Address not found. Please try again.", Toast.LENGTH_SHORT).show();
                     }

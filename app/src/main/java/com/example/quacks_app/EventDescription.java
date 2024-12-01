@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.GeoPoint;
 
-
-
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
  * It also includes the option to join the waitlist for that event. The information displayed will
