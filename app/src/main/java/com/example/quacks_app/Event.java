@@ -1,6 +1,7 @@
 package com.example.quacks_app;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable, Listable {
@@ -20,7 +21,8 @@ public class Event extends RepoModel implements Serializable, Listable {
     private boolean geolocationRequired;
     private int waitlist_capacity;
     private int registration_capacity;
-
+    private ApplicantList final_list;
+    private boolean closed_open;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -46,12 +48,12 @@ public class Event extends RepoModel implements Serializable, Listable {
         return this.geoRequired;
     }
 
-    public String getPosterId() {
-        return posterId;
+    public String getEventPosterPath() {
+        return eventPosterPath;
     }
 
-    public void setPosterId(String posterId) {
-        this.posterId = posterId;
+    public void setEventPosterPath(String posterId) {
+        this.eventPosterPath = posterId;
     }
 
 
@@ -236,20 +238,35 @@ public class Event extends RepoModel implements Serializable, Listable {
         this.qrCodePath = qrCodePath;
     }
 
-    public String getEventPosterPath() {
-        return eventPosterPath;
-    }
-
-    public void setEventPosterPath(String eventPosterPath) {
-        this.eventPosterPath = eventPosterPath;
-    }
-
-
     public void setNotificationList(NotificationList list){
         this.notificationList = list;
     }
 
     public NotificationList getNotificationList(){
         return this.notificationList;
+    }
+
+    /***
+     * Sets the final list of applicants when closing registration for event
+     */
+    public void setFinal_list(ApplicantList final_list){
+        this.final_list = final_list;
+    }
+    /***
+     * Sets the final list of applicants when closing registration for event
+     */
+    public ApplicantList getFinal_list(){
+        if (this.final_list == null){
+            return null;
+        }
+        return this.final_list;
+    }
+
+    public void setRegistration(boolean status){
+        this.closed_open = status;
+    }
+
+    public boolean getRegistration(){
+        return this.closed_open;
     }
 }

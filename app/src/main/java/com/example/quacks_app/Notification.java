@@ -23,9 +23,6 @@ public class Notification extends RepoModel implements Serializable {
      * Creates a notification
      */
 
-    public Notification(User user, String ApplicantListId, String EventId, String waitlist_status, String sent_status){
-        //placeholder
-    }
 
     public Notification(){
         //need empty constructor for firebase

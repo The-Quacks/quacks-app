@@ -213,32 +213,19 @@ public class CreateFacility extends AppCompatActivity {
                         @Override
                         public void onUpdateSuccess() {
                             new_facility.setOrganizerId(user.getDocumentId());
-                            EventList new_event_list = new EventList();
-                            CRUD.create(new_event_list, new CreateCallback() {
+                            CRUD.create(new_facility, new CreateCallback() {
                                 @Override
                                 public void onCreateSuccess() {
-                                    String evListId = new_event_list.getDocumentId();
-                                    new_facility.setEventListId(evListId);
-                                    CRUD.create(new_facility, new CreateCallback() {
-                                        @Override
-                                        public void onCreateSuccess() {
-                                            Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
-                                            Intent resultIntent = new Intent();
-                                            resultIntent.putExtra("User", user);
-                                            resultIntent.putExtra("Facility", new_facility);
-                                            setResult(RESULT_OK, resultIntent);
-                                            finish();
-                                        }
-                                        @Override
-                                        public void onCreateFailure(Exception e) {
-                                            Toast.makeText(CreateFacility.this, "Error creating facility Created!", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    });
+                                    Toast.makeText(CreateFacility.this, "Profile Created!", Toast.LENGTH_SHORT).show();
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("User", user);
+                                    resultIntent.putExtra("Facility", new_facility);
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
                                 }
-
                                 @Override
                                 public void onCreateFailure(Exception e) {
+                                    Toast.makeText(CreateFacility.this, "Error creating facility Created!", Toast.LENGTH_SHORT).show();
 
                                 }
                             });

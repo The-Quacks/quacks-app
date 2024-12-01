@@ -120,8 +120,15 @@
         <activity
             android:name=".SelectAtRandom"
             android:exported="true" />
-        <activity
-            android:name=".DummyLocationTest"
+        <activity android:name=".Choices"
+            android:exported="true" />
+        <activity android:name=".FinalizedApplicants"
+            android:exported="true" />
+        <activity android:name=".CancelledApplicants"
+            android:exported="true" />
+        <activity android:name=".LastChoice"
+            android:exported="true" />
+        <activity android:name=".DummyLocationTest"
             android:exported="true" />
         <activity
             android:name=".EntrantsMapActivity"

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class AcceptedApplicants extends AppCompatActivity {
+public class CancelledApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
     private ArrayList<Cartable> userList;
@@ -36,51 +36,37 @@ public class AcceptedApplicants extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accepted_applicants);
+        setContentView(R.layout.cancelled_applicants);
 
         if (getIntent().getSerializableExtra("Facility") == null){
-            Toast.makeText(AcceptedApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("User") == null){
-            Toast.makeText(AcceptedApplicants.this, "No User", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No User", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("Event") == null){
-            Toast.makeText(AcceptedApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
             finish();
         }
-        //if (getIntent().getSerializableExtra("EventList") == null){
-        //    Toast.makeText(AcceptedApplicants.this, "No EventList", Toast.LENGTH_SHORT).show();
-        //    finish();
-        //}
-        //eventList = (EventList) getIntent().getSerializableExtra("EventList");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
         assert event != null;
         if (!event.getRegistration()){
-            Toast.makeText(AcceptedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
         }
-        select = findViewById(R.id.accepted_select_button);
-        notify_all = findViewById(R.id.accepted_notify_button);
 
-        select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, NotifyOptions.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
-        });
+
+        notify_all = findViewById(R.id.cancelled_notify_button);
+
 
         notify_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, Choices.class);
+                Intent intent = new Intent(CancelledApplicants.this, LastChoice.class);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("User", user);
                 intent.putExtra("Event", event);
@@ -90,17 +76,11 @@ public class AcceptedApplicants extends AppCompatActivity {
 
         //setting up list
 
-        applicantListView = findViewById(R.id.accepted_app_list);
+        applicantListView = findViewById(R.id.cancelled_app_list);
         real_user = new ArrayList<User>();
         userList = new ArrayList<Cartable>();
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
         applicantListView.setAdapter(applicantArrayAdapter);
-
-        if (event == null) {
-            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
 
         String applicantListId = event.getApplicantList();
 
@@ -139,8 +119,10 @@ public class AcceptedApplicants extends AppCompatActivity {
                                             String first = current_user.getDeviceId();
                                             String second = user.getDeviceId();
                                             if (first.equals(second) && current.getWaitlistStatus().equals("Accepted")) {
-                                                userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
-                                                userList.add(userdisplay);
+                                                if (!current.getAccepted()) {
+                                                    userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
+                                                    userList.add(userdisplay);
+                                                }
                                             }
 
                                         }
@@ -152,24 +134,25 @@ public class AcceptedApplicants extends AppCompatActivity {
 
                             @Override
                             public void onReadFailure(Exception e) {
-                                Toast.makeText(AcceptedApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CancelledApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }
 
+
             }
 
             @Override
             public void onReadFailure(Exception e) {
-                Toast.makeText(AcceptedApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CancelledApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
             }
         });
 
-        back = findViewById(R.id.accepted_back_button);
-        search = findViewById(R.id.accepted_app_search);
-        homepage = findViewById(R.id.accepted_app_house);
-        profile = findViewById(R.id.accepted_app_person);
+        back = findViewById(R.id.cancelled_back_button);
+        search = findViewById(R.id.cancelled_app_search);
+        homepage = findViewById(R.id.cancelled_app_house);
+        profile = findViewById(R.id.cancelled_app_person);
 
         //create buttons
         back.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +165,7 @@ public class AcceptedApplicants extends AppCompatActivity {
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, OrganizerHomepage.class);
+                Intent intent = new Intent(CancelledApplicants.this, OrganizerHomepage.class);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);
                 intent.putExtra("User", user);
@@ -193,7 +176,7 @@ public class AcceptedApplicants extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, ViewOrganizer.class);
+                Intent intent = new Intent(CancelledApplicants.this, ViewOrganizer.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);
@@ -205,7 +188,7 @@ public class AcceptedApplicants extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Already here
-                Intent intent = new Intent(AcceptedApplicants.this, ViewEvents.class);
+                Intent intent = new Intent(CancelledApplicants.this, ViewEvents.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);

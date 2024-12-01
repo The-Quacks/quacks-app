@@ -32,7 +32,7 @@
         android:focusable="true"
         android:stateListAnimator="@null"
 
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/button"
         android:fadingEdge="horizontal"
         android:text="View All Applicants"
@@ -45,27 +45,6 @@
         app:layout_constraintTop_toBottomOf="@id/Welcome" />
 
     <Button
-        android:id="@+id/chosen_button"
-        android:layout_width="300dp"
-        android:layout_height="79dp"
-
-        android:layout_marginTop="50dp"
-        android:backgroundTint="@color/button"
-
-        android:clickable="true"
-        android:elevation="10dp"
-        android:fadingEdge="horizontal"
-        android:focusable="true"
-        android:stateListAnimator="@null"
-        android:text="View Chosen Applicants"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:cornerRadius="7dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/all_button"/>
-
-    <Button
         android:id="@+id/declined_button"
         android:layout_width="300dp"
         android:textSize = "18sp"
@@ -75,12 +54,12 @@
         android:elevation="10dp"
         android:stateListAnimator="@null"
         android:backgroundTint="@color/button"
-        android:text="View Cancelled Applicants"
+        android:text="View Declined Applicants"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/chosen_button"
+        app:layout_constraintTop_toBottomOf="@id/all_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         />
     <Button
         android:id="@+id/accepted_button"
@@ -92,12 +71,46 @@
         android:elevation="10dp"
         android:stateListAnimator="@null"
         android:backgroundTint="@color/button"
-        android:text="View Enrolled Applicants"
+        android:text="View Invited Applicants"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/declined_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
+        />
+    <Button
+        android:id="@+id/cancelled_button"
+        android:layout_width="300dp"
+        android:textSize = "18sp"
+        android:layout_height="76dp"
+        app:cornerRadius="7dp"
+        android:clickable = "true"
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+        android:backgroundTint="@color/button"
+        android:text="View Cancelled Entrants"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/accepted_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"
+        />
+    <Button
+        android:id="@+id/finalized_button"
+        android:layout_width="300dp"
+        android:textSize = "18sp"
+        android:layout_height="76dp"
+        app:cornerRadius="7dp"
+        android:clickable = "true"
+        android:elevation="10dp"
+        android:stateListAnimator="@null"
+        android:backgroundTint="@color/button"
+        android:text="View Finalized Registration"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/cancelled_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"
         />
     <Button
         android:id="@+id/applicant_back_button"

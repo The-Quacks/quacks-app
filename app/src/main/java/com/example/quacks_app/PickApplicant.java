@@ -1,5 +1,6 @@
 package com.example.quacks_app;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class PickApplicant extends AppCompatActivity {
@@ -27,10 +29,16 @@ public class PickApplicant extends AppCompatActivity {
     private ImageButton search;
     private ImageButton profile;
     private Event event;
-    int success = 0;
     int fail = 0;
     int total;
     private Button back;
+    private User actual_user;
+    private Event actual_event;
+    private Facility facility;
+    private String applicantListId;
+    private List<Notification> newNotifications = new ArrayList<>();
+    private ArrayList<String> applicantListed = new ArrayList<>();
+    private NotificationList notification_list;
 
     /*
     Selecting applicants from listview
@@ -43,23 +51,37 @@ public class PickApplicant extends AppCompatActivity {
         select = findViewById(R.id.select_button);
         back = findViewById(R.id.pick_back_button);
 
-
         applicantListView = findViewById(R.id.app_list);
-        real_user = new ArrayList<User>();
+        real_user = new ArrayList<>();
         userList = new ArrayList<Cartable>();
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
         applicantListView.setAdapter(applicantArrayAdapter);
 
-        // Get the Event and ApplicantList ID
-        Event event = (Event) getIntent().getSerializableExtra("Event");
 
-        if (event == null) {
+        if (getIntent().getSerializableExtra("Event") == null) {
             Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+        actual_event = (Event) getIntent().getSerializableExtra("Event");
 
-        String applicantListId = event.getApplicantList();
+
+        if (getIntent().getSerializableExtra("Facility") == null) {
+            Toast.makeText(PickApplicant.this, "No Facility Passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+        if (getIntent().getSerializableExtra("User") == null) {
+            Toast.makeText(PickApplicant.this, "No User Passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        actual_user = (User) getIntent().getSerializableExtra("User");
+
+        applicantListId = actual_event.getApplicantList();
+        if (applicantListId == null) {
+            Toast.makeText(this, "ApplicantListID not found", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         // Load the applicants
         CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
@@ -71,13 +93,18 @@ public class PickApplicant extends AppCompatActivity {
 
                     for (String applicantId : applicantList.getApplicantIds()) {
 
+                        applicantListed = applicantList.getApplicantIds();
+
                         CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
                             @Override
                             public void onReadSuccess(User user) {
                                 if (user != null) {
                                     real_user.add(user);
                                     UserProfile profile = user.getUserProfile();
-                                    userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
+                                    userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
+                                    userdisplay.setField(profile.getUserName());
+                                    userdisplay.setSubfield(user.getDeviceId());
+                                    userdisplay.setCart(false);
                                     userList.add(userdisplay);
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
@@ -90,8 +117,7 @@ public class PickApplicant extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(PickApplicant.this, "No applicant list found", Toast.LENGTH_SHORT).show();
                 }
 
@@ -130,40 +156,189 @@ public class PickApplicant extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userList == null || real_user == null || event == null) {
+                if (userList == null || real_user == null || actual_event == null) {
                     Toast.makeText(PickApplicant.this, "Error: Data not initialized", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                List<Cartable> selectedUsers = new ArrayList<>();
-                List<User> selected = new ArrayList<>();
-                int success = 0;
+                notification_list = actual_event.getNotificationList();
+
+                if (notification_list == null) {
+                    Toast.makeText(PickApplicant.this, "Notification list not initialized.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ArrayList<Notification> notifications = notification_list.getNotificationList();
+                if (notifications == null) {
+                    notifications = new ArrayList<>();
+                    notification_list.setNotificationList(notifications);
+                }
+                AtomicInteger remaining = new AtomicInteger(userList.size());
+
                 for (Cartable user : userList) {
                     if (user.Carted()) {
-                        String deviceId = user.getSubDisplay();
-                        if (deviceId != null) {
-                            //if the deviceId is found, then we create a notification with the user selected
-                            //Notification noted = new Notification(user, );
-                           // noted.setNotification(event);
-                            ++success;
-                        } else {
-                            continue;
+                        for (User current : real_user) {
+                            UserProfile profile = current.getUserProfile();
+
+                            if (profile != null && profile.getUserName().equals(user.getField())) {
+
+                                //check if user is in the current notification list
+                                boolean found = false;
+                                for (int i = 0; i < notifications.size(); i++) {
+                                    Notification notify = notifications.get(i);
+                                    if (notify.getUser() != null) {
+                                        User current_user = notify.getUser();
+                                        String first = current_user.getDeviceId();
+                                        String second = current.getDeviceId();
+
+
+                                        if (second.equals(first)) {
+                                            found = true;
+                                            notify.setUser(current);
+                                            notify.setApplicantListId(applicantListId);
+                                            notify.setNotificationEventId(actual_event.getEventId());
+                                            notify.setNotificationListId(notification_list.getNotificationListId());
+                                            notify.setSentStatus("Not Sent");
+                                            notify.setWaitlistStatus("Accepted");
+                                            notify.setAccepted(false);
+
+                                            CRUD.update(notify, new UpdateCallback() {
+                                                @Override
+                                                public void onUpdateSuccess() {
+                                                    //notification_list.addNotification(notify);
+                                                    Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                }
+                                            });
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!found) {// creates notification
+                                    Notification newer = new Notification();
+
+                                    CRUD.create(newer, new CreateCallback() {
+                                        @Override
+                                        public void onCreateSuccess() {
+                                            //Toast.makeText(PickApplicant.this, "notification was added to list", Toast.LENGTH_SHORT).show();
+
+                                            newer.setUser(current);
+                                            newer.setApplicantListId(applicantListId);
+                                            newer.setNotificationEventId(actual_event.getEventId());
+                                            newer.setNotificationListId(notification_list.getNotificationListId());
+                                            newer.setSentStatus("Not Sent");
+                                            newer.setWaitlistStatus("Accepted");
+                                            newer.setAccepted(false);
+                                            CRUD.update(newer, new UpdateCallback() {
+                                                @Override
+                                                public void onUpdateSuccess() {
+                                                    notification_list.addNotification(newer);
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCreateFailure(Exception e) {
+                                            checkCompletion(remaining.decrementAndGet());
+                                        }
+                                    });
+                                }
+
+                            } else {//otherwise find user and set as declined
+
+                                for (int i = 0; i < notifications.size(); i++) {
+                                    Notification notify = notifications.get(i);
+                                    if (notify.getUser() != null) {
+                                        User current_user = notify.getUser();
+                                        String first = current_user.getDeviceId();
+                                        String second = current.getDeviceId();
+
+
+                                        if (second.equals(first)) {
+                                            notify.setUser(current);
+                                            notify.setApplicantListId(applicantListId);
+                                            notify.setNotificationEventId(actual_event.getEventId());
+                                            notify.setNotificationListId(notification_list.getNotificationListId());
+                                            notify.setSentStatus("Not Sent");
+                                            notify.setWaitlistStatus("Declined");
+                                            notify.setAccepted(false);
+                                            CRUD.update(notify, new UpdateCallback() {
+                                                @Override
+                                                public void onUpdateSuccess() {
+                                                    //notification_list.addNotification(notify);
+                                                    Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+                                            });
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } else {
-                        continue;
+                        checkCompletion(remaining.decrementAndGet());
+                        Toast.makeText(PickApplicant.this, "Couldn't find User", Toast.LENGTH_SHORT).show();
                     }
-
-                }
-                if (success > 0) {
-                    Toast.makeText(PickApplicant.this, " Users were Notified.", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(PickApplicant.this, " Users were not Notified.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
+
+
+
+
+    private void checkCompletion(int remainingCount) {
+        if (remainingCount == 0) {
+            // All users processed
+            CRUD.update(notification_list, new UpdateCallback() {
+                @Override
+                public void onUpdateSuccess() {
+                    actual_event.setNotificationList(notification_list);
+                    CRUD.update(actual_event, new UpdateCallback() {
+                        @Override
+                        public void onUpdateSuccess() {
+                            Toast.makeText(PickApplicant.this, "Users Notified!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PickApplicant.this, EventInfo.class);
+
+                            intent.putExtra("Event", actual_event);
+                            intent.putExtra("Facility", facility);
+                            intent.putExtra("User", actual_user);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(PickApplicant.this, "Could not update the event", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onUpdateFailure(Exception e) {
+                    Toast.makeText(PickApplicant.this, "Could not update notification list.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 }
 
 

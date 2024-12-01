@@ -29,44 +29,32 @@ public class AdminViewOrganizer extends AppCompatActivity {
     String fieldFour;
 
     public void deleteFacility(Facility realFacility, DeleteCallback delCall){
-        CRUD.readLive(realFacility.getEventListId(), EventList.class, new ReadCallback<EventList>() {
+
+        CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
             @Override
-            public void onReadSuccess(EventList eventListData) {
-                ArrayList<String> evIds = eventListData.getEventIds();
-                for (String event : evIds){
-                    CRUD.readLive(event, Event.class, new ReadCallback<Event>() {
-                        @Override
-                        public void onReadSuccess(Event eventData) {
-                            String appList = eventData.getApplicantList();
-                            if (eventData.getPosterId() != null){
-                                CRUD.removeImage(eventData.getPosterId(), delCall);
-                            }
-                            CRUD.delete(appList, ApplicantList.class, delCall);
-                            CRUD.delete(eventData.getDocumentId(), Event.class, delCall);
-                            CRUD.delete(realFacility.getEventListId(), EventList.class, delCall);
-                            CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
+            public void onReadMultipleSuccess(ArrayList<Event> eventDataList) {
+                for (Event eventData : eventDataList){
+                    if (eventData.getFacility().equals(realFacility.getDocumentId())){
+                        String appList = eventData.getApplicantList();
+                        if (eventData.getEventPosterPath() != null){
+                            CRUD.removeImage(eventData.getEventPosterPath(), delCall);
                         }
+                        CRUD.delete(appList, ApplicantList.class, delCall);
+                        CRUD.delete(eventData.getDocumentId(), Event.class, delCall);
+                        CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
+                    }
 
-                        @Override
-                        public void onReadFailure(Exception e) {
-                            CRUD.delete(realFacility.getEventListId(), EventList.class, delCall);
-                            CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
-
-                        }
-                    });
                 }
-
-
             }
 
             @Override
-            public void onReadFailure(Exception e) {
+            public void onReadMultipleFailure(Exception e) {
                 CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
 
             }
         });
-
     }
+
 
 
 
@@ -107,8 +95,8 @@ public class AdminViewOrganizer extends AppCompatActivity {
             };
             if (editEvent instanceof Event){
                 Event realEvent = (Event) editEvent;
-                if (realEvent.getPosterId() != null){
-                    CRUD.removeImage(realEvent.getPosterId(), delCall);
+                if (realEvent.getEventPosterPath() != null){
+                    CRUD.removeImage(realEvent.getEventPosterPath(), delCall);
                 }
                 CRUD.delete(id, Event.class, delCall);
                 CRUD.delete(realEvent.getApplicantList(), ApplicantList.class, delCall);
@@ -149,7 +137,7 @@ public class AdminViewOrganizer extends AppCompatActivity {
                         @Override
                         public void onReadMultipleSuccess(ArrayList<Facility> facData) {
                             for (Facility fac : facData) {
-                                if (fac.getOrganizerId() == realUser.getDocumentId()) {
+                                if (fac.getOrganizerId().equals(realUser.getDocumentId())) {
                                     deleteFacility(fac, delCall);
                                 }
                             }
@@ -184,8 +172,8 @@ public class AdminViewOrganizer extends AppCompatActivity {
                     CRUD.readLive(specEvent.getFacility(), Facility.class, new ReadCallback<Facility>() {
                         @Override
                         public void onReadSuccess(Facility facData) {
-                            if (specEvent.getPosterId() != null){
-                                CRUD.downloadImage(specEvent.getPosterId(), new ReadCallback<Bitmap>() {
+                            if (specEvent.getEventPosterPath() != null){
+                                CRUD.downloadImage(specEvent.getEventPosterPath(), new ReadCallback<Bitmap>() {
                                     @Override
                                     public void onReadSuccess(Bitmap data) {
                                         ImageView poster = findViewById(R.id.prof_pic);

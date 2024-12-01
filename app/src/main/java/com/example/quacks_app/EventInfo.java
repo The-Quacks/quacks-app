@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
@@ -174,6 +175,71 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
                 .setTitle("Confirm Delete")
                 .setMessage("Are you sure you want to delete this event? This action cannot be undone.")
                 .setPositiveButton("Yes, Delete", (dialog, which) -> {
+
+                    NotificationList notificationList = event.getNotificationList();
+                    ArrayList<Notification> notifications = notificationList.getNotificationList();
+                    //deletes notifications
+                    for (int i = 0; i < notifications.size(); i++){
+                        Notification current = notifications.get(i);
+                        CRUD.delete(current.getDocumentId(), Notification.class, new DeleteCallback() {
+                            @Override
+                            public void onDeleteSuccess() {
+                            }
+
+                            @Override
+                            public void onDeleteFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+                    //deletes applicant List
+                    String applicant_list = event.getApplicantList();
+                    if (!applicant_list.isEmpty()) {
+                        CRUD.readStatic(applicant_list, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                            @Override
+                            public void onReadSuccess(ApplicantList data) {
+
+                                CRUD.delete(data.getDocumentId(), ApplicantList.class, new DeleteCallback() {
+                                    @Override
+                                    public void onDeleteSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onDeleteFailure(Exception e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onReadFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+
+                    //deletes notification list
+                    if (!notificationList.getNotificationList().isEmpty()) {
+                        CRUD.delete(notificationList.getDocumentId(), NotificationList.class, new DeleteCallback() {
+                            @Override
+                            public void onDeleteSuccess() {
+
+                            }
+
+                            @Override
+                            public void onDeleteFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+
                     CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
                         @Override
                         public void onDeleteSuccess() {
