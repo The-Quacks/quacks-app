@@ -127,4 +127,5 @@ public class ApplicantList extends RepoModel implements Serializable {
         LotterySystem lotterySystem = new LotterySystem();
         return this.applicantIds; // placeholder
     }
+
 }

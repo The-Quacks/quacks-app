@@ -69,7 +69,11 @@ public class DeclinedApplicants extends AppCompatActivity {
         notify_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DeclinedApplicants.this, "This feature is coming soon!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(DeclinedApplicants.this, Choices.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
             }
         });
 
@@ -99,7 +103,13 @@ public class DeclinedApplicants extends AppCompatActivity {
         }
 
         String applicantListId = event.getApplicantList();
+        NotificationList notificationList = event.getNotificationList(); //gets notificationList object
+        ArrayList<Notification> notifications = notificationList.getNotificationList();
 
+        ArrayList<String> accepted_applicant_ids = new ArrayList<>();
+        if (notifications == null){
+            finish();
+        }
         // Load the applicants
         CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
             @Override
@@ -117,12 +127,23 @@ public class DeclinedApplicants extends AppCompatActivity {
                             public void onReadSuccess(User user) {
                                 if (user != null) {
                                     //check to see if user was notified here
-
-
+                                    //check to see if user was notified here
                                     real_user.add(user);
                                     UserProfile profile = user.getUserProfile();
-                                    userdisplay = new Cartable(profile.getUserName().toString(), user.getDeviceId(), false, profile);
-                                    userList.add(userdisplay);
+
+                                    for (int i = 0; i < notifications.size(); i++){
+                                        Notification current = notifications.get(i);
+                                        if (current.getUser() != null) {
+                                            User current_user = current.getUser();
+                                            String first = current_user.getDeviceId();
+                                            String second = user.getDeviceId();
+                                            if (first.equals(second) && current.getWaitlistStatus().equals("Declined")) {
+                                                userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
+                                                userList.add(userdisplay);
+                                            }
+
+                                        }
+                                    }
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
 
@@ -134,9 +155,6 @@ public class DeclinedApplicants extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                else {
-                    Toast.makeText(DeclinedApplicants.this, "No applicant list found", Toast.LENGTH_SHORT).show();
                 }
 
             }

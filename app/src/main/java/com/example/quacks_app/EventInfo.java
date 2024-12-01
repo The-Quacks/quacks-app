@@ -144,6 +144,64 @@ public class EventInfo extends AppCompatActivity {
         delete_event.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View view) {
+
+                  NotificationList notificationList = event.getNotificationList();
+                  ArrayList<Notification> notifications = notificationList.getNotificationList();
+
+                  //delete notifications
+                  for (int i = 0; i < notifications.size(); i++){
+                      Notification current = notifications.get(i);
+                      CRUD.delete(current.getDocumentId(), Notification.class, new DeleteCallback() {
+                          @Override
+                          public void onDeleteSuccess() {
+
+                          }
+
+                          @Override
+                          public void onDeleteFailure(Exception e) {
+
+                          }
+                      });
+                  }
+
+                  //delete notification list
+                  CRUD.delete(notificationList.getDocumentId(), NotificationList.class, new DeleteCallback() {
+                      @Override
+                      public void onDeleteSuccess() {
+
+                      }
+
+                      @Override
+                      public void onDeleteFailure(Exception e) {
+
+                      }
+                  });
+
+                  //delete applicant list
+                  String applicant_list = event.getApplicantList(); // this is id
+                  CRUD.readStatic(applicant_list, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                      @Override
+                      public void onReadSuccess(ApplicantList data) {
+
+                          CRUD.delete(data.getDocumentId(), ApplicantList.class, new DeleteCallback() {
+                              @Override
+                              public void onDeleteSuccess() {
+
+                              }
+
+                              @Override
+                              public void onDeleteFailure(Exception e) {
+
+                              }
+                          });
+                      }
+
+                      @Override
+                      public void onReadFailure(Exception e) {
+
+                      }
+                  });
+
                   CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
                       @Override
                       public void onDeleteSuccess() {

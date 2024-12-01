@@ -107,6 +107,14 @@
             android:exported="true" />
         <activity android:name=".SelectAtRandom"
             android:exported="true" />
+        <activity android:name=".Choices"
+            android:exported="true" />
+        <activity android:name=".FinalizedApplicants"
+            android:exported="true" />
+        <activity android:name=".CancelledApplicants"
+            android:exported="true" />
+        <activity android:name=".LastChoice"
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"

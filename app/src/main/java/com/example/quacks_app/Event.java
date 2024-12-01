@@ -1,6 +1,7 @@
 package com.example.quacks_app;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event extends RepoModel implements Serializable {
@@ -18,6 +19,7 @@ public class Event extends RepoModel implements Serializable {
     private int registration_capacity;
     private String instructorName;
     private Boolean geoRequired;
+    private ApplicantList final_list;
 
     public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
         // placeholder
@@ -230,5 +232,21 @@ public class Event extends RepoModel implements Serializable {
 
     public NotificationList getNotificationList(){
         return this.notificationList;
+    }
+
+    /***
+     * Sets the final list of applicants when closing registration for event
+     */
+    public void setFinal_list(ApplicantList final_list){
+        this.final_list = final_list;
+    }
+    /***
+     * Sets the final list of applicants when closing registration for event
+     */
+    public ApplicantList getFinal_list(){
+        if (this.final_list == null){
+            return null;
+        }
+        return this.final_list;
     }
 }

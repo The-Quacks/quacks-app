@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class AcceptedApplicants extends AppCompatActivity {
+public class FinalizedApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
     private ArrayList<Cartable> userList;
@@ -36,18 +36,18 @@ public class AcceptedApplicants extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accepted_applicants);
+        setContentView(R.layout.finalized_registration);
 
         if (getIntent().getSerializableExtra("Facility") == null){
-            Toast.makeText(AcceptedApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FinalizedApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("User") == null){
-            Toast.makeText(AcceptedApplicants.this, "No User", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FinalizedApplicants.this, "No User", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("Event") == null){
-            Toast.makeText(AcceptedApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FinalizedApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
             finish();
         }
         //if (getIntent().getSerializableExtra("EventList") == null){
@@ -59,38 +59,22 @@ public class AcceptedApplicants extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
         assert event != null;
-        if (event.getApplicantList().equals("0")){
-            Toast.makeText(AcceptedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
-            finish();
+        String applicantListId = event.getApplicantList();
+        if (event.getApplicantList().equals("0")) {
+            if (event.getFinal_list() == null) {
+                Toast.makeText(FinalizedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                ApplicantList applicantList = event.getFinal_list();
+                applicantListId = applicantList.getDocumentId();
+            }
         }
-        select = findViewById(R.id.accepted_select_button);
-        notify_all = findViewById(R.id.accepted_notify_button);
+        notify_all = findViewById(R.id.fin_notify_button);
 
-        select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, NotifyOptions.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
-        });
-
-        notify_all.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, Choices.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
-        });
 
         //setting up list
 
-        applicantListView = findViewById(R.id.accepted_app_list);
+        applicantListView = findViewById(R.id.fin_app_list);
         real_user = new ArrayList<User>();
         userList = new ArrayList<Cartable>();
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
@@ -101,8 +85,6 @@ public class AcceptedApplicants extends AppCompatActivity {
             finish();
             return;
         }
-
-        String applicantListId = event.getApplicantList();
 
         NotificationList notificationList = event.getNotificationList(); //gets notificationList object
         ArrayList<Notification> notifications = notificationList.getNotificationList();
@@ -138,7 +120,7 @@ public class AcceptedApplicants extends AppCompatActivity {
                                             User current_user = current.getUser();
                                             String first = current_user.getDeviceId();
                                             String second = user.getDeviceId();
-                                            if (first.equals(second) && current.getWaitlistStatus().equals("Accepted")) {
+                                            if (first.equals(second) && current.getWaitlistStatus().equals("Accepted") && current.getAccepted()) {
                                                 userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
                                                 userList.add(userdisplay);
                                             }
@@ -152,7 +134,7 @@ public class AcceptedApplicants extends AppCompatActivity {
 
                             @Override
                             public void onReadFailure(Exception e) {
-                                Toast.makeText(AcceptedApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(FinalizedApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -162,14 +144,56 @@ public class AcceptedApplicants extends AppCompatActivity {
 
             @Override
             public void onReadFailure(Exception e) {
-                Toast.makeText(AcceptedApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FinalizedApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
+            }
+        });
+        String finalApplicantListId = applicantListId;
+        notify_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //close the registration here
+                CRUD.readStatic(finalApplicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList applicantList) {
+                        if (applicantList != null) {
+                            event.setFinal_list(applicantList);
+                            event.setApplicantList("0");
+                            CRUD.update(event, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    Toast.makeText(FinalizedApplicants.this, "Registration Closed", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(FinalizedApplicants.this, EventInfo.class);
+                                    intent.putExtra("Facility", facility);
+                                    intent.putExtra("Event", event);
+                                    intent.putExtra("User", user);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(FinalizedApplicants.this, "Failed to Close Registration", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(FinalizedApplicants.this, "No Applicant list", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+
+
             }
         });
 
-        back = findViewById(R.id.accepted_back_button);
-        search = findViewById(R.id.accepted_app_search);
-        homepage = findViewById(R.id.accepted_app_house);
-        profile = findViewById(R.id.accepted_app_person);
+        back = findViewById(R.id.fin_back_button);
+        search = findViewById(R.id.fin_app_search);
+        homepage = findViewById(R.id.fin_app_house);
+        profile = findViewById(R.id.fin_app_person);
 
         //create buttons
         back.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +206,7 @@ public class AcceptedApplicants extends AppCompatActivity {
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, OrganizerHomepage.class);
+                Intent intent = new Intent(FinalizedApplicants.this, OrganizerHomepage.class);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);
                 intent.putExtra("User", user);
@@ -193,7 +217,7 @@ public class AcceptedApplicants extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, ViewOrganizer.class);
+                Intent intent = new Intent(FinalizedApplicants.this, ViewOrganizer.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);
@@ -205,7 +229,7 @@ public class AcceptedApplicants extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Already here
-                Intent intent = new Intent(AcceptedApplicants.this, ViewEvents.class);
+                Intent intent = new Intent(FinalizedApplicants.this, ViewEvents.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("Event", event);
@@ -214,9 +238,6 @@ public class AcceptedApplicants extends AppCompatActivity {
 
             }
         });
-
-
-
 
     }
 }

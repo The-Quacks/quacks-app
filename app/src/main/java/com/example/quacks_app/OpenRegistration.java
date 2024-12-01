@@ -52,7 +52,7 @@ public class OpenRegistration  extends AppCompatActivity {
 
         //check if there is an applicant list already made
         if (!event.getApplicantList().equals("0")){
-            Toast.makeText(OpenRegistration.this, "This event is already Open!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OpenRegistration.this, "This event is already Open!", Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -89,43 +89,74 @@ public class OpenRegistration  extends AppCompatActivity {
                     capacity.setText(value);
 
                     ApplicantList app = new ApplicantList();
-                    app.setLimit(parsedValue);
-                    event.setWaitlistCapacity(parsedValue);
-                    String randomId = UUID.randomUUID().toString();
-                    app.setDocumentId(randomId);
+                    if (event.getFinal_list() != null) {
 
-                    CRUD.create(app, new CreateCallback() {
-                        @Override
-                        public void onCreateSuccess() {
-                            event.setApplicantList(app.getDocumentId());
-                            CRUD.update(event, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(OpenRegistration.this, EventInfo.class);
-                                    intent.putExtra("Event", event);
-                                    intent.putExtra("Facility", facility);
-                                    intent.putExtra("User", user);
-                                    startActivity(intent);
-                                }
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(OpenRegistration.this, "Failed to update event.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        app = event.getFinal_list();
+                        String ID = app.getDocumentId();
+                        event.setApplicantList(ID);
+                        app.setLimit(parsedValue);
+                        event.setWaitlistCapacity(parsedValue);
+                        event.setApplicantList(app.getDocumentId());
+                        CRUD.update(event, new UpdateCallback() {
+                            @Override
+                            public void onUpdateSuccess() {
+                                Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(OpenRegistration.this, EventInfo.class);
+                                intent.putExtra("Event", event);
+                                intent.putExtra("Facility", facility);
+                                intent.putExtra("User", user);
+                                startActivity(intent);
+                            }
 
-                        }
-                        @Override
-                        public void onCreateFailure(Exception e) {
-                            Toast.makeText(OpenRegistration.this, "Failed to open registration.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onUpdateFailure(Exception e) {
+                                Toast.makeText(OpenRegistration.this, "Failed to update event.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                } else {
-                    Toast.makeText(OpenRegistration.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
-                    flagger = 0;
+                    } else {
+                        app.setLimit(parsedValue);
+                        event.setWaitlistCapacity(parsedValue);
+                        String randomId = UUID.randomUUID().toString();
+                        app.setDocumentId(randomId);
+
+
+                        ApplicantList finalApp = app;
+                        CRUD.create(app, new CreateCallback() {
+                            @Override
+                            public void onCreateSuccess() {
+                                event.setApplicantList(finalApp.getDocumentId());
+                                CRUD.update(event, new UpdateCallback() {
+                                    @Override
+                                    public void onUpdateSuccess() {
+                                        Toast.makeText(OpenRegistration.this, "Registration is Now Open!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(OpenRegistration.this, EventInfo.class);
+                                        intent.putExtra("Event", event);
+                                        intent.putExtra("Facility", facility);
+                                        intent.putExtra("User", user);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onUpdateFailure(Exception e) {
+                                        Toast.makeText(OpenRegistration.this, "Failed to update event.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCreateFailure(Exception e) {
+                                Toast.makeText(OpenRegistration.this, "Failed to open registration.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    } else{
+                        Toast.makeText(OpenRegistration.this, "Validation Failed. Please Try Again", Toast.LENGTH_SHORT).show();
+                        flagger = 0;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
-}
