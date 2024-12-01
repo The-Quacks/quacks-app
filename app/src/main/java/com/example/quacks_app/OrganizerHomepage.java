@@ -128,8 +128,12 @@ public class OrganizerHomepage extends AppCompatActivity {
         });
 
 
-        entrant_map.setOnClickListener(view -> Toast.makeText(OrganizerHomepage.this, "Entrant Map Coming Soon!", Toast.LENGTH_SHORT).show());
-
+        entrant_map.setOnClickListener(view -> {
+            Intent intent = new Intent(OrganizerHomepage.this, SelectMapEvent.class);
+            intent.putExtra("User", current);
+            intent.putExtra("Facility", facility);
+            startActivity(intent);
+        });
     }
 
     /**
