@@ -12,24 +12,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class DeclinedApplicants extends AppCompatActivity {
+public class CancelledApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
     private ArrayList<Cartable> userList;
     private ArrayList<User> real_user;
     private ApplicantArrayAdapter applicantArrayAdapter;
-    private Button back;
     private ImageButton search;
-    private ImageButton profile;
     private ImageButton homepage;
+    private ImageButton profile;
+    private Button back;
     private Facility facility;
     private User user;
-    private Button notify_all;
-    private Button notify_options;
     private Event event;
-
+    private Button select;
+    private Button notify_all;
     /**
-     * This is the list that holds all declined applicants
+     * This is the list that holds all accepted applicants
      *
      * @param savedInstanceState
      */
@@ -37,50 +36,37 @@ public class DeclinedApplicants extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.declined_applicants);
+        setContentView(R.layout.cancelled_applicants);
 
         if (getIntent().getSerializableExtra("Facility") == null){
-            Toast.makeText(DeclinedApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No Facility", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("User") == null){
-            Toast.makeText(DeclinedApplicants.this, "No User", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No User", Toast.LENGTH_SHORT).show();
             finish();
         }
         if (getIntent().getSerializableExtra("Event") == null){
-            Toast.makeText(DeclinedApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "No Event", Toast.LENGTH_SHORT).show();
             finish();
         }
-
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
-
         assert event != null;
         if (!event.getRegistration()){
-            Toast.makeText(DeclinedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CancelledApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
-
         }
 
-        notify_all = findViewById(R.id.declined_notify_button);
-        notify_options = findViewById(R.id.declined_select_button);
+
+        notify_all = findViewById(R.id.cancelled_notify_button);
+
 
         notify_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DeclinedApplicants.this, Choices.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("User", user);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
-        });
-
-        notify_options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DeclinedApplicants.this, NotifyOptions.class);
+                Intent intent = new Intent(CancelledApplicants.this, LastChoice.class);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("User", user);
                 intent.putExtra("Event", event);
@@ -90,19 +76,14 @@ public class DeclinedApplicants extends AppCompatActivity {
 
         //setting up list
 
-        applicantListView = findViewById(R.id.declined_app_list);
+        applicantListView = findViewById(R.id.cancelled_app_list);
         real_user = new ArrayList<User>();
         userList = new ArrayList<Cartable>();
         applicantArrayAdapter = new ApplicantArrayAdapter(this, userList);
         applicantListView.setAdapter(applicantArrayAdapter);
 
-        if (event == null) {
-            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
         String applicantListId = event.getApplicantList();
+
         NotificationList notificationList = event.getNotificationList(); //gets notificationList object
         ArrayList<Notification> notifications = notificationList.getNotificationList();
 
@@ -110,6 +91,8 @@ public class DeclinedApplicants extends AppCompatActivity {
         if (notifications == null){
             finish();
         }
+
+
         // Load the applicants
         CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
             @Override
@@ -120,13 +103,11 @@ public class DeclinedApplicants extends AppCompatActivity {
 
                     for (String applicantId : applicantList.getApplicantIds()) {
 
-                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
-
+                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {//this retrieves the applicanId
 
                             @Override
                             public void onReadSuccess(User user) {
                                 if (user != null) {
-                                    //check to see if user was notified here
                                     //check to see if user was notified here
                                     real_user.add(user);
                                     UserProfile profile = user.getUserProfile();
@@ -137,9 +118,11 @@ public class DeclinedApplicants extends AppCompatActivity {
                                             User current_user = current.getUser();
                                             String first = current_user.getDeviceId();
                                             String second = user.getDeviceId();
-                                            if (first.equals(second) && current.getWaitlistStatus().equals("Declined")) {
-                                                userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
-                                                userList.add(userdisplay);
+                                            if (first.equals(second) && current.getWaitlistStatus().equals("Accepted")) {
+                                                if (!current.getAccepted()) {
+                                                    userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
+                                                    userList.add(userdisplay);
+                                                }
                                             }
 
                                         }
@@ -151,29 +134,27 @@ public class DeclinedApplicants extends AppCompatActivity {
 
                             @Override
                             public void onReadFailure(Exception e) {
-                                Toast.makeText(DeclinedApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CancelledApplicants.this, "Failed to load users", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }
 
+
             }
 
             @Override
             public void onReadFailure(Exception e) {
-                Toast.makeText(DeclinedApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CancelledApplicants.this, "Failed to load applicant list", Toast.LENGTH_SHORT).show();
             }
         });
 
+        back = findViewById(R.id.cancelled_back_button);
+        search = findViewById(R.id.cancelled_app_search);
+        homepage = findViewById(R.id.cancelled_app_house);
+        profile = findViewById(R.id.cancelled_app_person);
 
-
-
-        search = findViewById(R.id.declined_app_search);
-        homepage = findViewById(R.id.declined_app_house);
-        profile = findViewById(R.id.declined_app_person);
-
-        back = findViewById(R.id.declined_back_button);
-
+        //create buttons
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,8 +165,10 @@ public class DeclinedApplicants extends AppCompatActivity {
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DeclinedApplicants.this, OrganizerHomepage.class);
+                Intent intent = new Intent(CancelledApplicants.this, OrganizerHomepage.class);
                 intent.putExtra("Facility", facility);
+                intent.putExtra("Event", event);
+                intent.putExtra("User", user);
                 startActivity(intent);
             }
         });
@@ -193,9 +176,10 @@ public class DeclinedApplicants extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DeclinedApplicants.this, ViewOrganizer.class);
+                Intent intent = new Intent(CancelledApplicants.this, ViewOrganizer.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
+                intent.putExtra("Event", event);
                 startActivity(intent);
             }
         });
@@ -204,12 +188,18 @@ public class DeclinedApplicants extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Already here
-                Intent intent = new Intent(DeclinedApplicants.this, ViewEvents.class);
+                Intent intent = new Intent(CancelledApplicants.this, ViewEvents.class);
                 intent.putExtra("User", user);
                 intent.putExtra("Facility", facility);
+                intent.putExtra("Event", event);
+                //intent.putExtra("EventList", eventList);
                 startActivity(intent);
+
             }
         });
+
+
+
 
     }
 }

@@ -190,8 +190,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
-                    appList = new ApplicantList();
-                    appList.setLimit(classes);
+                    //appList = new ApplicantList();
+                    //appList.setLimit(classes);
                     event.setEventName(eventname);
                     event.setDateTime(final_date_time);
                     event.setDescription(text);
@@ -201,20 +201,55 @@ public class CreateEvent extends AppCompatActivity {
                     event.setFacility(facility.getDocumentId());
                     event.setRegistrationCapacity(classes);
                     event.setWaitlistCapacity(classes_two);
+                    event.setFinal_list(null);
 
                     //Setting the notification list
                     String notificationListId = UUID.randomUUID().toString();
                     NotificationList notificationList = new NotificationList();
-                    notificationList.setNotificationListId(notificationListId);
-                    event.setNotificationList(notificationList);
+                    CRUD.create(notificationList, new CreateCallback() {
+                        @Override
+                        public void onCreateSuccess() {
+                            notificationList.setNotificationListId(notificationListId);
+                            CRUD.update(notificationList, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    event.setNotificationList(notificationList);
+                                    //Toast.makeText(CreateEvent.this, "Notification List created successfully", Toast.LENGTH_SHORT).show();
+
+                                    CRUD.update(event, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            //Toast.makeText(CreateEvent.this, "Notification List created successfully", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(CreateEvent.this, "Notification List was not updated", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCreateFailure(Exception e) {
+                            Toast.makeText(CreateEvent.this, "Notification list was not created", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
                     String uuid = UUID.randomUUID().toString();
                     event.setDocumentId(uuid);
+                    event.setRegistration(false);
 
                     notificationList.setNotificationEventId(event.getEventId());
 
-                    //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(appList, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {

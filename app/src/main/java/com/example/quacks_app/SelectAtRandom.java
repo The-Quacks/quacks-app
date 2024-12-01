@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
 Selecting a specified number of participants per notification round
@@ -28,11 +29,11 @@ public class SelectAtRandom extends AppCompatActivity {
     private Event event;
     private String applicantListId;
     private NotificationList notificationList;
-    private ArrayList<String> Tracker;
-    private ImageButton home;
-    private ImageButton search;
-    private ImageButton profile;
-    private ListenerRegistration listenerRegistration;
+    private ArrayList<String> Tracker = new ArrayList<>();
+    private int final_value = 0;
+    private Facility facility;
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +44,34 @@ public class SelectAtRandom extends AppCompatActivity {
         back = findViewById(R.id.random_back_button);
         confirm = findViewById(R.id.random_confirm_button);
 
-        if (getIntent().getSerializableExtra("Event") == null){
+        if (getIntent().getSerializableExtra("Event") == null) {
             Toast.makeText(SelectAtRandom.this, "No event was passed", Toast.LENGTH_SHORT).show();
             finish();
         }
         event = (Event) getIntent().getSerializableExtra("Event");
+
+
+        if (getIntent().getSerializableExtra("Facility") == null) {
+            Toast.makeText(SelectAtRandom.this, "No facility was passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+
+
+        if (getIntent().getSerializableExtra("User") == null) {
+            Toast.makeText(SelectAtRandom.this, "No User was passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        user = (User) getIntent().getSerializableExtra("User");
+
         applicantListId = "";
         int waitlist_capacity = 0;
 
-        try{
+        try {
             assert event != null;
             applicantListId = event.getApplicantList();
             waitlist_capacity = event.getRegistrationCapacity();
-        } catch(Exception E){
+        } catch (Exception E) {
             Toast.makeText(SelectAtRandom.this, "The applicant list or waitlist capacity is not set", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -73,84 +89,147 @@ public class SelectAtRandom extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (applicantListId == null || applicantListId.isEmpty()) {
                     Toast.makeText(SelectAtRandom.this, "Applicant List ID is invalid.", Toast.LENGTH_SHORT).show();
                     finish();
+                    return;
                 }
 
                 CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
                     @Override
                     public void onReadSuccess(ApplicantList applicantList) {
-
-                        if (applicantList != null) {
-                            int limit;
-                            try {
-                                limit = Integer.parseInt(capacity.getText().toString());
-                                if (limit <= 0 || limit > applicantList.getApplicantIds().size()) {
-                                    Toast.makeText(SelectAtRandom.this, "Number of applicants chosen exceeds amount in waitlist", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                            } catch (NumberFormatException e) {
-                                Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            List<String> ids = applicantList.getApplicantIds().subList(0, limit);
-                            int counter = 0;
-                            for (String applicantId : ids) {
-                                CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
-                                    @Override
-                                    public void onReadSuccess(User user) {
-                                        if (user != null) {
-
-                                            UserProfile profile = user.getUserProfile();
-                                            Notification notify = new Notification(user, applicantListId, event.getEventId(), "Unknown", "Not Sent");
-
-                                            //Looks at the NotificationList Id and decides whether it needs to create a new one
-                                            if (event.getNotificationList() == null){//creates one
-                                                String notificationListId = UUID.randomUUID().toString();
-                                                notificationList = new NotificationList();
-                                                notificationList.setDocumentId(notificationListId);
-                                                event.setNotificationList(notificationList);
-                                                notificationList.setNotificationEventId(event.getEventId());
-                                            }
-                                            else{
-                                                notificationList = event.getNotificationList();
-                                            }
-                                            //otherwise event.getNotificationList returns the list associated to the event
-                                            //we add the new notification to the list
-                                            notificationList.addNotification(notify);
-
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onReadFailure(Exception e) {
-                                        Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                Tracker.add("1");
-                            }
-                            if (!Tracker.isEmpty()){
-                                Toast.makeText(SelectAtRandom.this, "Users Notified.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(SelectAtRandom.this, OrganizerHomepage.class);
-                                intent.putExtra("Event", event);
-                                startActivity(intent);
-
-                            }else{
-                                Toast.makeText(SelectAtRandom.this, "Error notifying users.", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-
-
-
-                        } else {
+                        if (applicantList == null || applicantList.getApplicantIds().isEmpty()) {
                             Toast.makeText(SelectAtRandom.this, "Applicant list is empty.", Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
+                        int limit;
+                        try {
+                            limit = Integer.parseInt(capacity.getText().toString());
+                            if (limit <= 0 || limit > applicantList.getApplicantIds().size()) {
+                                Toast.makeText(SelectAtRandom.this, "Invalid number of applicants.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(SelectAtRandom.this, "Invalid capacity value.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        notificationList = event.getNotificationList();
+                        if (notificationList == null) {
+                            Toast.makeText(SelectAtRandom.this, "No notification list.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+
+                        // Process applicants
+                        List<String> ids = applicantList.getApplicantIds().subList(0, limit);
+                        List<String> all_ids = applicantList.getApplicantIds();
+                        ArrayList<Notification> notifications = notificationList.getNotificationList();
+
+                        AtomicInteger remaining = new AtomicInteger(all_ids.size());
+
+                        for (String applicantId : all_ids) {
+                            boolean isAccepted = ids.contains(applicantId);
+
+                            for (int i = 0; i < notifications.size(); i++) {
+                                Notification current = notifications.get(i);
+                                if (current.getUser() != null) {
+                                    User current_user = current.getUser();
+                                    String first = current_user.getDeviceId();
+                                    String second = user.getDeviceId();
+
+
+                                    if (second.equals(first)) {
+
+                                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
+                                            @Override
+                                            public void onReadSuccess(User user) {
+                                                if (user != null) {
+
+                                                    current.setUser(user);
+                                                    current.setApplicantListId(applicantListId);
+                                                    current.setNotificationEventId(event.getEventId());
+                                                    current.setNotificationListId(notificationList.getNotificationListId());
+                                                    String condition = isAccepted ? "Accepted" : "Declined";
+                                                    current.setSentStatus("Not Sent");
+                                                    current.setWaitlistStatus(condition);
+                                                    current.setAccepted(false);
+                                                    CRUD.update(current, new UpdateCallback() {
+                                                        @Override
+                                                        public void onUpdateSuccess() {
+                                                            checkCompletion(remaining.decrementAndGet());
+                                                        }
+
+                                                        @Override
+                                                        public void onUpdateFailure(Exception e) {
+                                                            checkCompletion(remaining.decrementAndGet());
+                                                        }
+                                                    });
+                                                } else {
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onReadFailure(Exception e) {
+                                                checkCompletion(remaining.decrementAndGet());
+                                            }
+                                        });
+                                    } else {
+                                        CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {
+                                            @Override
+                                            public void onReadSuccess(User user) {
+                                                if (user != null) {
+                                                    Notification notify = new Notification();
+
+                                                    CRUD.create(notify, new CreateCallback() {
+                                                        @Override
+                                                        public void onCreateSuccess() {
+
+                                                            notify.setUser(user);
+                                                            notify.setApplicantListId(applicantListId);
+                                                            notify.setNotificationEventId(event.getEventId());
+                                                            notify.setNotificationListId(notificationList.getNotificationListId());
+                                                            String condition = isAccepted ? "Accepted" : "Declined";
+                                                            notify.setSentStatus("Not Sent");
+                                                            notify.setWaitlistStatus(condition);
+                                                            notify.setAccepted(false);
+
+                                                            CRUD.update(notify, new UpdateCallback() {
+                                                                @Override
+                                                                public void onUpdateSuccess() {
+                                                                    notificationList.addNotification(notify);
+                                                                    checkCompletion(remaining.decrementAndGet());
+                                                                }
+
+                                                                @Override
+                                                                public void onUpdateFailure(Exception e) {
+                                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                                }
+                                                            });
+                                                        }
+
+                                                        @Override
+                                                        public void onCreateFailure(Exception e) {
+                                                            checkCompletion(remaining.decrementAndGet());
+                                                        }
+                                                    });
+                                                } else {
+                                                    checkCompletion(remaining.decrementAndGet());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onReadFailure(Exception e) {
+                                                checkCompletion(remaining.decrementAndGet());
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     @Override
@@ -161,7 +240,42 @@ public class SelectAtRandom extends AppCompatActivity {
             }
         });
     }
+
+            private void checkCompletion(int remainingCount) {
+                if (remainingCount == 0) {
+                    // All users processed
+                    CRUD.update(notificationList, new UpdateCallback() {
+                        @Override
+                        public void onUpdateSuccess() {
+                            event.setNotificationList(notificationList);
+                            CRUD.update(event, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    Toast.makeText(SelectAtRandom.this, "Users Notified!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(SelectAtRandom.this, EventInfo.class);
+
+                                    intent.putExtra("Event", event);
+                                    intent.putExtra("Facility", facility);
+                                    intent.putExtra("User", user);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(SelectAtRandom.this, "Could not update the event", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onUpdateFailure(Exception e) {
+                            Toast.makeText(SelectAtRandom.this, "Could not update notification list.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
 }
+
 
 
 

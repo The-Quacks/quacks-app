@@ -13,6 +13,8 @@ public class ApplicantOptions extends AppCompatActivity {
     private Button declined_applicants;
     private Button accepted_applicants;
     private Button back;
+    private Button cancelled_applicants;
+    private Button finalized_applicants;
     private Facility facility;
     private User user;
 
@@ -43,6 +45,8 @@ public class ApplicantOptions extends AppCompatActivity {
         all_applicants = findViewById(R.id.all_button);
         declined_applicants = findViewById(R.id.declined_button);
         accepted_applicants = findViewById(R.id.accepted_button);
+        cancelled_applicants = findViewById(R.id.cancelled_button);
+        finalized_applicants = findViewById(R.id.finalized_button);
         back = findViewById(R.id.applicant_back_button);
 
         //create buttons
@@ -79,6 +83,28 @@ public class ApplicantOptions extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ApplicantOptions.this, AcceptedApplicants.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                startActivity(intent);
+            }
+        });
+
+        cancelled_applicants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ApplicantOptions.this, CancelledApplicants.class);
+                intent.putExtra("Event", event);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                startActivity(intent);
+            }
+        });
+
+        finalized_applicants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ApplicantOptions.this, FinalizedApplicants.class);
                 intent.putExtra("Event", event);
                 intent.putExtra("Facility", facility);
                 intent.putExtra("User", user);

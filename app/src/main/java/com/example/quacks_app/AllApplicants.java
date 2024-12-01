@@ -23,8 +23,6 @@ public class AllApplicants extends AppCompatActivity {
     private ImageButton search;
     private ImageButton homepage;
     private ImageButton profile;
-    private Facility facility;
-    private User user;
     private Button back;
 
     @Override
@@ -45,13 +43,13 @@ public class AllApplicants extends AppCompatActivity {
             finish();
         }
 
-        facility = (Facility) getIntent().getSerializableExtra("Facility");
-        user = (User) getIntent().getSerializableExtra("User");
+        Facility facility = (Facility) getIntent().getSerializableExtra("Facility");
+        User user = (User) getIntent().getSerializableExtra("User");
         // Get the Event and ApplicantList ID
         Event event = (Event) getIntent().getSerializableExtra("Event");
 
         assert event != null;
-        if (event.getApplicantList().equals("0")){
+        if (!event.getRegistration()){
             Toast.makeText(AllApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -119,7 +117,12 @@ public class AllApplicants extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // set number of applicants then pool at random
-                Toast.makeText(AllApplicants.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AllApplicants.this, Choices.class);
+                intent.putExtra("Facility", facility);
+                intent.putExtra("User", user);
+                intent.putExtra("Event", event);
+                startActivity(intent);
+
             }
         });
 
@@ -168,10 +171,6 @@ public class AllApplicants extends AppCompatActivity {
                         });
                     }
                 }
-                else {
-                    Toast.makeText(AllApplicants.this, "No applicant list found", Toast.LENGTH_SHORT).show();
-                }
-
             }
 
             @Override
