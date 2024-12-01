@@ -130,19 +130,55 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
         });
 
 
-        close_registration_button.setOnClickListener(view ->
-                        CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
-            @Override
-            public void onDeleteSuccess() {
-                Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
-                finish();
+        close_registration_button.setOnClickListener(view -> {
+
+            if (!event.getRegistration()){
+                Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
+            } else{
+                event.setRegistration(false);
+                String app_id = event.getApplicantList();
+                CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList data) {
+                        if (data != null){
+                            event.setFinal_list(data);
+
+                            CRUD.update(event, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
 
-            @Override
-            public void onDeleteFailure(Exception e) {
-                Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
-            }
-            })
+
+                    //            CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
+                    //@Override
+                    //public void onDeleteSuccess() {
+                    //    Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                    //    finish();
+                    //}
+
+                    //@Override
+                    //public void onDeleteFailure(Exception e) {
+                    //    Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
+                    //}
+                    //})
+                }
         );
 
         //This is the bottom of the page directory
@@ -224,7 +260,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
 
 
                     //deletes notification list
-                    if (!notificationList.getNotificationList().isEmpty()) {
+                    if (notificationList.getDocumentId() != null) {
                         CRUD.delete(notificationList.getDocumentId(), NotificationList.class, new DeleteCallback() {
                             @Override
                             public void onDeleteSuccess() {

@@ -74,6 +74,10 @@ public class OpenRegistration  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //this is where they have entered in an amount want to close
+                if (event.getRegistration() == true){
+                    Toast.makeText(OpenRegistration.this, "Registration is Already Open!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
 
                 String value = capacity.getText().toString().trim();
                 int parsedValue = 0;
@@ -96,6 +100,7 @@ public class OpenRegistration  extends AppCompatActivity {
                         event.setApplicantList(ID);
                         app.setLimit(parsedValue);
                         event.setWaitlistCapacity(parsedValue);
+                        event.setRegistration(true);
                         event.setApplicantList(app.getDocumentId());
                         CRUD.update(event, new UpdateCallback() {
                             @Override
@@ -117,6 +122,7 @@ public class OpenRegistration  extends AppCompatActivity {
                     } else {
                         app.setLimit(parsedValue);
                         event.setWaitlistCapacity(parsedValue);
+                        event.setRegistration(true);
                         String randomId = UUID.randomUUID().toString();
                         app.setDocumentId(randomId);
 

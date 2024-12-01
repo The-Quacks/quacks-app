@@ -64,11 +64,13 @@ public class CreateEvent extends AppCompatActivity {
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
+
+        if (getIntent().getSerializableExtra("User") == null){
+            finish();
+        }
+
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
-
-
-
         //Then we set them like in create profile
 
         //Finding the right text box
@@ -190,8 +192,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (!wrong && validDate && validInstructorName && validEventName) {
                     event = new Event();
-                    //appList = new ApplicantList();
-                    //appList.setLimit(classes);
+                    appList = new ApplicantList();
+                    appList.setLimit(classes);
                     event.setEventName(eventname);
                     event.setDateTime(final_date_time);
                     event.setDescription(text);
@@ -249,7 +251,7 @@ public class CreateEvent extends AppCompatActivity {
 
                     notificationList.setNotificationEventId(event.getEventId());
 
-                    Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(CreateEvent.this, "It reaches the bottom", Toast.LENGTH_SHORT).show();
                     CRUD.create(appList, new CreateCallback() {
                         @Override
                         public void onCreateSuccess() {
