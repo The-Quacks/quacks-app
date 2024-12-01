@@ -53,8 +53,9 @@ public class CancelledApplicants extends AppCompatActivity {
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
         event = (Event) getIntent().getSerializableExtra("Event");
+
         assert event != null;
-        if (!event.getRegistration()){
+        if (event.getRegistration() == false){
             Toast.makeText(CancelledApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
         }

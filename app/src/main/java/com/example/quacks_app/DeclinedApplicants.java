@@ -57,7 +57,7 @@ public class DeclinedApplicants extends AppCompatActivity {
         event = (Event) getIntent().getSerializableExtra("Event");
 
         assert event != null;
-        if (!event.getRegistration()){
+        if (event.getRegistration() == false){
             Toast.makeText(DeclinedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
             finish();
 

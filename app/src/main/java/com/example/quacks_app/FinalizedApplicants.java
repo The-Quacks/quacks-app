@@ -60,7 +60,7 @@ public class FinalizedApplicants extends AppCompatActivity {
         event = (Event) getIntent().getSerializableExtra("Event");
         assert event != null;
         String applicantListId = event.getApplicantList();
-        if (!event.getRegistration()) {
+        if (event.getRegistration() == false) {
             if (event.getFinal_list() == null) {
                 Toast.makeText(FinalizedApplicants.this, "Please Open Registration!", Toast.LENGTH_SHORT).show();
                 finish();
