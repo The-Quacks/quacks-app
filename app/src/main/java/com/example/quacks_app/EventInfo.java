@@ -2,11 +2,14 @@ package com.example.quacks_app;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Date;
 
-public class EventInfo extends AppCompatActivity {
+public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
     private String applicantList;
     private EventList eventList;
     private Facility actual_facility;
@@ -47,6 +50,7 @@ public class EventInfo extends AppCompatActivity {
         TextView id = findViewById(R.id.event_id);
         TextView waitlist_capacity = findViewById(R.id.waitlist_capacity);
         TextView registration_capacity = findViewById(R.id.class_capacity);
+        ImageView eventPoster = findViewById(R.id.event_poster);
 
         // Buttons
         Button open_registration_button = findViewById(R.id.register_button);
@@ -82,6 +86,25 @@ public class EventInfo extends AppCompatActivity {
         organizer.setText(organizerId);
         id.setText(event.getEventId());
 
+        // Load profile picture if it exists
+        if (event.getEventPosterPath() != null) {
+            CRUD.downloadImage(event.getEventPosterPath(), new ReadCallback<Bitmap>() {
+                @Override
+                public void onReadSuccess(Bitmap data) {
+                    eventPoster.setImageBitmap(data);
+                }
+
+                @Override
+                public void onReadFailure(Exception e) {
+                    Log.e("Event Info", "Failed to load event poster: " + e.getMessage());
+                }
+            });
+        }
+        if (event.getEventPosterPath() == null) {
+            Log.e("Event Info", "event poster doesn't exist: ");
+        }
+
+
         open_registration_button.setOnClickListener(view -> {
             //makes an applicant list for that event.
             Intent intent = new Intent(EventInfo.this, OpenRegistration.class);
@@ -101,13 +124,10 @@ public class EventInfo extends AppCompatActivity {
         });
 
         edit_event_button.setOnClickListener(view -> {
-            Intent intent  = new Intent(EventInfo.this, EditEvent.class);
-            intent.putExtra("mode", "edit");
-            intent.putExtra("Event", event);
-            intent.putExtra("User", user);
-            intent.putExtra("Facility", actual_facility);
-            startActivity(intent);
+            EditDeleteEventFragment dialog = new EditDeleteEventFragment();
+            dialog.show(getSupportFragmentManager(), "EditDeleteDialog");
         });
+
 
         close_registration_button.setOnClickListener(view ->
                         CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
@@ -147,6 +167,44 @@ public class EventInfo extends AppCompatActivity {
 
         search.setOnClickListener(view -> finish());
 
+    }
+
+    private void confirmDeleteEvent() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete this event? This action cannot be undone.")
+                .setPositiveButton("Yes, Delete", (dialog, which) -> {
+                    CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
+                        @Override
+                        public void onDeleteSuccess() {
+                            Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                            finish(); // Close EventInfo after deletion
+                        }
+
+                        @Override
+                        public void onDeleteFailure(Exception e) {
+                            Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onEditSelected() {
+        // Navigate to EditEvent activity
+        Intent intent = new Intent(this, EditEvent.class);
+        intent.putExtra("Event", event);
+        intent.putExtra("User", user);
+        intent.putExtra("Facility", actual_facility);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteSelected() {
+        // Confirm deletion
+        confirmDeleteEvent();
     }
 
 }

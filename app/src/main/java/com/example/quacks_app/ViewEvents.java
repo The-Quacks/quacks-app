@@ -79,8 +79,6 @@ public class ViewEvents extends AppCompatActivity {
             }
         });
 
-
-
         //This is the bottom of the page directory
         ImageButton homepage = findViewById(R.id.house);
         ImageButton profile = findViewById(R.id.person);

@@ -132,7 +132,7 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
                         // Display the selected image on the ImageView
                         profilePicture.setImageURI(imageUri);
 
-                        // Upload the image to Firebase
+                        // Optionally, upload the image to Firebase
                         ImageUpload.uploadImageToFirebase(
                                 this,
                                 imageUri,
@@ -219,14 +219,22 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
      */
     private void requestStoragePermissionAndOpenGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ImageUpload.openGallery(pickImageLauncher);
+            openGallery();
         } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
             } else {
-                ImageUpload.openGallery(pickImageLauncher);
+                openGallery();
             }
         }
+    }
+
+    /**
+     * Opens the gallery to pick an image.
+     */
+    private void openGallery() {
+        Intent intent = ImageUpload.createGalleryIntent();
+        pickImageLauncher.launch(intent);
     }
 
     /**

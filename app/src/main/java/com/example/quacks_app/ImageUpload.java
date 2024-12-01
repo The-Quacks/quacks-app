@@ -165,7 +165,6 @@ public class ImageUpload {
                             onSaveCallback.run();
                         }
                     }
-
                     @Override
                     public void onReadFailure(Exception e) {
                         Toast.makeText(context, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
@@ -180,41 +179,36 @@ public class ImageUpload {
         });
     }
 
-    public static void uploadEventImageToFirebase(Context context, Uri imageUri, ImageView imageView,
-                                                  Event event, Runnable onSaveCallback
-    ) {
-        // Use a unique path for storing event images
-        String path = "events/" + System.currentTimeMillis();
-
+    /**
+     * Uploads an event poster to Firebase and updates the event object with the poster path.
+     *
+     * @param context        The context for showing messages.
+     * @param imageUri       The URI of the image to upload.
+     * @param event          The Event object to update with the image path.
+     * @param onSaveCallback A callback to save the updated event after uploading.
+     */
+    public static void uploadEventPosterToFirebase(Context context, Uri imageUri, Event event, Runnable onSaveCallback) {
         CRUD.storeImage(imageUri, new ReadCallback<String>() {
             @Override
-            public void onReadSuccess(String uploadedPath) {
-                event.setQrCodePath(path); // Associate the path with the event object
+            public void onReadSuccess(String path) {
+                // Set the event poster path
+                Log.d("EditEvent", "Uploaded image path: " + path);
+                event.setEventPosterPath(path);
+                Log.d("EditEvent", "reached here"+ path);
 
-                // Download the image and display it in the ImageView
-                CRUD.downloadImage(uploadedPath, new ReadCallback<Bitmap>() {
-                    @Override
-                    public void onReadSuccess(Bitmap bitmap) {
-                        imageView.setImageBitmap(bitmap); // Update the UI with the uploaded image
-                        Toast.makeText(context, "Event image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                // Call the save callback to persist the event
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
 
-                        // Save the event data if required
-                        if (onSaveCallback != null) {
-                            onSaveCallback.run();
-                        }
-                    }
-
-                    @Override
-                    public void onReadFailure(Exception e) {
-                        Toast.makeText(context, "Failed to retrieve event image", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Toast.makeText(context, "Event poster updated successfully", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onReadFailure(Exception e) {
-                Toast.makeText(context, "Failed to upload event image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Failed to upload event poster", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

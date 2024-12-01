@@ -226,7 +226,7 @@ public class Event extends RepoModel implements Serializable {
     }
 
     public void setEventPosterPath(String eventPosterPath) {
-        this.eventPosterPath = this.eventPosterPath;
+        this.eventPosterPath = eventPosterPath;
     }
 
 }

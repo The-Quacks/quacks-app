@@ -9,16 +9,28 @@
     android:visibility="visible"
     tools:context=".EventInfo">
 
+    <ImageView
+        android:id="@+id/event_poster"
+        android:layout_width="368dp"
+        android:layout_height="127dp"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/event_poster"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:id = "@+id/event_box"
+        android:id="@+id/event_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background = "@color/white"
-        android:orientation = "vertical"
-        app:layout_constraintEnd_toEndOf = "parent"
-        app:layout_constraintStart_toStartOf = "parent"
-        app:layout_constraintTop_toTopOf = "parent"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="156dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/event_information"
@@ -35,12 +47,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_name_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Name:    "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_name"
                 android:layout_width="wrap_content"
@@ -58,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text="      Instructor:  "
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/instructor"
                 android:layout_width="wrap_content"
@@ -68,12 +83,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_date_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Event Date:  "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_date"
                 android:layout_width="wrap_content"
@@ -85,12 +102,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_description_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Description:    "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_description"
                 android:layout_width="wrap_content"
@@ -101,12 +120,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_facility_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Facility:    "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_facility"
                 android:layout_width="wrap_content"
@@ -118,12 +139,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/waitlist_capacity_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Waitlist Capacity:   "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/waitlist_capacity"
                 android:layout_width="wrap_content"
@@ -134,12 +157,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/class_capacity_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Class Capacity:  "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/class_capacity"
                 android:layout_width="wrap_content"
@@ -150,12 +175,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_organizer_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Organizer ID:   "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_organizer"
                 android:layout_width="wrap_content"
@@ -166,23 +193,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/event_id_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="      Event ID:   "
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/event_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="123456" />
         </LinearLayout>
+
         <CheckBox
-            android:layout_marginLeft="10dp"
             android:id="@+id/geolocation_status"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:text="Geolocation Status"
             app:centerIfNoTextEnabled="false" />
 
@@ -193,75 +223,75 @@
         android:id="@+id/register_button"
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:elevation="10dp"
-        android:stateListAnimator="@null"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/profile_icon_med"
+        android:drawableTop="@drawable/profile_icon_med"
+        android:elevation="10dp"
         android:fadingEdge="horizontal"
+        android:stateListAnimator="@null"
         android:text="@string/open_registration"
-        android:textSize = "15sp"
         android:textColor="@color/black"
+        android:textSize="15sp"
         app:cornerRadius="7dp"
-        android:layout_marginStart = "15dp"
-        app:layout_constraintTop_toBottomOf = "@id/event_box"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_box" />
 
     <Button
         android:id="@+id/close"
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:elevation="10dp"
-        android:stateListAnimator="@null"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/email_icon_med"
+        android:drawableTop="@drawable/email_icon_med"
+        android:elevation="10dp"
         android:fadingEdge="horizontal"
+        android:stateListAnimator="@null"
         android:text="@string/close_registration"
-        android:textSize ="15sp"
         android:textColor="@color/black"
+        android:textSize="15sp"
         app:cornerRadius="7dp"
-        android:layout_marginEnd = "15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@id/event_box" />
+        app:layout_constraintTop_toBottomOf="@id/event_box" />
 
     <Button
         android:id="@+id/edit_event_button"
         android:layout_width="175dp"
         android:layout_height="150dp"
-        android:elevation="10dp"
-        android:stateListAnimator="@null"
-        android:layout_marginTop="170dp"
+        android:layout_marginStart="16dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/create_event_resize"
+        android:drawableTop="@drawable/create_event_resize"
+        android:elevation="10dp"
         android:fadingEdge="horizontal"
-        android:text="@string/edit_event"
-        android:textSize = "18sp"
+        android:stateListAnimator="@null"
+        android:text="@string/edit_delete_event"
         android:textColor="@color/black"
+        android:textSize="18sp"
         app:cornerRadius="7dp"
-        android:layout_marginStart = "15dp"
-        app:layout_constraintTop_toBottomOf = "@id/event_box"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/register_button"
+        app:layout_constraintVertical_bias="0.211" />
 
     <Button
         android:id="@+id/applicant_lists"
         android:layout_width="175dp"
         android:layout_height="150dp"
-        android:elevation="10dp"
-        android:stateListAnimator="@null"
-        android:layout_marginTop="170dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/button"
-        android:drawableTop = "@drawable/event_resize"
+        android:drawableTop="@drawable/event_resize"
+        android:elevation="10dp"
         android:fadingEdge="horizontal"
+        android:stateListAnimator="@null"
         android:text="@string/applicant_lists"
-        android:textSize = "18sp"
         android:textColor="@color/black"
+        android:textSize="18sp"
         app:cornerRadius="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf = "@id/event_box"
-        android:layout_marginEnd = "15dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/close"
+        app:layout_constraintVertical_bias="0.211" />
 
     <RelativeLayout
         android:layout_width="match_parent"

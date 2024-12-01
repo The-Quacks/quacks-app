@@ -35,11 +35,12 @@
     <string name="event_list">Event List</string>
     <string name="applicant_lists">Applicant Lists</string>
     <string name="open_registration">Open Registration</string>
-    <string name="edit_event">Edit Event</string>
+    <string name="edit_delete_event">Edit/Delete Event</string>
     <string name="close_registration">Close Registration</string>
     <string name="event_information">Event Information</string>
     <string name="create_an_event">Create An Event</string>
     <string name="editing_event_details">Editing Event Details</string>
     <string name="eventPoster">Event Poster</string>
     <string name="upload_event_poster">Upload Event Poster</string>
+    <string name="event_poster">Event Poster</string>
 </resources>

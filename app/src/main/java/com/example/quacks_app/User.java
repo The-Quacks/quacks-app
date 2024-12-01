@@ -6,7 +6,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User extends RepoModel implements Serializable,Listable {
+public class User extends RepoModel implements Serializable, Listable {
     private String deviceId;
     private ArrayList<Role> roles; // Note: Firebase does not like enum sets
     private UserProfile userProfile;
