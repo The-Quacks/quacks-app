@@ -283,17 +283,28 @@ public class CRUD {
         StorageReference storageRef =  FirebaseStorage.getInstance().getReference();
         String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
         StorageReference imageRef = storageRef.child(uniquePath);
-
-        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+        CRUD.readStatic("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>() {
             @Override
             public void onReadSuccess(ImageList data) {
                 data.addImage(uniquePath);
+                CRUD.update(data, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        // Do something on success
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        // Handle failure
+                    }
+                });
             }
 
             @Override
             public void onReadFailure(Exception e) {
 
             }
+
         });
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -319,18 +330,31 @@ public class CRUD {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String uniquePath = "images/" + UUID.randomUUID().toString() + ".jpg";
         StorageReference imageRef = storageRef.child(uniquePath);
-        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+        CRUD.readStatic("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>() {
+            private ListenerRegistration listener;
+
             @Override
             public void onReadSuccess(ImageList data) {
                 data.addImage(uniquePath);
+                CRUD.update(data, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+
+                    }
+                });
             }
 
             @Override
             public void onReadFailure(Exception e) {
 
             }
-        });
 
+        });
 
         UploadTask uploadTask = imageRef.putFile(uri);
         uploadTask
@@ -369,9 +393,13 @@ public class CRUD {
     public static void removeImage(String imagePath, DeleteCallback callback) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child(imagePath);
-        CRUD.readLive("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+        CRUD.readStatic("yYc9ikIhSODAcZ4180Hi", ImageList.class, new ReadCallback<ImageList>(){
+            private ListenerRegistration listener;
             @Override
             public void onReadSuccess(ImageList data) {
+                if (listener != null) {
+                    listener.remove();
+                }
                 data.removeImage(imagePath);
                 CRUD.update(data, new UpdateCallback() {
                     @Override
@@ -388,8 +416,9 @@ public class CRUD {
 
             @Override
             public void onReadFailure(Exception e) {
-
+                if (listener != null) listener.remove();
             }
+
         });
 
         imageRef.delete()
