@@ -10,6 +10,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import static androidx.test.espresso.Espresso.onData;
+import static org.hamcrest.Matchers.anything;
+
 import static org.hamcrest.CoreMatchers.not;
 
 import android.widget.Button;
@@ -80,7 +83,9 @@ public class OrganizerHomeTest {
                     onView(withId(R.id.welcome_home)).perform(click());
 
                     //getting to the edit page
-                    onView(withId(R.id.switch_activity_entrant)).perform(click());
+                    onView(withId(R.id.profile_spinner_entrant)).perform(click());
+                    onData(anything()).atPosition(1).perform(click());
+
                     onView(withId(R.id.organizer_profile_button)).check(matches(isDisplayed()));
                     onView(withId(R.id.organizer_profile_button)).perform(click());
                     onView(withId(R.id.edit_button)).check(matches(isDisplayed()));
@@ -152,7 +157,8 @@ public class OrganizerHomeTest {
                     onView(withId(R.id.welcome_home)).perform(click());
 
                     //getting to the edit page
-                    onView(withId(R.id.switch_activity_entrant)).perform(click());
+                    onView(withId(R.id.profile_spinner_entrant)).perform(click());
+                    onData(anything()).atPosition(1).perform(click());
                     onView(withId(R.id.organizer_profile_button)).check(matches(isDisplayed()));
 
                     onView(withId(R.id.create_event)).perform(click());
@@ -201,7 +207,8 @@ public class OrganizerHomeTest {
                 onView(withId(R.id.welcome_home)).perform(click());
 
                 //getting to the entrant page
-                onView(withId(R.id.switch_activity_entrant)).perform(click());
+                onView(withId(R.id.profile_spinner_entrant)).perform(click());
+                onData(anything()).atPosition(1).perform(click());
                 onView(withId(R.id.organizer_profile_button)).check(matches(isDisplayed()));
 
                 //clicks on entrant
