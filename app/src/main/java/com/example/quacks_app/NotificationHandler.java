@@ -172,14 +172,14 @@ public class NotificationHandler {
     public ArrayList<Notification> getNotificationForUser(User user) {
         ArrayList<Notification> user_specified_notifications = new ArrayList<Notification>();
 
-        CRUD.readStatic(user.getDeviceId(), User.class, new ReadCallback<User>() {
+        CRUD.readLive(user.getDeviceId(), User.class, new ReadCallback<User>() {
             @Override
             public void onReadSuccess(User data) {
                 //once we have the user, we check if there are notifications with the status "Not Sent"
                 // and where the user matches
 
                 if (data != null) {
-                    CRUD.readAllStatic(Notification.class, new ReadMultipleCallback<Notification>() {
+                    CRUD.readAllLive(Notification.class, new ReadMultipleCallback<Notification>() {
                         @Override
                         public void onReadMultipleSuccess(ArrayList<Notification> data) {
                             if (data != null) {
@@ -220,7 +220,7 @@ public class NotificationHandler {
     public ArrayList<Notification> getAllUnsentNotifications(){
         ArrayList<Notification> notifications = new ArrayList<>();
 
-        CRUD.readAllStatic(Notification.class, new ReadMultipleCallback<Notification>() {
+        CRUD.readAllLive(Notification.class, new ReadMultipleCallback<Notification>() {
             @Override
             public void onReadMultipleSuccess(ArrayList<Notification> data) {
                 if (data != null){

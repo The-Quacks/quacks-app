@@ -82,7 +82,7 @@ public class PickApplicant extends AppCompatActivity {
             Toast.makeText(this, "ApplicantListID not found", Toast.LENGTH_SHORT).show();
             finish();
         }
-
+        ArrayList<Cartable> usernames = new ArrayList<>();
         // Load the applicants
         CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
             @Override
@@ -105,7 +105,9 @@ public class PickApplicant extends AppCompatActivity {
                                     userdisplay.setField(profile.getUserName());
                                     userdisplay.setSubfield(user.getDeviceId());
                                     userdisplay.setCart(false);
+                                    usernames.add(userdisplay);
                                     userList.add(userdisplay);
+
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
 
@@ -176,12 +178,11 @@ public class PickApplicant extends AppCompatActivity {
                 AtomicInteger remaining = new AtomicInteger(userList.size());
 
                 for (Cartable user : userList) {
+                    int index = userList.indexOf(user);
                     if (user.Carted()) {
                         for (User current : real_user) {
                             UserProfile profile = current.getUserProfile();
-
-                            if (profile != null && profile.getUserName().equals(user.getField())) {
-
+                            if (profile != null && (index == real_user.indexOf(current))) {
                                 //check if user is in the current notification list
                                 boolean found = false;
                                 for (int i = 0; i < notifications.size(); i++) {
@@ -190,7 +191,6 @@ public class PickApplicant extends AppCompatActivity {
                                         User current_user = notify.getUser();
                                         String first = current_user.getDeviceId();
                                         String second = current.getDeviceId();
-
 
                                         if (second.equals(first)) {
                                             found = true;
@@ -233,7 +233,7 @@ public class PickApplicant extends AppCompatActivity {
                                             newer.setNotificationEventId(actual_event.getEventId());
                                             newer.setNotificationListId(notification_list.getNotificationListId());
                                             newer.setSentStatus("Not Sent");
-                                            newer.setWaitlistStatus("Accepted");
+                                            newer.setWaitlistStatus("Declined");
                                             newer.setAccepted(false);
                                             CRUD.update(newer, new UpdateCallback() {
                                                 @Override
@@ -278,7 +278,7 @@ public class PickApplicant extends AppCompatActivity {
                                                 @Override
                                                 public void onUpdateSuccess() {
                                                     //notification_list.addNotification(notify);
-                                                    Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
 
@@ -295,7 +295,7 @@ public class PickApplicant extends AppCompatActivity {
                         }
                     } else {
                         checkCompletion(remaining.decrementAndGet());
-                        Toast.makeText(PickApplicant.this, "Couldn't find User", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PickApplicant.this, "Couldn't find User", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
