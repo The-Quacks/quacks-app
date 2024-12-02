@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -13,6 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -34,13 +37,13 @@ import java.util.Objects;
  */
 public class NotificationCenter extends AppCompatActivity {
     //Initializations
-    boolean notifsAllowed;
     Switch notifToggle;
     TextView falseTitle, falseWaitlistText, falseAppNotifText, falsePhoneNotifText, trueTitle;
     Button settingsButton;
     ImageButton homeButton;
     ListView notifList;
-
+    NotificationHandler nHandler;
+    User user;
     /**
      * This overidden method is the function that loads and implements the display, based on the attributes
      * that are in the notification_center.xml file.
@@ -52,7 +55,9 @@ public class NotificationCenter extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.notification_center);
         //Grab Notification Handler value from previous activity (EntrantHome)
-        notifsAllowed = Objects.requireNonNull(getIntent().getExtras()).getBoolean("Notif_Permissions", false);
+        nHandler = (NotificationHandler) getIntent().getSerializableExtra("Notif_Handler");
+        user = (User) getIntent().getSerializableExtra("User");
+        // ArrayList<Notification> notifs = nHandler.getNotificationForUser(user);
         //Define elements
         notifToggle = (Switch) findViewById(R.id.appNotifsSwitch);
         falseTitle = findViewById(R.id.notificationFalseTitle);
@@ -65,7 +70,7 @@ public class NotificationCenter extends AppCompatActivity {
         notifList = findViewById(R.id.notif_list);
         //Display Notification List or disabled prompt, depending on if notifications are allowed
         //THIS IS ON INITIAL STARTUP OF THE ACTIVITY ONLY, and is therefore needed because the switch does not exist yet.
-        if (notifsAllowed) {
+        if (nHandler.appEnabled) {
             notifToggle.setChecked(true);
             falseTitle.setVisibility(View.GONE);
             falseWaitlistText.setVisibility(View.GONE);
@@ -106,7 +111,7 @@ public class NotificationCenter extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //If on/true, enable the Notification Center and hide settings prompt.
                 if (isChecked) {
-                    notifsAllowed = true;
+                    nHandler.appEnabled = true;
                     notifToggle.setChecked(true);
                     falseTitle.setVisibility(View.GONE);
                     falseWaitlistText.setVisibility(View.GONE);
@@ -117,7 +122,7 @@ public class NotificationCenter extends AppCompatActivity {
                     notifList.setVisibility(View.VISIBLE);
                 //If off/false, enable the Notification Settings prompt and hide the Notification Center.
                 } else {
-                    notifsAllowed = false;
+                    nHandler.appEnabled = false;
                     notifToggle.setChecked(false);
                     falseTitle.setVisibility(View.VISIBLE);
                     falseWaitlistText.setVisibility(View.VISIBLE);
