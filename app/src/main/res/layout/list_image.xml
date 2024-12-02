@@ -24,6 +24,7 @@
         android:layout_height="515dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_delete_button"
         app:layout_constraintTop_toBottomOf="@+id/listViewType" />
 
     <Button
