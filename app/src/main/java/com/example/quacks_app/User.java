@@ -20,6 +20,7 @@ public class User extends RepoModel implements Serializable, Listable {
     private double longitude;
 
     public User() {
+        roles = new ArrayList<>();
     }
 
     public User(String deviceId, ArrayList<Role> roles, UserProfile userProfile) {

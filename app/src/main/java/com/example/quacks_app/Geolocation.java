@@ -13,26 +13,49 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
+/**
+ * The {@code Geolocation} class is used to get the device's current location, including the
+ * permissions that are required to do so. It saves the location as the latitude and longitude to
+ * be used by other functionality. To use it, you must create a Geolocation object, and then
+ * define callbacks for when the location is received, or when there is an error.
+ */
 public class Geolocation {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private final Context context;
     private final Activity activity;
     private LocationCallback locationCallback;
 
+    /**
+     * The callback functions that need to be defined.
+     */
     public interface LocationCallback {
         void onLocationReceived(double latitude, double longitude);
         void onLocationError(String error);
     }
 
+    /**
+     * Constructor for the Geolocation class.
+     * @param context The current context
+     * @param activity The current activity
+     */
     public Geolocation(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
     }
 
+    /**
+     * Stores the callback functions in the object
+     * @param callback The LocationCallback functions
+     */
     public void setLocationCallback(LocationCallback callback) {
         this.locationCallback = callback;
     }
 
+    /**
+     * This function asks the user for permission to access their location.
+     * If access is granted, the current location is fetched, and then used elsewhere.
+     * If access is denied, other functionality will not work.
+     */
     public void requestLocationPermissions() {
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchCurrentLocation();
@@ -48,6 +71,12 @@ public class Geolocation {
         }
     }
 
+    /**
+     * This function is called automatically by the overriden onRequestPermissionsResult function
+     * @param requestCode An integer that identifies this permission request
+     * @param permissions An array of the requested permissions. Not directly used by this function
+     * @param grantResults An array indicating whether each permission was granted or not
+     */
     public void handlePermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -61,6 +90,9 @@ public class Geolocation {
         }
     }
 
+    /**
+     * Gets the device's current location
+     */
     private void fetchCurrentLocation() {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
