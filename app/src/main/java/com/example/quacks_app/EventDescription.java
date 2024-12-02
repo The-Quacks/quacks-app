@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Objects;
+
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
  * It also includes the option to join the waitlist for that event.
@@ -26,6 +28,7 @@ public class EventDescription extends AppCompatActivity {
     private boolean isRemoving;
     private boolean geolocationRequired;
     private Geolocation geolocation;
+    private boolean registrationOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class EventDescription extends AppCompatActivity {
                 eventDescription.setText(String.format("Applicant List: %s\nStart Time: %s\nDescription: %s\nFacility: %s\nOrganizer: %s\nGeolocation Required: %s", data.getApplicantList(), data.getDateTime(), data.getDescription(), data.getFacility(), data.getOrganizerId(), data.getGeo()));
                 geolocationRequired = data.getGeo();
                 applicantListId = data.getApplicantList();
+                registrationOpen = data.getRegistration();
             }
 
             @Override
@@ -169,6 +173,10 @@ public class EventDescription extends AppCompatActivity {
                     }
                 };
 
+                if (!registrationOpen || Objects.equals(applicantListId, "0") || applicantListId == null) {
+                    Toast.makeText(EventDescription.this, "Registration has not yet opened for this event", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 CRUD.readStatic(applicantListId, ApplicantList.class, readAppListCallback);
             } else {
                 Toast.makeText(EventDescription.this, "Could not find user in database", Toast.LENGTH_SHORT).show();
