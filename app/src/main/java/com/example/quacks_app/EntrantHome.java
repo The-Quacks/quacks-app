@@ -50,7 +50,12 @@ public class EntrantHome extends AppCompatActivity {
 
     boolean isFirstSelection = true;
 
-
+    /**
+     * Initializes the Entrant Home page, sets up UI components, and handles user interactions.
+     *
+     * @param savedInstanceState If the activity is reinitialized after previously being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,7 +208,11 @@ public class EntrantHome extends AppCompatActivity {
         });
     }
 
-    // Initialize the spinner adapter with selectable profiles
+    /**
+     * Initializes the spinner adapter with selectable profiles.
+     *
+     * @return An {@link ArrayAdapter} with profile options.
+     */
     @NonNull
     private ArrayAdapter<String> getStringArrayAdapter() {
         ArrayList<String> items = new ArrayList<>();
@@ -220,8 +229,13 @@ public class EntrantHome extends AppCompatActivity {
         return adapter;
     }
 
-    //Separate overidden function outside onCreate
-    //This function responds with a Snackbar if notifications are enabled/disabled
+    /**
+     * Handles the result of permission requests for notifications.
+     *
+     * @param requestCode  The request code passed in {@code requestPermissions}.
+     * @param permissions  The requested permissions.
+     * @param grantResults The results for the corresponding permissions.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //call super

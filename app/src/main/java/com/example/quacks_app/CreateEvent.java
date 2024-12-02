@@ -24,7 +24,10 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Create Event allows the organizer to create an event and store it in the DB
+ * The {@code CreateEvent} class allows organizers to create an event and store it in the database.
+ * It validates user inputs for event details such as name, capacity, date, time, instructor,
+ * geolocation, and description. If all inputs are valid, the event is saved in the database,
+ * and a QR code is generated for it.
  */
 public class CreateEvent extends AppCompatActivity {
     private LocalDate startDate;
@@ -56,6 +59,12 @@ public class CreateEvent extends AppCompatActivity {
     private Button updatePoster;
 
 
+    /**
+     * Initializes the activity, sets up UI components, and handles event creation.
+     *
+     * @param savedInstanceState If the activity is being reinitialized after being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

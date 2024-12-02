@@ -3,6 +3,7 @@ package com.example.quacks_app;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -13,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
  * The {@code EventDescription} class is used to show important information about a selected event.
  * It also includes the option to join the waitlist for that event.
  */
-
 public class EventDescription extends AppCompatActivity {
     private String userId;
     private String eventId;
@@ -30,17 +32,25 @@ public class EventDescription extends AppCompatActivity {
     private Geolocation geolocation;
     private boolean registrationOpen;
 
+    /**
+     * Initializes the activity, fetches event details, and sets up the UI for event interaction.
+     *
+     * @param savedInstanceState If the activity is being reinitialized after being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_description);
 
+        // Buttons and navigation
         ImageButton back = findViewById(R.id.backButton);
-        ImageButton home = findViewById(R.id.homeIcon);
         Button joinWaitlist = findViewById(R.id.joinWaitlistButton);
 
+        // Get data from Intent
         eventId = getIntent().getStringExtra("id");
         currentUser = (User) getIntent().getSerializableExtra("User");
+
         userId = currentUser.getDocumentId();
         isRemoving = getIntent().getBooleanExtra("isRemoving", false);
 
@@ -51,10 +61,65 @@ public class EventDescription extends AppCompatActivity {
         ReadCallback<Event> readEventCallback = new ReadCallback<Event>() {
             @Override
             public void onReadSuccess(Event data) {
+                // Find the text views
                 TextView eventTitle = findViewById(R.id.eventTitle);
-                eventTitle.setText(data.getEventName());
+                TextView eventStartTime = findViewById(R.id.eventStartTime);
                 TextView eventDescription = findViewById(R.id.eventDescription);
-                eventDescription.setText(String.format("Applicant List: %s\nStart Time: %s\nDescription: %s\nFacility: %s\nOrganizer: %s\nGeolocation Required: %s", data.getApplicantList(), data.getDateTime(), data.getDescription(), data.getFacility(), data.getOrganizerId(), data.getGeo()));
+                TextView eventFacility = findViewById(R.id.eventFacility);
+                TextView eventOrganizer = findViewById(R.id.eventOrganizer);
+                TextView eventGeo = findViewById(R.id.eventGeoLocation);
+
+                // Set the values
+                eventTitle.setText(data.getEventName());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                String formattedDate = dateFormat.format(data.getDateTime());
+                eventStartTime.setText(formattedDate);
+                eventDescription.setText(data.getDescription());
+
+                // Fetch Facility Name
+                CRUD.readStatic(data.getFacility(), Facility.class, new ReadCallback<Facility>() {
+                    @Override
+                    public void onReadSuccess(Facility facility) {
+                        if (facility != null) {
+                            eventFacility.setText(facility.getName());
+                        } else {
+                            eventFacility.setText("Facility not found");
+                        }
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        eventFacility.setText("Error fetching facility name");
+                        Toast.makeText(EventDescription.this, "Error fetching facility details", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Fetch Organizer Name
+                CRUD.readStatic(data.getOrganizerId(), User.class, new ReadCallback<User>() {
+                    @Override
+                    public void onReadSuccess(User organizer) {
+                        if (organizer != null && organizer.getUserProfile() != null) {
+                            eventOrganizer.setText(organizer.getUserProfile().getUserName());
+                        } else {
+                            Log.d("Event Description","org not found");
+                            eventOrganizer.setText("Organizer not found");
+                        }
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        eventOrganizer.setText("Error fetching organizer name");
+                        Toast.makeText(EventDescription.this, "Error fetching organizer details", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                if (data.getGeo() == Boolean.FALSE){
+                    eventGeo.setText("No");
+                }
+                else{
+                    eventGeo.setText("Yes");
+                }
+
                 geolocationRequired = data.getGeo();
                 applicantListId = data.getApplicantList();
                 registrationOpen = data.getRegistration();
@@ -75,6 +140,7 @@ public class EventDescription extends AppCompatActivity {
             finish();
         });
 
+        ImageButton home = findViewById(R.id.homeIcon);
         home.setOnClickListener(v -> {
             Intent intent = new Intent(EventDescription.this, EntrantHome.class);
             intent.putExtra("User", currentUser);
@@ -256,6 +322,12 @@ public class EventDescription extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles the result of geolocation permission requests.
+     *
+     * @param requestCode The request code for the permission request.
+     * @param permissions The requested permissions
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

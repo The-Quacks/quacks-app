@@ -12,6 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code AcceptedApplicants} class represents the screen in the Quacks app
+ * that displays a list of accepted applicants for a specific event.
+ * Organizers can view, notify, and perform actions on these applicants.
+ */
 public class AcceptedApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -27,12 +32,13 @@ public class AcceptedApplicants extends AppCompatActivity {
     private Event event;
     private Button select;
     private Button notify_all;
-    /**
-     * This is the list that holds all accepted applicants
-     *
-     * @param savedInstanceState
-     */
 
+    /**
+     * Initializes the activity. Sets up the UI components, retrieves data from
+     * the intent, and loads the list of accepted applicants.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,51 +178,33 @@ public class AcceptedApplicants extends AppCompatActivity {
         profile = findViewById(R.id.accepted_app_person);
 
         //create buttons
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        back.setOnClickListener(view -> finish());
+
+        homepage.setOnClickListener(view -> {
+            Intent intent = new Intent(AcceptedApplicants.this, OrganizerHomepage.class);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
 
-        homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, OrganizerHomepage.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                intent.putExtra("User", user);
-                startActivity(intent);
-            }
+        profile.setOnClickListener(view -> {
+            Intent intent = new Intent(AcceptedApplicants.this, ViewOrganizer.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            startActivity(intent);
         });
 
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AcceptedApplicants.this, ViewOrganizer.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
+        search.setOnClickListener(view -> {
+            //Already here
+            Intent intent = new Intent(AcceptedApplicants.this, ViewEvents.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            //intent.putExtra("EventList", eventList);
+            startActivity(intent);
+
         });
-
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Already here
-                Intent intent = new Intent(AcceptedApplicants.this, ViewEvents.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                //intent.putExtra("EventList", eventList);
-                startActivity(intent);
-
-            }
-        });
-
-
-
-
     }
 }

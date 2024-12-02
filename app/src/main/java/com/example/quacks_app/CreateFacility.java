@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * The {@code CreateFacility} class allows users to create a facility profile in the application.
+ * It validates input fields, geocodes the provided address into geographic coordinates, and
+ * saves the facility details into the database.
+ */
 public class CreateFacility extends AppCompatActivity {
     private EditText bussiness_name;
     private EditText username;
@@ -45,10 +50,11 @@ public class CreateFacility extends AppCompatActivity {
 
 
     /**
-     * This is where they can create a Facility Page
-     * @param savedInstanceState
+     * Initializes the activity and sets up UI components and event handlers.
+     *
+     * @param savedInstanceState If the activity is being reinitialized after previously being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
