@@ -31,6 +31,7 @@ public class EventDescription extends AppCompatActivity {
     private boolean geolocationRequired;
     private Geolocation geolocation;
     private boolean registrationOpen;
+    private Event eventData;
 
     /**
      * Initializes the activity, fetches event details, and sets up the UI for event interaction.
@@ -123,6 +124,7 @@ public class EventDescription extends AppCompatActivity {
                 geolocationRequired = data.getGeo();
                 applicantListId = data.getApplicantList();
                 registrationOpen = data.getRegistration();
+                eventData = data;
             }
 
             @Override
@@ -155,6 +157,10 @@ public class EventDescription extends AppCompatActivity {
                     public void onReadSuccess(ApplicantList applicantList) {
                         if (applicantList == null) {
                             Toast.makeText(EventDescription.this, "Registration has not yet opened for this event", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                        if (applicantList.getApplicantIds().size() > applicantList.getLimit()){
+                            Toast.makeText(EventDescription.this, "The wait list for this event is already full", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         if (isRemoving) {

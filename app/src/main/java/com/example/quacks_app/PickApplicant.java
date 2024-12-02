@@ -39,6 +39,7 @@ public class PickApplicant extends AppCompatActivity {
     private List<Notification> newNotifications = new ArrayList<>();
     private ArrayList<String> applicantListed = new ArrayList<>();
     private NotificationList notification_list;
+    private ApplicantList appList = null;
 
     /*
     Selecting applicants from listview
@@ -88,6 +89,7 @@ public class PickApplicant extends AppCompatActivity {
             @Override
             public void onReadSuccess(ApplicantList applicantList) {
                 if (applicantList != null) {
+                    appList = applicantList;
 
                     userList.clear();
 
@@ -103,7 +105,7 @@ public class PickApplicant extends AppCompatActivity {
                                     UserProfile profile = user.getUserProfile();
                                     userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
                                     userdisplay.setField(profile.getUserName());
-                                    userdisplay.setSubfield(user.getDeviceId());
+                                    userdisplay.setSubfield(user.getDocumentId());
                                     userdisplay.setCart(false);
                                     userList.add(userdisplay);
                                 }
@@ -156,11 +158,34 @@ public class PickApplicant extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int numSelected = 0;
+                int numAlready = 0;
                 if (userList == null || real_user == null || actual_event == null) {
                     Toast.makeText(PickApplicant.this, "Error: Data not initialized", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                for (Notification notif: actual_event.getNotificationList().getNotificationList()){
+                    if (notif.getWaitlistStatus().equals("Accepted")){
+                        numAlready += 1;
+                    }
+                }
+                for (Cartable user : userList){
+                    if (user.Carted()){
+                        for (User current : real_user){
+                            UserProfile profile1 = current.getUserProfile();
+                            if (profile1.getUserName().equals(user.getField())){
+                                numSelected += 1;
+                            }
+
+
+                        }
+                    }
+                }
+                if (actual_event.getRegistrationCapacity() < numSelected + numAlready){
+                    Toast.makeText(PickApplicant.this, "Selected entrants exceeds event limit. Limit: " + actual_event.getRegistrationCapacity(), Toast.LENGTH_LONG).show();
+                    return;
+                }
                 notification_list = actual_event.getNotificationList();
 
                 if (notification_list == null) {
