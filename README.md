@@ -23,7 +23,7 @@ Geolocation Verification:
 - Organizers can optionally use geolocation to verify where entrants are joining the waiting list from
 
 ## Requirements
-Android Studio 2024.1.2
+Android Studio 2024.1.2  
 Firebase Blaze subscription
 
 ## Installation
