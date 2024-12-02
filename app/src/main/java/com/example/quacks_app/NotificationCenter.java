@@ -57,7 +57,7 @@ public class NotificationCenter extends AppCompatActivity {
         //Grab Notification Handler value from previous activity (EntrantHome)
         nHandler = (NotificationHandler) getIntent().getSerializableExtra("Notif_Handler");
         user = (User) getIntent().getSerializableExtra("User");
-        ArrayList<Notification> notifs = nHandler.getNotificationForUser(user);
+        // ArrayList<Notification> notifs = nHandler.getNotificationForUser(user);
         //Define elements
         notifToggle = (Switch) findViewById(R.id.appNotifsSwitch);
         falseTitle = findViewById(R.id.notificationFalseTitle);
