@@ -115,7 +115,7 @@ public class AdminHome extends AppCompatActivity {
     private ArrayAdapter<String> getStringArrayAdapter() {
         ArrayList<String> items = new ArrayList<>();
         items.add("Entrant Profile");
-        if (user.getRoles().contains(Role.ORGANIZER)) {
+        if (user != null && user.getRoles().contains(Role.ORGANIZER)) {
             items.add("Organizer Profile");
         }
         items.add("Administrator Profile");

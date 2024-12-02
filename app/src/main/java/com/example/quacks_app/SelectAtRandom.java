@@ -91,6 +91,7 @@ public class SelectAtRandom extends AppCompatActivity {
         }
 
 
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,15 +138,14 @@ public class SelectAtRandom extends AppCompatActivity {
 
                         // Process applicants
 
-                        List<String> ids = applicantList.getApplicantIds().subList(0, limit- finalAlreadyAcc);
                         List<String> all_ids = applicantList.getApplicantIds();
                         ArrayList<Notification> notifications = notificationList.getNotificationList();
 
 
                         AtomicInteger remaining = new AtomicInteger(all_ids.size());
+                        AtomicInteger selected = new AtomicInteger(limit-finalAlreadyAcc);
 
                         for (String applicantId : all_ids) {
-                            boolean isAccepted = ids.contains(applicantId);
 
                             for (int i = 0; i < notifications.size(); i++) {
                                 Notification current = notifications.get(i);
@@ -166,7 +166,13 @@ public class SelectAtRandom extends AppCompatActivity {
                                                     current.setApplicantListId(applicantListId);
                                                     current.setNotificationEventId(event.getEventId());
                                                     current.setNotificationListId(notificationList.getNotificationListId());
-                                                    String condition = isAccepted ? "Accepted" : "Declined";
+                                                    String condition;
+                                                    if (checkSelected(selected.decrementAndGet())){
+                                                        condition = "Accepted";
+                                                    }
+                                                    else{
+                                                        condition = "Declined";
+                                                    }
                                                     current.setSentStatus("Not Sent");
                                                     current.setWaitlistStatus(condition);
                                                     current.setAccepted(false);
@@ -219,7 +225,13 @@ public class SelectAtRandom extends AppCompatActivity {
                                                             notify.setApplicantListId(applicantListId);
                                                             notify.setNotificationEventId(event.getEventId());
                                                             notify.setNotificationListId(notificationList.getNotificationListId());
-                                                            String condition = isAccepted ? "Accepted" : "Declined";
+                                                            String condition;
+                                                            if (checkSelected(selected.decrementAndGet())){
+                                                                condition = "Accepted";
+                                                            }
+                                                            else{
+                                                                condition = "Declined";
+                                                            }
                                                             notify.setSentStatus("Not Sent");
                                                             notify.setWaitlistStatus(condition);
                                                             notify.setAccepted(false);
@@ -281,6 +293,9 @@ public class SelectAtRandom extends AppCompatActivity {
         });
     }
 
+    private boolean checkSelected(int selected){
+        return selected >= 0;
+    }
     /**
      * Updates the notification and event list once all users are processed.
      *
