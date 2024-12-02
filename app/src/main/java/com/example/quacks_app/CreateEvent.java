@@ -59,8 +59,8 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
 
-        back = findViewById(R.id.back_button);
-        confirm = findViewById(R.id.confirm_button);
+        back = findViewById(R.id.event_back_button);
+        confirm = findViewById(R.id.event_confirm_button);
         if (getIntent().getSerializableExtra("Facility") == null) {
             finish();
         }
