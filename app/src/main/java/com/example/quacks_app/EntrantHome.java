@@ -77,6 +77,7 @@ public class EntrantHome extends AppCompatActivity {
         ImageButton notifications = findViewById(R.id.notificationsButton);
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
         Spinner spinner = findViewById(R.id.profile_spinner_entrant);
+        ImageButton goBack = findViewById(R.id.homeIcon);
 
         // Set up the ActivityResultLauncher
         ActivityResultLauncher<Intent> swapActivityLauncher = registerForActivityResult(
@@ -92,6 +93,13 @@ public class EntrantHome extends AppCompatActivity {
         ArrayAdapter<String> adapter = getStringArrayAdapter();
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
+
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
