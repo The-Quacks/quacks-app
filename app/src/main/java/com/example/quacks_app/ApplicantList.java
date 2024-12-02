@@ -112,17 +112,6 @@ public class ApplicantList extends RepoModel implements Serializable {
     }
 
     /**
-     * Draws a specified number of applicants using the lottery system.
-     *
-     * @param number The number of applicants to draw.
-     * @return An {@code ArrayList} of {@code String} representing the drawn applicant IDs.
-     */
-    public ArrayList<String> drawApplicants(int number) {
-        LotterySystem lotterySystem = new LotterySystem();
-        return this.applicantIds; // placeholder
-    }
-
-    /**
      * Checks if the given user ID is present in the list of applicant IDs.
      *
      * @param userId The {@code String} representing the user ID to be checked.
