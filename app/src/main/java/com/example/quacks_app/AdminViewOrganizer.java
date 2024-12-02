@@ -130,6 +130,32 @@ public class AdminViewOrganizer extends AppCompatActivity {
 
                         }
                     });
+                    CRUD.readAllLive(Notification.class, new ReadMultipleCallback<Notification>() {
+                        @Override
+                        public void onReadMultipleSuccess(ArrayList<Notification> data) {
+                            for (Notification notif : data){
+                                if (notif.getUser().getDeviceId().equals(realUser.getDeviceId())){
+                                    CRUD.delete(notif.getDocumentId(), Notification.class, new DeleteCallback() {
+                                        @Override
+                                        public void onDeleteSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onDeleteFailure(Exception e) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onReadMultipleFailure(Exception e) {
+
+                        }
+                    });
+
 
                 }
                 if (realUser.getRoles().contains(Role.ORGANIZER)){

@@ -78,6 +78,13 @@ public class SelectAtRandom extends AppCompatActivity {
 
         capacity.setText(String.valueOf(waitlist_capacity));
 
+        int alreadyAcc = 0;
+        for (Notification notif : event.getNotificationList().getNotificationList()){
+            if (notif.getAccepted()){
+                alreadyAcc += 1;
+            }
+        }
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +93,7 @@ public class SelectAtRandom extends AppCompatActivity {
             }
         });
 
+        int finalAlreadyAcc = alreadyAcc;
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,9 +131,11 @@ public class SelectAtRandom extends AppCompatActivity {
 
 
                         // Process applicants
-                        List<String> ids = applicantList.getApplicantIds().subList(0, limit);
+
+                        List<String> ids = applicantList.getApplicantIds().subList(0, limit- finalAlreadyAcc);
                         List<String> all_ids = applicantList.getApplicantIds();
                         ArrayList<Notification> notifications = notificationList.getNotificationList();
+
 
                         AtomicInteger remaining = new AtomicInteger(all_ids.size());
 
