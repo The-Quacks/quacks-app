@@ -14,6 +14,10 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 
+/**
+ * The {@code ImageUpload} class provides utility methods for managing images,
+ * including uploading, removing, and handling default profile pictures.
+ */
 public class ImageUpload {
     private static final int STORAGE_PERMISSION_CODE = 101;
 

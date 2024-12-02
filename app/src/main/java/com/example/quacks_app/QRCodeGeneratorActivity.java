@@ -11,12 +11,22 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * QRCodeGeneratorActivity generates a QR code for a specific event and saves it to Firestore.
+ * The QR code is displayed on the screen, and users can proceed to upload a poster for the event.
+ */
 public class QRCodeGeneratorActivity extends AppCompatActivity {
     private Event event;
     private User user;
     private Facility facility;
     private EventList eventList;
 
+    /**
+     * Initializes the activity, generates the QR code for the event, stores it in Firestore,
+     * and sets up the UI elements.
+     *
+     * @param savedInstanceState The saved instance state of the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

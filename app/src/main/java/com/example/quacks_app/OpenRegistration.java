@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.UUID;
 
+/**
+ * The {@code OpenRegistration} class handles the functionality to open registration for an event.
+ * Event organizers can specify the waitlist capacity and enable registration for participants.
+ */
 public class OpenRegistration  extends AppCompatActivity {
     private Button back;
     private Button confirm;
@@ -22,8 +26,11 @@ public class OpenRegistration  extends AppCompatActivity {
     private Facility facility;
     private User user;
 
-    /*
-    Opens Registration for applicants
+    /**
+     * Initializes the activity and sets up UI components for opening registration.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this contains the most recent data. Otherwise, it is {@code null}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +40,6 @@ public class OpenRegistration  extends AppCompatActivity {
         capacity = findViewById(R.id.amount);
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
-
-
 
         if (getIntent().getSerializableExtra("Event") == null){
             finish();

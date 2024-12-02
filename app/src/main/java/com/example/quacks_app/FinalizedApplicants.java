@@ -11,7 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-
+/**
+ * The {@code FinalizedApplicants} class represents the screen where finalized (accepted) applicants
+ * for an event are displayed. It also provides options to notify all applicants and manage registration closure.
+ */
 public class FinalizedApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -27,12 +30,12 @@ public class FinalizedApplicants extends AppCompatActivity {
     private Event event;
     private Button select;
     private Button notify_all;
-    /**
-     * This is the list that holds all accepted applicants
-     *
-     * @param savedInstanceState
-     */
 
+    /**
+     * This is the list that holds all finalized (accepted) applicants for an event.
+     *
+     * @param savedInstanceState The saved instance state for the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,11 +185,6 @@ public class FinalizedApplicants extends AppCompatActivity {
                         Toast.makeText(FinalizedApplicants.this, "No Applicant list", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
-
-
             }
         });
 
@@ -196,47 +194,33 @@ public class FinalizedApplicants extends AppCompatActivity {
         profile = findViewById(R.id.fin_app_person);
 
         //create buttons
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        back.setOnClickListener(view -> finish());
+
+        homepage.setOnClickListener(view -> {
+            Intent intent = new Intent(FinalizedApplicants.this, OrganizerHomepage.class);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            intent.putExtra("User", user);
+            startActivity(intent);
         });
 
-        homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(FinalizedApplicants.this, OrganizerHomepage.class);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                intent.putExtra("User", user);
-                startActivity(intent);
-            }
+        profile.setOnClickListener(view -> {
+            Intent intent = new Intent(FinalizedApplicants.this, ViewOrganizer.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            startActivity(intent);
         });
 
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(FinalizedApplicants.this, ViewOrganizer.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-            }
-        });
+        search.setOnClickListener(view -> {
+            //Already here
+            Intent intent = new Intent(FinalizedApplicants.this, ViewEvents.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            //intent.putExtra("EventList", eventList);
+            startActivity(intent);
 
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Already here
-                Intent intent = new Intent(FinalizedApplicants.this, ViewEvents.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                //intent.putExtra("EventList", eventList);
-                startActivity(intent);
-
-            }
         });
 
     }

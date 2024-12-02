@@ -19,8 +19,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/*
-Selecting a specified number of participants per notification round
+/**
+ * The {@code SelectAtRandom} class represents an activity where the organizer can select a specified number of
+ * applicants at random for an event. Notifications are sent to the selected applicants and updated in the system.
  */
 public class SelectAtRandom extends AppCompatActivity {
     private EditText capacity;
@@ -34,7 +35,11 @@ public class SelectAtRandom extends AppCompatActivity {
     private Facility facility;
     private User user;
 
-
+    /**
+     * Initializes the activity and its UI components. Handles event, facility, and user data validation.
+     *
+     * @param savedInstanceState The saved state of the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,8 +247,9 @@ public class SelectAtRandom extends AppCompatActivity {
     }
 
     /**
-     * Checks based from the count of userlist, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Updates the notification and event list once all users are processed.
+     *
+     * @param remainingCount The remaining number of users to process.
      */
     private void checkCompletion(int remainingCount) {
                 if (remainingCount == 0) {

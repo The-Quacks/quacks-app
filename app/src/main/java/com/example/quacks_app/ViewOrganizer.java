@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ViewOrganizer} class displays the organizer's profile information in a read-only format.
+ * Users can view details such as the organizer's name, contact information, location, and facility details.
+ * An option to edit the profile is provided through a button.
+ */
 public class ViewOrganizer extends AppCompatActivity {
     private Button back;
     private Button edit;
@@ -32,8 +37,9 @@ public class ViewOrganizer extends AppCompatActivity {
     private Facility facility;
 
     /**
-     * Where you can view the organizer profile but not edit
-     * @param savedInstanceState
+     * Initializes the activity, loads the organizer's profile data, and sets up the UI components.
+     *
+     * @param savedInstanceState The saved instance state.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
