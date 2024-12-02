@@ -125,10 +125,7 @@
             android:exported="true" />
         <activity android:name=".LastChoice"
             android:exported="true" />
-        <activity android:name=".DummyLocationTest"
-            android:exported="true" />
-        <activity
-            android:name=".EntrantsMapActivity"
+        <activity android:name=".EntrantsMapActivity"
             android:exported="true" />
         <activity
             android:name=".SelectMapEvent"

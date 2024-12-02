@@ -3,11 +3,15 @@ package com.example.quacks_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 
 /**
  * The {@code AdminHome} class represents the home screen for admin users in the Quacks app.
@@ -16,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class AdminHome extends AppCompatActivity {
     private User user;
+    boolean isFirstSelection = true;
 
     /**
      * Initializes the activity. Sets up the UI components and navigation actions for the admin home screen.
@@ -33,17 +38,43 @@ public class AdminHome extends AppCompatActivity {
         ImageButton Events = findViewById(R.id.eventsButton);
         ImageButton Images = findViewById(R.id.imagesButton);
         ImageButton Facilities = findViewById(R.id.facilitiesButton);
-        ImageButton switch_activity = findViewById(R.id.switch_profile_admin);
+        Spinner spinner = findViewById(R.id.profile_spinner_admin);
 
         Bundle bundle = new Bundle();
 
-        switch_activity.setOnClickListener(new View.OnClickListener() {
+        ArrayAdapter<String> adapter = getStringArrayAdapter();
+        spinner.setAdapter(adapter);
+
+        spinner.setSelection(adapter.getCount() - 1);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminHome.this, EntrantHome.class);
-                intent.putExtra("User", user);
-                startActivity(intent);
-                finish();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false;
+                    return; // Ignore the initial trigger
+                }
+
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                if ("Organizer Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(AdminHome.this, OrganizerHomepage.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
+                }
+                else if ("Entrant Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(AdminHome.this, EntrantHome.class);
+                    intent.putExtra("User", user);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -75,5 +106,22 @@ public class AdminHome extends AppCompatActivity {
             myIntent.putExtras(bundle);
             startActivity(myIntent);
         });
+
+
+
+    }
+
+    // Initialize the spinner adapter with selectable profiles
+    private ArrayAdapter<String> getStringArrayAdapter() {
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Entrant Profile");
+        if (user.getRoles().contains(Role.ORGANIZER)) {
+            items.add("Organizer Profile");
+        }
+        items.add("Administrator Profile");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 }

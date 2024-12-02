@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +29,7 @@ public class OrganizerHomepage extends AppCompatActivity {
     private Button profile;
     private Facility facility;
     private User current;
+    boolean isFirstSelection = true;
 
     /**
      * This is the Organizer Homepage: they can choose out of the four options
@@ -41,22 +45,44 @@ public class OrganizerHomepage extends AppCompatActivity {
         profile = findViewById(R.id.organizer_profile_button);
         Button view_events = findViewById(R.id.view_events);
         Button create_events = findViewById(R.id.create_event);
-        Button entrant_map = findViewById(R.id.map);
-        ImageButton switch_activity = findViewById(R.id.switch_activity_organizer);
+        Button entrant_map = findViewById(R.id.mapped);
+        Spinner spinner = findViewById(R.id.profile_spinner_organizer);
 
         current = (User) getIntent().getSerializableExtra("User");
 
-        switch_activity.setOnClickListener(v -> {
-            Intent intent;
-            if (current.getRoles().contains(Role.ADMIN)) {
-                intent = new Intent(OrganizerHomepage.this, AdminHome.class);
+        ArrayAdapter<String> adapter = getStringArrayAdapter();
+        spinner.setAdapter(adapter);
+        spinner.setSelection(1);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false;
+                    return; // Ignore the initial trigger
+                }
+
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                if ("Administrator Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(OrganizerHomepage.this, AdminHome.class);
+                    intent.putExtra("User", current);
+                    startActivity(intent);
+                    finish();
+                }
+                else if ("Entrant Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(OrganizerHomepage.this, EntrantHome.class);
+                    intent.putExtra("User", current);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
-            else {
-                intent = new Intent(OrganizerHomepage.this, EntrantHome.class);
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
-            intent.putExtra("User", current);
-            startActivity(intent);
-            finish();
         });
 
         ReadMultipleCallback<Facility> readMultipleCallback = new ReadMultipleCallback<Facility>() {
@@ -121,6 +147,20 @@ public class OrganizerHomepage extends AppCompatActivity {
             intent.putExtra("Facility", facility);
             startActivity(intent);
         });
+    }
+
+    // Initialize the spinner adapter with selectable profiles
+    private ArrayAdapter<String> getStringArrayAdapter() {
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Entrant Profile");
+        items.add("Organizer Profile");
+        if (current.getRoles().contains(Role.ADMIN)) {
+            items.add("Administrator Profile");
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     /**

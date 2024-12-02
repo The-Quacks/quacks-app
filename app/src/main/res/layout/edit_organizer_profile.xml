@@ -1,16 +1,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/edit_organizer_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:foregroundTint="#D5B4B4"
     android:visibility="visible"
-    tools:context=".CreateFacility">
+    tools:context=".MakeOrganizerProfile">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/edit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -24,10 +24,10 @@
 
 
     <ImageView
-        android:id = "@+id/ellipse"
+        android:id = "@+id/edit_ellipse"
         android:contentDescription="@string/todo"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toTopOf="@id/text_box"
+        app:layout_constraintTop_toBottomOf="@id/edit_title"
+        app:layout_constraintBottom_toTopOf="@id/edit_text_box"
         android:layout_width="match_parent"
         android:layout_height= "150dp"
         android:paddingTop="10dp"
@@ -35,9 +35,9 @@
         android:src = "@drawable/ellipse_30" />
 
     <ImageView
-        android:id = "@+id/person_fig"
+        android:id = "@+id/edit_person_fig"
         android:contentDescription="@string/todo"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/edit_title"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height= "100dp"
@@ -48,16 +48,16 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:id = "@+id/text_box"
+        android:id = "@+id/edit_text_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toBottomOf="@id/ellipse"
+        app:layout_constraintTop_toBottomOf="@id/edit_ellipse"
         android:background = "@color/base"
         >
 
         <EditText
-            android:id="@+id/Name"
+            android:id="@+id/edit_Name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -65,7 +65,7 @@
             android:inputType = "text"
             android:hint ="Business Name" />
         <EditText
-            android:id = "@+id/location"
+            android:id = "@+id/edit_location"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -73,7 +73,7 @@
             android:inputType = "text"
             android:hint ="@string/location"/>
         <EditText
-            android:id = "@+id/contact_info"
+            android:id = "@+id/edit_contact_info"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -81,7 +81,7 @@
             android:inputType = "text"
             android:hint ="@string/phone_number_780_289_1234"/>
         <EditText
-            android:id = "@+id/facility_details"
+            android:id = "@+id/edit_facility_details"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -89,7 +89,7 @@
             android:inputType = "text"
             android:hint ="@string/facility_details"/>
         <EditText
-            android:id = "@+id/accessibility"
+            android:id = "@+id/edit_accessibility"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:autofillHints="yes"
@@ -97,7 +97,7 @@
             android:inputType = "text"
             android:hint ="@string/accessibilty_status_yes_with_ramps_etc"/>
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -105,7 +105,7 @@
             android:inputType = "text"
             android:hint ="Email  Address (abc@gmail.com)" />
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/edit_username"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -113,7 +113,7 @@
             android:inputType = "text"
             android:hint ="Username" />
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="30"
@@ -123,7 +123,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/confirm_button"
+        android:id="@+id/edit_confirm_button"
         android:layout_width="150dp"
         android:layout_height="79dp"
 
@@ -143,7 +143,7 @@
         android:layout_marginEnd="25dp"
         />
     <Button
-        android:id="@+id/back_button"
+        android:id="@+id/edit_back_button"
         android:layout_width="150dp"
         android:layout_height="79dp"
 
