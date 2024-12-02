@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -47,6 +48,7 @@ public class NotificationHandler {
     /**
      * Creates the notification channel that notifications will be broadcast to.
      * This channel is called Events Channel, and is "A channel for sending updates about events you expressed interest in.", you as in the user.
+     *
      * @param context - the activity that this channel is being created in.
      */
     public static void createChannel(Context context) {
@@ -69,10 +71,11 @@ public class NotificationHandler {
      * notification may be sent without a check of the proper permissions. These are intentionally suppressed because in a given activity,
      * this method is never called unless notifications are allowed in the first place, effectively checking for permission first before allowing
      * any notifications to be made.
-     * @param context - The activity the notification is sent over.
-     * @param title - The main title of the notification.
+     *
+     * @param context      - The activity the notification is sent over.
+     * @param title        - The main title of the notification.
      * @param messageShort - The content of the notification.
-     * @param icon - An image resource that serves as the logo for the notification.
+     * @param icon         - An image resource that serves as the logo for the notification.
      */
     @SuppressLint("MissingPermission")
     public void sendNotification(Context context, String title, String messageShort, int icon) {
@@ -100,11 +103,12 @@ public class NotificationHandler {
      * notification may be sent without a check of the proper permissions. These are intentionally suppressed because in a given activity,
      * this method is never called unless notifications are allowed in the first place, effectively checking for permission first before allowing
      * any notifications to be made.
-     * @param context - The activity the notification is sent over.
-     * @param title - The main title of the notification.
+     *
+     * @param context      - The activity the notification is sent over.
+     * @param title        - The main title of the notification.
      * @param messageShort - The content of the notification.
-     * @param messageLong - The content of the longer text portion of the notification.
-     * @param icon - An image resource that serves as the logo for the notification.
+     * @param messageLong  - The content of the longer text portion of the notification.
+     * @param icon         - An image resource that serves as the logo for the notification.
      */
     @SuppressLint("MissingPermission")
     public void sendNotificationVerbose(Context context, String title, String messageShort, String messageLong, int icon) {
@@ -151,11 +155,56 @@ public class NotificationHandler {
      * standardized permission prompt by Android. Additionally, because these permissions were
      * introduced on a specific version of Android, there is a check to ensure the user has an OS that is
      * at least a specific threshold OS (the one that introduced the permissions.)
+     *
      * @param activity - the activity that is asking for permission.
      */
     public static void askForPermission(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(activity, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE);
         }
+    }
+
+    public ArrayList<Notification> queryDatabase(User user) {
+        ArrayList<Notification> user_specified_notifications = new ArrayList<Notification>();
+
+        CRUD.readStatic(user.getDeviceId(), User.class, new ReadCallback<User>() {
+            @Override
+            public void onReadSuccess(User data) {
+                //once we have the user, we check if there are notifications with the status "Not Sent"
+                // and where the user matches
+
+                if (data != null) {
+                    CRUD.readAllStatic(Notification.class, new ReadMultipleCallback<Notification>() {
+                        @Override
+                        public void onReadMultipleSuccess(ArrayList<Notification> data) {
+                            if (data != null) {
+                                for (Notification notification : data) {
+                                    if (notification.getUser().getDeviceId().equals(user.getDeviceId())) {
+                                        if (notification.getSentStatus().equals("Not Sent")) {
+                                            user_specified_notifications.add(notification);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onReadMultipleFailure(Exception e) {
+                            //usually id put a toast here but the class doesn't list toasts
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                //usually id put a toast here but the class doesn't list toasts
+            }
+
+        });
+
+        //then at the end we return the arraylist
+        return user_specified_notifications;
     }
 }

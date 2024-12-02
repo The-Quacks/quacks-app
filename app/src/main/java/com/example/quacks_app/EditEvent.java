@@ -69,12 +69,12 @@ public class EditEvent extends AppCompatActivity {
         setContentView(R.layout.create_event);
 
         // Update the title of the Activity based on the mode - Create Event / Edit Event
-        TextView title = findViewById(R.id.title);
+        TextView title = findViewById(R.id.event_title);
         title.setText(R.string.editing_event_details);
 
         //back and confirm buttons
-        Button back = findViewById(R.id.back_button);
-        Button confirm = findViewById(R.id.confirm_button);
+        Button back = findViewById(R.id.event_back_button);
+        Button confirm = findViewById(R.id.event_confirm_button);
 
         if (getIntent().getSerializableExtra("Event") == null) {
             finish();
@@ -94,12 +94,12 @@ public class EditEvent extends AppCompatActivity {
 
         //Finding the right text box
         event_name = findViewById(R.id.event_name);
-        class_capacity = findViewById(R.id.class_capacity);
-        waitlist_capacity = findViewById(R.id.waitlist_capacity);
+        class_capacity = findViewById(R.id.event_class_capacity);
+        waitlist_capacity = findViewById(R.id.event_waitlist_capacity);
         beginning = findViewById(R.id.event_date);
-        instructor = findViewById(R.id.instructor);
-        geolocation = findViewById(R.id.geolocation);
-        description = findViewById(R.id.description);
+        instructor = findViewById(R.id.event_instructor);
+        geolocation = findViewById(R.id.event_geolocation);
+        description = findViewById(R.id.event_description);
         eventtime = findViewById(R.id.event_time);
 
         //Setting the textboxes with old data
@@ -136,7 +136,7 @@ public class EditEvent extends AppCompatActivity {
         eventtime.setText(display);
 
         Button updatePosterButton = findViewById(R.id.UpdatePoster);
-        Button deleteEventButton = findViewById(R.id.delete_event);
+        Button deleteEventButton = findViewById(R.id.event_delete_event);
 
         updatePosterButton.setOnClickListener(view -> {
             Intent intent = new Intent(EditEvent.this, UploadPosterActivity.class);
