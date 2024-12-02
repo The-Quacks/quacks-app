@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -13,9 +15,11 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -44,6 +48,7 @@ public class NotificationCenter extends AppCompatActivity {
     ListView notifList;
     NotificationHandler nHandler;
     User user;
+    ArrayList<String> testList;
     /**
      * This overidden method is the function that loads and implements the display, based on the attributes
      * that are in the notification_center.xml file.
@@ -68,6 +73,11 @@ public class NotificationCenter extends AppCompatActivity {
         homeButton = (ImageButton) findViewById(R.id.homeIcon);
         trueTitle = findViewById(R.id.notificationTrueTitle);
         notifList = findViewById(R.id.notif_list);
+        testList = new ArrayList<>();
+        String []test = {"Notification 1", "Notification 2", "Notification 3", "Notification 4"};
+        testList.addAll(Arrays.asList(test));
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.notification_list_item, testList);
+        notifList.setAdapter(arrayAdapter);
         //Display Notification List or disabled prompt, depending on if notifications are allowed
         //THIS IS ON INITIAL STARTUP OF THE ACTIVITY ONLY, and is therefore needed because the switch does not exist yet.
         if (nHandler.appEnabled) {
@@ -89,6 +99,44 @@ public class NotificationCenter extends AppCompatActivity {
             trueTitle.setVisibility(View.GONE);
             notifList.setVisibility(View.GONE);
         }
+        notifList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i % 2 == 0) {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(NotificationCenter.this);
+                    alertDialogBuilder.setTitle("Notification " + String.valueOf(i));
+                    alertDialogBuilder
+                            .setTitle("Opened Notification")
+                            .setMessage("\nHere you would see details about the event.")
+                            .setCancelable(false)
+                            //If not, just cancel the alert dialog box.
+                            .setNegativeButton("DISMISS", (dialog, id) -> {
+                                //testList.remove(i);
+                                //notifList.setAdapter(arrayAdapter);
+                                dialog.cancel();
+                            });
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+                } else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(NotificationCenter.this);
+                    alertDialogBuilder.setTitle("Notification " + String.valueOf(i));
+                    alertDialogBuilder
+                            .setTitle("Opened Invitation")
+                            .setMessage("\nHere you would see details about the event you were invited to.")
+                            .setCancelable(false)
+                            //If not, just cancel the alert dialog box.
+                            .setPositiveButton("ACCEPT", (dialog, id) -> {
+                                dialog.cancel();
+                            })
+                            .setNegativeButton("DECLINE", (dialog, id) -> {
+                                dialog.cancel();
+                            });
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+                }
+
+            }
+        });
         //Send user to Settings App's notification settings for this app when clicked.
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -158,31 +206,5 @@ public class NotificationCenter extends AppCompatActivity {
             }
         });
         return user[0];
-    }
-
-    /**
-     * Gets the current event from notification object, returns event object
-     */
-    public Event getEvent(Notification notification){
-        String eventid = notification.getNotificationEventId();
-        String appliantid = notification.getApplicantListId();
-        final Event[] event = {null};
-        CRUD.readStatic(eventid, Event.class, new ReadCallback<Event>() {
-            @Override
-            public void onReadSuccess(Event data) {
-                if (data != null){
-                    if (data.getApplicantList().equals(appliantid) && eventid.equals(data.getEventId())){
-                        //they are the same event
-                        event[0] = data;
-                    }
-                }
-            }
-
-            @Override
-            public void onReadFailure(Exception e) {
-
-            }
-        });
-        return event[0];
     }
 }
