@@ -173,7 +173,20 @@ public class SelectAtRandom extends AppCompatActivity {
                                                     CRUD.update(current, new UpdateCallback() {
                                                         @Override
                                                         public void onUpdateSuccess() {
-                                                            checkCompletion(remaining.decrementAndGet());
+                                                            notificationList.addNotification(current);
+                                                            CRUD.update(notificationList, new UpdateCallback() {
+                                                                @Override
+                                                                public void onUpdateSuccess() {
+                                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                                }
+
+                                                                @Override
+                                                                public void onUpdateFailure(Exception e) {
+
+                                                                }
+                                                            });
+
                                                         }
 
                                                         @Override
@@ -215,7 +228,19 @@ public class SelectAtRandom extends AppCompatActivity {
                                                                 @Override
                                                                 public void onUpdateSuccess() {
                                                                     notificationList.addNotification(notify);
-                                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                                    CRUD.update(notificationList, new UpdateCallback() {
+                                                                        @Override
+                                                                        public void onUpdateSuccess() {
+                                                                            checkCompletion(remaining.decrementAndGet());
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onUpdateFailure(Exception e) {
+
+                                                                        }
+                                                                    });
+
                                                                 }
 
                                                                 @Override
