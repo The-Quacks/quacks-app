@@ -198,7 +198,7 @@ public class EntrantHome extends AppCompatActivity {
         notifications.setOnClickListener(v -> {
             Intent intent = new Intent(EntrantHome.this, NotificationCenter.class);
             intent.putExtra("User", user);
-            intent.putExtra("Notif_Permissions", nHandler.appEnabled);
+            intent.putExtra("Notif_Handler", nHandler);
             startActivity(intent);
         });
     }

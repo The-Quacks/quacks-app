@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  * @see EntrantHome
  * @version 1.1
  */
-public class NotificationHandler {
+public class NotificationHandler implements Serializable {
     //Declaration of attributes
     public static final String EVENTS_CHANNEL_ID = "events_channel";
     private static final int REQUEST_CODE = 1;
@@ -215,6 +216,7 @@ public class NotificationHandler {
 
     /**
      * Gets all notifications that are not sent--- NOT DEPENDENT ON USER
+     * @return notifications - the list of all notifications, regardless of user.
      */
 
     public ArrayList<Notification> getAllUnsentNotifications(){
@@ -239,5 +241,14 @@ public class NotificationHandler {
         });
         return notifications;
 
+    }
+
+    public sendUnreadNotifications(Context context, ArrayList<Notification> notifications, Event event) {
+        for (int i = 0; i < notifications.size(); i++) {
+            String wStatus = notifications.get(i).getWaitlistStatus();
+            if (wStatus.contains("Accepted")) {
+                this.sendNotificationVerbose(context, "Accepted Into Event!", );
+            }
+        }
     }
 }
