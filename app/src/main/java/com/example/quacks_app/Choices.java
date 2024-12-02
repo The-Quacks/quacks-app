@@ -120,7 +120,7 @@ public class Choices extends AppCompatActivity {
                                                         Toast.makeText(Choices.this, "Please Select one option", Toast.LENGTH_SHORT).show();
                                                     } else {
 
-                                                        if ((condition1) && (notifications.size() > event.getWaitlistCapacity())) {
+                                                        if ((condition1) && (notifications.size() < event.getWaitlistCapacity())) {
                                                             //make sure within waitlist limit
                                                             Toast.makeText(Choices.this, "Current Waitlist Capacity exceeds Registration Capacity", Toast.LENGTH_SHORT).show();
                                                         } else {
@@ -138,18 +138,7 @@ public class Choices extends AppCompatActivity {
                                                                 @Override
                                                                 public void onUpdateSuccess() {
                                                                     notificationList.addNotification(current);
-                                                                    CRUD.update(notificationList, new UpdateCallback() {
-
-                                                                        @Override
-                                                                        public void onUpdateSuccess() {
-                                                                            checkCompletion(remaining.decrementAndGet());
-                                                                        }
-
-                                                                        @Override
-                                                                        public void onUpdateFailure(Exception e) {
-
-                                                                        }
-                                                                    } );
+                                                                    checkCompletion(remaining.decrementAndGet());
 
                                                                 }
 
@@ -203,20 +192,8 @@ public class Choices extends AppCompatActivity {
                                                                         @Override
                                                                         public void onUpdateSuccess() {
                                                                             notificationList.addNotification(notify);
+                                                                            checkCompletion(remaining.decrementAndGet());
 
-
-                                                                            CRUD.update(notificationList, new UpdateCallback() {
-
-                                                                                @Override
-                                                                                public void onUpdateSuccess() {
-                                                                                    checkCompletion(remaining.decrementAndGet());
-                                                                                }
-
-                                                                                @Override
-                                                                                public void onUpdateFailure(Exception e) {
-
-                                                                                }
-                                                                            } );
                                                                         }
 
                                                                         @Override
