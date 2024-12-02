@@ -280,6 +280,31 @@ public class EntrantHome extends AppCompatActivity {
                 resultSnackbar.show();
                 nHandler.appEnabled = true;
                 nHandler.phoneEnabled = true;
+                nHandler.getNotificationForUser(user, new ReadMultipleCallback<Notification>() {
+                    @Override
+                    public void onReadMultipleSuccess(ArrayList<Notification> data) {
+                        if (data != null) {
+                            ArrayList<Notification> notifications = new ArrayList<>();
+                            for (Notification notification : data) {
+                                if (notification.getUser().getDeviceId().equals(user.getDeviceId())) {
+                                    if (notification.getSentStatus().equals("Not Sent")) {
+
+                                        notifications.add(notification);
+                                    }
+
+                                }
+                            }
+                            nHandler.sendUnreadNotifications(EntrantHome.this, notifications);
+                        }
+                    }
+
+                    @Override
+                    public void onReadMultipleFailure(Exception e) {
+
+                    }
+                });
+
+
                 // If denied, from now on show Snackbar that says "Notifications Disabled", with option to change permissions.
             } else {
                 resultSnackbar = Snackbar.make(this, this.findViewById(R.id.notificationsButton).getRootView(), "Notifications Disabled", Snackbar.LENGTH_LONG);

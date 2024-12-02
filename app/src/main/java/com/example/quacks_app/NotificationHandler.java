@@ -170,48 +170,9 @@ public class NotificationHandler implements Serializable {
      * @param user
      * @return an Arraylist of notifications
      */
-    public ArrayList<Notification> getNotificationForUser(User user) {
+    public void getNotificationForUser(User user, ReadMultipleCallback<Notification> callback ) {
         ArrayList<Notification> user_specified_notifications = new ArrayList<Notification>();
-
-        CRUD.readLive(user.getDeviceId(), User.class, new ReadCallback<User>() {
-            @Override
-            public void onReadSuccess(User data) {
-                //once we have the user, we check if there are notifications with the status "Not Sent"
-                // and where the user matches
-
-                if (data != null) {
-                    CRUD.readAllLive(Notification.class, new ReadMultipleCallback<Notification>() {
-                        @Override
-                        public void onReadMultipleSuccess(ArrayList<Notification> data) {
-                            if (data != null) {
-                                for (Notification notification : data) {
-                                    if (notification.getUser().getDeviceId().equals(user.getDeviceId())) {
-                                        if (notification.getSentStatus().equals("Not Sent")) {
-                                            user_specified_notifications.add(notification);
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onReadMultipleFailure(Exception e) {
-                            //usually id put a toast here but the class doesn't list toasts
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onReadFailure(Exception e) {
-                //usually id put a toast here but the class doesn't list toasts
-            }
-
-        });
-
-        //then at the end we return the arraylist
-        return user_specified_notifications;
+        CRUD.readAllStatic(Notification.class, callback);
     }
 
     /**
@@ -242,12 +203,22 @@ public class NotificationHandler implements Serializable {
         return notifications;
 
     }
-
-    public sendUnreadNotifications(Context context, ArrayList<Notification> notifications, Event event) {
+    public void sendUnreadNotifications(Context context, ArrayList<Notification> notifications) {
         for (int i = 0; i < notifications.size(); i++) {
             String wStatus = notifications.get(i).getWaitlistStatus();
             if (wStatus.contains("Accepted")) {
-                this.sendNotificationVerbose(context, "Accepted Into Event!", );
+                CRUD.readStatic(notifications.get(i).getNotificationEventId(), Event.class, new ReadCallback<Event>() {
+                    @Override
+                    public void onReadSuccess(Event data) {
+                        sendNotificationVerbose(context, "Accepted Into Event!", "Accepted into event " + data.getEventName() + "!", "Accepted into event " + data.getEventName() + "!",  R.drawable.new_email);
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+
+                    }
+                });
+
             }
         }
     }
