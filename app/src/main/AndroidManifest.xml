@@ -131,6 +131,8 @@
             android:exported="true" />
         <activity android:name=".SelectMapEvent"
             android:exported="true"/>
+        <activity android:name=".NotificationCenter"
+            android:exported="true"/>
 
         <meta-data
             android:name="preloaded_fonts"
