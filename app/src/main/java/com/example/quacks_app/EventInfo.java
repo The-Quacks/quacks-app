@@ -17,9 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 /**
- * The EventInfo class displays detailed information about a specific event and
- * provides options to edit, delete, or manage the event's applicants.
+ * The {@code EventInfo} class displays detailed information about a specific event
+ * and provides options to edit, delete, manage registration, or handle applicants for the event.
  */
 public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
     private String applicantList; // ID of the applicant list for the event
@@ -28,6 +29,12 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
     private User user; // The user interacting with this activity
     private Event event; // The event being displayed
 
+    /**
+     * Initializes the activity, sets up the UI components, and handles user interactions.
+     *
+     * @param savedInstanceState If the activity is reinitialized after previously being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,38 +143,38 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
 
         close_registration_button.setOnClickListener(view -> {
 
-            if (!event.getRegistration()){
-                Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
-            } else{
-                event.setRegistration(false);
-                String app_id = event.getApplicantList();
-                CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
-                    @Override
-                    public void onReadSuccess(ApplicantList data) {
-                        if (data != null){
-                            event.setFinal_list(data);
+                    if (!event.getRegistration()){
+                        Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
+                    } else{
+                        event.setRegistration(false);
+                        String app_id = event.getApplicantList();
+                        CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                            @Override
+                            public void onReadSuccess(ApplicantList data) {
+                                if (data != null){
+                                    event.setFinal_list(data);
 
-                            CRUD.update(event, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                    CRUD.update(event, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+                                            Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
+                            }
 
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                            @Override
+                            public void onReadFailure(Exception e) {
+                                Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
-
-                    @Override
-                    public void onReadFailure(Exception e) {
-                        Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
 
 
                     //            CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {

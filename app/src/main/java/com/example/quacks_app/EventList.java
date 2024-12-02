@@ -92,6 +92,12 @@ public class EventList extends RepoModel implements Serializable {
         }
     }
 
+    /**
+     * Checks if the list contains a specific event ID.
+     *
+     * @param eventId The {@code String} representing the event ID to check.
+     * @return {@code true} if the event ID is present in the list, {@code false} otherwise.
+     */
     public boolean contains(String eventId) {
         return eventIds.contains(eventId);
     }
