@@ -11,14 +11,14 @@
     android:visibility="visible"
     tools:context=".OrganizerHomepage">
 
-    <ImageButton
-        android:id="@+id/switch_activity_organizer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Spinner
+        android:id="@+id/profile_spinner_organizer"
+        android:layout_width="220dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/icons8_switch_50"
-        android:backgroundTint="@color/button" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/titlea"
