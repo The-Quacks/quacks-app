@@ -40,7 +40,8 @@ public class AdminHome extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = getStringArrayAdapter();
         spinner.setAdapter(adapter);
-        spinner.setSelection(2);
+
+        spinner.setSelection(adapter.getCount() - 1);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
