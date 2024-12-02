@@ -262,10 +262,18 @@ public class Event extends RepoModel implements Serializable, Listable {
         return this.final_list;
     }
 
+    /**
+     * Opens Registration
+     * @param status
+     */
     public void setRegistration(boolean status){
         this.closed_open = status;
     }
 
+    /**
+     * Gets whether registration for that event is open
+     * @return
+     */
     public boolean getRegistration(){
         return this.closed_open;
     }
