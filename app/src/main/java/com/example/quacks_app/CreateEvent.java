@@ -53,6 +53,7 @@ public class CreateEvent extends AppCompatActivity {
     private ApplicantList appList;
 
     private Button delete;
+    private Button updatePoster;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -85,7 +86,10 @@ public class CreateEvent extends AppCompatActivity {
         description = findViewById(R.id.description);
         eventtime = findViewById(R.id.event_time);
         delete = findViewById(R.id.delete_event);
+        updatePoster = findViewById(R.id.UpdatePoster);
         delete.setVisibility(View.GONE);
+        updatePoster.setVisibility(View.GONE);
+
 
 
         back.setOnClickListener(new View.OnClickListener() {
