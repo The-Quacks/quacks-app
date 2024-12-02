@@ -8,6 +8,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * The {@code ApplicantOptions} class represents a screen in the Quacks app
+ * where users can choose different categories of applicants to view, such as
+ * all applicants, accepted applicants, declined applicants, cancelled applicants,
+ * or finalized applicants for a specific event.
+ *
+ * <p>This class handles navigation to the respective applicant list screens based
+ * on user selection.</p>
+ */
 public class ApplicantOptions extends AppCompatActivity {
     private Button all_applicants;
     private Button declined_applicants;
@@ -18,7 +27,12 @@ public class ApplicantOptions extends AppCompatActivity {
     private Facility facility;
     private User user;
 
-
+    /**
+     * Initializes the activity, sets up the UI components, and handles navigation
+     * to different applicant categories.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
