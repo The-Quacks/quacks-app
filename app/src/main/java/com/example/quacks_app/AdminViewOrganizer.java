@@ -39,6 +39,10 @@ public class AdminViewOrganizer extends AppCompatActivity {
                         if (eventData.getEventPosterPath() != null){
                             CRUD.removeImage(eventData.getEventPosterPath(), delCall);
                         }
+                        if (eventData.getQrCodePath() != null){
+                            CRUD.removeImage(eventData.getQrCodePath(), delCall);
+                        }
+
                         CRUD.delete(appList, ApplicantList.class, delCall);
                         CRUD.delete(eventData.getDocumentId(), Event.class, delCall);
                         CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
@@ -97,6 +101,9 @@ public class AdminViewOrganizer extends AppCompatActivity {
                 Event realEvent = (Event) editEvent;
                 if (realEvent.getEventPosterPath() != null){
                     CRUD.removeImage(realEvent.getEventPosterPath(), delCall);
+                }
+                if (realEvent.getQrCodePath() != null){
+                    CRUD.removeImage(realEvent.getQrCodePath(), delCall);
                 }
                 CRUD.delete(id, Event.class, delCall);
                 CRUD.delete(realEvent.getApplicantList(), ApplicantList.class, delCall);
