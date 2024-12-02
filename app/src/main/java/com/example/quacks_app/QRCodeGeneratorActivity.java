@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,30 @@ public class QRCodeGeneratorActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         Bitmap qrcode = QRCodeUtil.encode(event.getDocumentId(), 1000, 1000);
+
+        CRUD.storeImage(qrcode, new ReadCallback<String>() {
+            @Override
+            public void onReadSuccess(String data) {
+                event.setQrCodePath(data);
+                CRUD.update(event, new UpdateCallback() {
+                    @Override
+                    public void onUpdateSuccess() {
+                        Toast.makeText(QRCodeGeneratorActivity.this, "Successfully stored QR code", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onUpdateFailure(Exception e) {
+                        Toast.makeText(QRCodeGeneratorActivity.this, "Failed to update event", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+                Toast.makeText(QRCodeGeneratorActivity.this, "Failed to store QR code", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 
         ImageView imageView = findViewById(R.id.code);

@@ -85,7 +85,7 @@ public class CreateEvent extends AppCompatActivity {
         geolocation = findViewById(R.id.event_geolocation);
         description = findViewById(R.id.event_description);
         eventtime = findViewById(R.id.event_time);
-        delete = findViewById(R.id.delete_event);
+        delete = findViewById(R.id.event_delete_event);
         updatePoster = findViewById(R.id.UpdatePoster);
         delete.setVisibility(View.GONE);
         updatePoster.setVisibility(View.GONE);
