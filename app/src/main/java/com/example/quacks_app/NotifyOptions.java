@@ -13,6 +13,8 @@ public class NotifyOptions extends AppCompatActivity {
     private Button select_applicants;
     private Button back;
     private Event event;
+    private User user;
+    private Facility facility;
 
     /**
      * Notification Page can see pick by pool or select participants
@@ -33,11 +35,26 @@ public class NotifyOptions extends AppCompatActivity {
         }
         event = (Event) getIntent().getSerializableExtra("Event");
 
+        if (getIntent().getSerializableExtra("Facility") == null){
+            Toast.makeText(NotifyOptions.this, "No Facility Passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        facility = (Facility) getIntent().getSerializableExtra("Facility");
+        if (getIntent().getSerializableExtra("User") == null){
+            Toast.makeText(NotifyOptions.this, "No User Passed", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        user = (User) getIntent().getSerializableExtra("User");
+
+
+
         pool_applicants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(NotifyOptions.this, SelectAtRandom.class);
                 intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
                 startActivity(intent);
             }
         });
@@ -47,6 +64,8 @@ public class NotifyOptions extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(NotifyOptions.this, PickApplicant.class);
                 intent.putExtra("Event", event);
+                intent.putExtra("User", user);
+                intent.putExtra("Facility", facility);
                 startActivity(intent);
 
             }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
@@ -129,19 +130,55 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
         });
 
 
-        close_registration_button.setOnClickListener(view ->
-                        CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
-            @Override
-            public void onDeleteSuccess() {
-                Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
-                finish();
+        close_registration_button.setOnClickListener(view -> {
+
+            if (!event.getRegistration()){
+                Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
+            } else{
+                event.setRegistration(false);
+                String app_id = event.getApplicantList();
+                CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                    @Override
+                    public void onReadSuccess(ApplicantList data) {
+                        if (data != null){
+                            event.setFinal_list(data);
+
+                            CRUD.update(event, new UpdateCallback() {
+                                @Override
+                                public void onUpdateSuccess() {
+                                    Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onUpdateFailure(Exception e) {
+                                    Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onReadFailure(Exception e) {
+                        Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
 
-            @Override
-            public void onDeleteFailure(Exception e) {
-                Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
-            }
-            })
+
+                    //            CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
+                    //@Override
+                    //public void onDeleteSuccess() {
+                    //    Toast.makeText(EventInfo.this, "Event has been deleted", Toast.LENGTH_SHORT).show();
+                    //    finish();
+                    //}
+
+                    //@Override
+                    //public void onDeleteFailure(Exception e) {
+                    //    Toast.makeText(EventInfo.this, "Error deleting event", Toast.LENGTH_SHORT).show();
+                    //}
+                    //})
+                }
         );
 
         //This is the bottom of the page directory
@@ -174,6 +211,71 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
                 .setTitle("Confirm Delete")
                 .setMessage("Are you sure you want to delete this event? This action cannot be undone.")
                 .setPositiveButton("Yes, Delete", (dialog, which) -> {
+
+                    NotificationList notificationList = event.getNotificationList();
+                    ArrayList<Notification> notifications = notificationList.getNotificationList();
+                    //deletes notifications
+                    for (int i = 0; i < notifications.size(); i++){
+                        Notification current = notifications.get(i);
+                        CRUD.delete(current.getDocumentId(), Notification.class, new DeleteCallback() {
+                            @Override
+                            public void onDeleteSuccess() {
+                            }
+
+                            @Override
+                            public void onDeleteFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+                    //deletes applicant List
+                    String applicant_list = event.getApplicantList();
+                    if (!applicant_list.isEmpty()) {
+                        CRUD.readStatic(applicant_list, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                            @Override
+                            public void onReadSuccess(ApplicantList data) {
+
+                                CRUD.delete(data.getDocumentId(), ApplicantList.class, new DeleteCallback() {
+                                    @Override
+                                    public void onDeleteSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onDeleteFailure(Exception e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onReadFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+
+                    //deletes notification list
+                    if (notificationList.getDocumentId() != null) {
+                        CRUD.delete(notificationList.getDocumentId(), NotificationList.class, new DeleteCallback() {
+                            @Override
+                            public void onDeleteSuccess() {
+
+                            }
+
+                            @Override
+                            public void onDeleteFailure(Exception e) {
+
+                            }
+                        });
+                    }
+
+
+
                     CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
                         @Override
                         public void onDeleteSuccess() {
