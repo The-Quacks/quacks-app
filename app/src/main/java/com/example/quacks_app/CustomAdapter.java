@@ -11,15 +11,23 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-/*
-Custom ArrayAdapter so we can assign headings and subheadings, not just a single peice of text
+/**
+ * A custom {@link ArrayAdapter} for displaying items with both headings and subheadings.
+ * This adapter is designed to work with {@link Listable} objects, which provide display
+ * and sub-display text fields for customization.
  */
-
 public class CustomAdapter extends ArrayAdapter<Listable> {
     private Context mContext;
     private ArrayList<Listable> dataList;
     private int resource;
 
+    /**
+     * Constructs a new {@code CustomAdapter}.
+     *
+     * @param context  The context in which the adapter is being used.
+     * @param resource The resource ID for the layout file that defines the list item views.
+     * @param dataList The list of {@link Listable} objects to display.
+     */
     public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Listable> dataList) {
         super(context, resource, dataList);
         this.mContext = context;
@@ -27,6 +35,14 @@ public class CustomAdapter extends ArrayAdapter<Listable> {
         this.dataList = dataList;
     }
 
+    /**
+     * Provides a view for an adapter view (such as a {@link android.widget.ListView}).
+     *
+     * @param position    The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible. If it is {@code null}, a new view will be created.
+     * @param parent      The parent view that this view will be attached to.
+     * @return A {@link View} corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

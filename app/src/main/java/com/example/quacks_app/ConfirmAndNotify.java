@@ -5,7 +5,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Page that makes sure you wanted to proceed
+ * The {@code ConfirmAndNotify} class represents a confirmation page in the Quacks app.
+ * This page is displayed to the user to confirm their intent to proceed with notifying
+ * applicants. It ensures that the user has reviewed their choice before notifications
+ * are sent out.
  */
 public class ConfirmAndNotify extends AppCompatActivity {
     @Override

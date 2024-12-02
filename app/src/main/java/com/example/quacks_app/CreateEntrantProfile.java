@@ -24,7 +24,6 @@ import java.util.ArrayList;
  * the first time they use the app. It validates the user's input, and then creates a new User
  * in the database.
  */
-
 public class CreateEntrantProfile extends AppCompatActivity {
     private ImageView profilePicture;
     private User user;
@@ -52,7 +51,8 @@ public class CreateEntrantProfile extends AppCompatActivity {
     }
 
     /**
-     * Initializes the ActivityResultLaunchers for taking pictures and selecting from the gallery.
+     * Initializes the {@link ActivityResultLauncher} objects for taking a picture or selecting one
+     * from the gallery.
      */
     private void initializeLaunchers() {
         // Camera launcher
@@ -83,7 +83,8 @@ public class CreateEntrantProfile extends AppCompatActivity {
     }
 
     /**
-     * Sets up listeners for the "Take Picture" and "Upload Picture" buttons.
+     * Sets up listeners for the "Take Picture" and "Upload Picture" buttons, allowing
+     * the user to capture or select a profile picture.
      */
     private void initializePictureButtons() {
         Button takePicture = findViewById(R.id.takePicture);
@@ -95,7 +96,7 @@ public class CreateEntrantProfile extends AppCompatActivity {
 
 
     /**
-     * Saves the profile after validating input.
+     * Validates user input and saves the profile information to the database if all fields are valid.
      */
     private void saveProfile() {
         EditText name = findViewById(R.id.nameInput);
