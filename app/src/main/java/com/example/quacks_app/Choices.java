@@ -112,7 +112,7 @@ public class Choices extends AppCompatActivity {
                                                         Toast.makeText(Choices.this, "Please Select one option", Toast.LENGTH_SHORT).show();
                                                     } else {
 
-                                                        if ((condition1) && (notifications.size() > event.getRegistrationCapacity())) {
+                                                        if ((condition1) && (notifications.size() < event.getWaitlistCapacity())) {
                                                             //make sure within waitlist limit
                                                             Toast.makeText(Choices.this, "Current Waitlist Capacity exceeds Registration Capacity", Toast.LENGTH_SHORT).show();
                                                         } else {

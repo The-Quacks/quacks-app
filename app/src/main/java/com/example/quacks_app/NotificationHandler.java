@@ -165,7 +165,7 @@ public class NotificationHandler {
     }
 
     /**
-     * Based on the user passed it queries for the notifications that are not delivered and addes them to an arraylist
+     * Based on the user passed it queries for the notifications that are not delivered and adds them to an arraylist
      * @param user
      * @return an Arraylist of notifications
      */
@@ -211,5 +211,33 @@ public class NotificationHandler {
 
         //then at the end we return the arraylist
         return user_specified_notifications;
+    }
+
+    /**
+     * Gets all notifications that are not sent--- NOT DEPENDENT ON USER
+     */
+
+    public ArrayList<Notification> getAllUnsentNotifications(){
+        ArrayList<Notification> notifications = new ArrayList<>();
+
+        CRUD.readAllStatic(Notification.class, new ReadMultipleCallback<Notification>() {
+            @Override
+            public void onReadMultipleSuccess(ArrayList<Notification> data) {
+                if (data != null){
+                    for (Notification notification : data){
+                        if (notification.getSentStatus().equals("Not Sent")){
+                            notifications.add(notification);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onReadMultipleFailure(Exception e) {
+
+            }
+        });
+        return notifications;
+
     }
 }
