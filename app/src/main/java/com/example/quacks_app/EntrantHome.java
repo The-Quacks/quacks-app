@@ -31,8 +31,11 @@ import java.util.Map;
 
 /**
  * The {@code EntrantHome} class is used on the home page for entrants. It includes buttons to
- * go to different parts of the app. Currently, the scan QR code button is implemented, which allows
- * the user to scan a QR code, see the event information, and join the waitlist.
+ * go to different parts of the app. If the user is an organizer or entrant, the button in the bottom
+ * corner will switch to the proper home page. Pressing profile displays the entrant's profile,
+ * and allows them to edit their details. The waitlist button shows all of the events that the
+ * user has joined the waitlist for. The scan QR code button lets the user scan an event's
+ * code, and then displays details about the event.
  */
 
 public class EntrantHome extends AppCompatActivity {
