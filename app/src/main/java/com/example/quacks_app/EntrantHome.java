@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.provider.Settings;
 
@@ -46,6 +48,8 @@ public class EntrantHome extends AppCompatActivity {
     private EventList eventIds;
     private ArrayList<Event> events;
 
+    boolean isFirstSelection = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class EntrantHome extends AppCompatActivity {
         ImageButton waitlist = findViewById(R.id.waitlistButton);
         ImageButton notifications = findViewById(R.id.notificationsButton);
         ImageButton scanQRCode = findViewById(R.id.scanQRCodeButton);
-        ImageButton switch_activity = findViewById(R.id.switch_activity_entrant);
+        Spinner spinner = findViewById(R.id.profile_spinner_entrant);
 
         // Set up the ActivityResultLauncher
         ActivityResultLauncher<Intent> swapActivityLauncher = registerForActivityResult(
@@ -76,27 +80,42 @@ public class EntrantHome extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         // Get updated user and facility from the result
                         user = (User) result.getData().getSerializableExtra("User");
-
-                        // Update the UI based on the new data
-                        updateUI(switch_activity);
                     }
                 }
         );
 
-        // Dynamically update the UI
-        updateUI(switch_activity);
-        setupRoleListener(switch_activity);
+        ArrayAdapter<String> adapter = getStringArrayAdapter();
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
 
-        switch_activity.setOnClickListener(v -> {
-            if (user.getRoles().contains(Role.ORGANIZER)) {
-                Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
-                intent.putExtra("User", user);
-                swapActivityLauncher.launch(intent);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false;
+                    return; // Ignore the initial trigger
+                }
+
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                if ("Administrator Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(EntrantHome.this, AdminHome.class);
+                    intent.putExtra("User", user);
+                    swapActivityLauncher.launch(intent);
+
+                }
+
+                else if ("Organizer Profile".equals(selectedItem)) {
+                    Intent intent = new Intent(EntrantHome.this, OrganizerHomepage.class);
+                    intent.putExtra("User", user);
+                    swapActivityLauncher.launch(intent);
+                }
+
             }
-            else if (user.getRoles().contains(Role.ADMIN)) {
-                Intent intent = new Intent(EntrantHome.this, AdminHome.class);
-                intent.putExtra("User", user);
-                swapActivityLauncher.launch(intent);
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -155,10 +174,6 @@ public class EntrantHome extends AppCompatActivity {
             });
         });
 
-//        notifications.setOnClickListener(view -> {
-//            startActivity(new Intent(EntrantHome.this, Notifications.class));
-//        });
-
         scanQRCode.setOnClickListener(view -> {
             GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
                     .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
@@ -179,35 +194,30 @@ public class EntrantHome extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                     });
         });
+
+        notifications.setOnClickListener(v -> {
+            Intent intent = new Intent(EntrantHome.this, NotificationCenter.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Notif_Permissions", nHandler.appEnabled);
+            startActivity(intent);
+        });
     }
 
-    /**
-     * Updates the UI dynamically based on the user's facility and role status.
-     */
-    private void updateUI(ImageButton switch_activity) {
-        // Hide Switch Activity button if role organizer or admin exists
-        if (user.getRoles().contains(Role.ORGANIZER) || user.getRoles().contains(Role.ADMIN)) {
-            switch_activity.setVisibility(View.VISIBLE);
-        } else {
-            switch_activity.setVisibility(View.GONE);
+    // Initialize the spinner adapter with selectable profiles
+    @NonNull
+    private ArrayAdapter<String> getStringArrayAdapter() {
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Entrant Profile");
+        if (user.getRoles().contains(Role.ORGANIZER)) {
+            items.add("Organizer Profile");
         }
-    }
-
-    private void setupRoleListener(ImageButton switch_activity) {
-        if (user != null && user.getDocumentId() != null) {
-            CRUD.readLive(user.getDocumentId(), User.class, new ReadCallback<User>() {
-                @Override
-                public void onReadSuccess(User updatedUser) {
-                    user = updatedUser; // Update the user object with new data
-                    updateUI(switch_activity); // Dynamically update the UI
-                }
-
-                @Override
-                public void onReadFailure(Exception e) {
-                    Toast.makeText(EntrantHome.this, "Failed to monitor user roles.", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if (user.getRoles().contains(Role.ADMIN)) {
+            items.add("Administrator Profile");
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     //Separate overidden function outside onCreate
@@ -246,6 +256,8 @@ public class EntrantHome extends AppCompatActivity {
                     alert.show();
                 });
                 resultSnackbar.show();
+                nHandler.appEnabled = true;
+                nHandler.phoneEnabled = true;
                 // If denied, from now on show Snackbar that says "Notifications Disabled", with option to change permissions.
             } else {
                 resultSnackbar = Snackbar.make(this, this.findViewById(R.id.notificationsButton).getRootView(), "Notifications Disabled", Snackbar.LENGTH_LONG);
@@ -254,6 +266,8 @@ public class EntrantHome extends AppCompatActivity {
                     alert.show();
                 });
                 resultSnackbar.show();
+                nHandler.appEnabled = false;
+                nHandler.phoneEnabled = false;
             }
         }
     }

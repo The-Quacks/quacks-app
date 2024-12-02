@@ -75,12 +75,12 @@ public class CreateEvent extends AppCompatActivity {
 
         //Finding the right text box
         event_name = findViewById(R.id.event_name);
-        class_capacity = findViewById(R.id.class_capacity);
-        waitlist_capacity = findViewById(R.id.waitlist_capacity);
+        class_capacity = findViewById(R.id.event_class_capacity);
+        waitlist_capacity = findViewById(R.id.event_waitlist_capacity);
         beginning = findViewById(R.id.event_date);
-        instructor = findViewById(R.id.instructor);
-        geolocation = findViewById(R.id.geolocation);
-        description = findViewById(R.id.description);
+        instructor = findViewById(R.id.event_instructor);
+        geolocation = findViewById(R.id.event_geolocation);
+        description = findViewById(R.id.event_description);
         eventtime = findViewById(R.id.event_time);
 
 

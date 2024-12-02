@@ -59,7 +59,7 @@ public class CreateFacility extends AppCompatActivity {
 
         context = this;
         //on back click nothing is saved
-        back = findViewById(R.id.back_button);
+        back = findViewById(R.id.create_back_button);
         back.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -68,7 +68,7 @@ public class CreateFacility extends AppCompatActivity {
             }
         });
 
-        confirm = findViewById(R.id.confirm_button);
+        confirm = findViewById(R.id.create_confirm_button);
         confirm.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -77,14 +77,14 @@ public class CreateFacility extends AppCompatActivity {
 
                 new_facility = new Facility();
 
-                bussiness_name = findViewById(R.id.Name);
-                location = findViewById(R.id.location);
-                phone_number = findViewById(R.id.contact_info);
-                facility_deets = findViewById(R.id.facility_details);
-                accessibility = findViewById(R.id.accessibility);
-                username = findViewById(R.id.username);
-                password = findViewById(R.id.password);
-                email = findViewById(R.id.email);
+                bussiness_name = findViewById(R.id.create_Name);
+                location = findViewById(R.id.create_location);
+                phone_number = findViewById(R.id.create_contact_info);
+                facility_deets = findViewById(R.id.create_facility_details);
+                accessibility = findViewById(R.id.create_accessibility);
+                username = findViewById(R.id.create_username);
+                password = findViewById(R.id.create_password);
+                email = findViewById(R.id.create_email);
 
 
                 String test_1 = bussiness_name.getText().toString();
