@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code AllApplicants} class displays a list of all applicants for a specific event.
+ * Admins or organizers can view applicant details, notify selected applicants, or notify all applicants.
+ */
 public class AllApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -25,6 +29,11 @@ public class AllApplicants extends AppCompatActivity {
     private ImageButton profile;
     private Button back;
 
+    /**
+     * Initializes the activity, sets up UI components, and loads the list of applicants.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
