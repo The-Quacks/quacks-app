@@ -126,8 +126,8 @@ public class AcceptedApplicants extends AppCompatActivity {
                 if (applicantList != null) {
 
                     userList.clear();
-
-                    for (String applicantId : applicantList.getApplicantIds()) {
+                    ArrayList<String> new_list = applicantList.getApplicantIds();
+                    for (String applicantId : new_list) {
 
                         CRUD.readStatic(applicantId, User.class, new ReadCallback<User>() {//this retrieves the applicanId
 

@@ -215,7 +215,7 @@ public class PickApplicant extends AppCompatActivity {
                     if (user.Carted()) {
                         for (User current : real_user) {
                             UserProfile profile = current.getUserProfile();
-                            if (profile != null && (index == real_user.indexOf(current))) {
+                            if (profile != null && current.getDeviceId().equals(user.getField())) {
                                 //check if user is in the current notification list
                                 boolean found = false;
                                 for (int i = 0; i < notifications.size(); i++) {
@@ -234,7 +234,7 @@ public class PickApplicant extends AppCompatActivity {
                                             notify.setSentStatus("Not Sent");
                                             notify.setWaitlistStatus("Accepted");
                                             notify.setAccepted(false);
-
+                                            notification_list.addNotification(notify);
                                             CRUD.update(notify, new UpdateCallback() {
                                                 @Override
                                                 public void onUpdateSuccess() {
@@ -249,6 +249,20 @@ public class PickApplicant extends AppCompatActivity {
 
                                                 }
                                             });
+
+                                            CRUD.update(notification_list, new UpdateCallback() {
+
+                                                @Override
+                                                public void onUpdateSuccess() {
+
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+
+                                                }
+                                            } );
+
                                             break;
                                         }
                                     }
@@ -268,10 +282,10 @@ public class PickApplicant extends AppCompatActivity {
                                             newer.setSentStatus("Not Sent");
                                             newer.setWaitlistStatus("Declined");
                                             newer.setAccepted(false);
+                                            notification_list.addNotification(newer);
                                             CRUD.update(newer, new UpdateCallback() {
                                                 @Override
                                                 public void onUpdateSuccess() {
-                                                    notification_list.addNotification(newer);
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
 
@@ -280,6 +294,18 @@ public class PickApplicant extends AppCompatActivity {
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
                                             });
+                                            CRUD.update(notification_list, new UpdateCallback() {
+
+                                                @Override
+                                                public void onUpdateSuccess() {
+
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+
+                                                }
+                                            } );
                                         }
 
                                         @Override
