@@ -69,12 +69,12 @@ public class EditEvent extends AppCompatActivity {
         setContentView(R.layout.create_event);
 
         // Update the title of the Activity based on the mode - Create Event / Edit Event
-        TextView title = findViewById(R.id.title);
+        TextView title = findViewById(R.id.event_title);
         title.setText(R.string.editing_event_details);
 
         //back and confirm buttons
-        Button back = findViewById(R.id.back_button);
-        Button confirm = findViewById(R.id.confirm_button);
+        Button back = findViewById(R.id.event_back_button);
+        Button confirm = findViewById(R.id.event_confirm_button);
 
         if (getIntent().getSerializableExtra("Event") == null) {
             finish();

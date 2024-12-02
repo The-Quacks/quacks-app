@@ -45,7 +45,7 @@ public class OrganizerHomepage extends AppCompatActivity {
         profile = findViewById(R.id.organizer_profile_button);
         Button view_events = findViewById(R.id.view_events);
         Button create_events = findViewById(R.id.create_event);
-        Button entrant_map = findViewById(R.id.map);
+        Button entrant_map = findViewById(R.id.mapped);
         Spinner spinner = findViewById(R.id.profile_spinner_organizer);
 
         current = (User) getIntent().getSerializableExtra("User");
