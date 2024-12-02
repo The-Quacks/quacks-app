@@ -57,7 +57,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the Geo Location
-     * @ return String geo
+     * @return String geo
      */
     public Boolean getGeo() {
         return this.geoRequired;
@@ -91,7 +91,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the instructor name
-     * @ return String name
+     * @return String name
      */
     public String getInstructor() {
         return this.instructorName;
@@ -106,7 +106,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the waitlist capacity for the event
-     * @ return int capacity
+     * @return int capacity
      */
     public int getWaitlistCapacity(){
         return this.waitlist_capacity;
@@ -121,7 +121,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the registration Capacity
-     * @ return int number
+     * @return int number
      */
     public int getRegistrationCapacity(){
        return this.registration_capacity;
@@ -129,14 +129,13 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Sets the name of the event
-     * @ return none
      */
     public void setEventName(String Name){
         this.eventName = Name;
     }
     /**
      * Gets the name of the event
-     * @ return String name
+     * @return String name
      */
     public String getEventName(){
         return this.eventName;
