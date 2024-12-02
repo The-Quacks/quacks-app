@@ -11,7 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-
+/**
+ * The {@code Choices} class allows users to notify all applicants for an event
+ * and categorize them as "Accepted" or "Declined". It provides a user interface
+ * to select a single notification status and updates the event's notification list accordingly.
+ */
 public class Choices extends AppCompatActivity {
     private Button back;
     private Button confirm;
@@ -22,7 +26,11 @@ public class Choices extends AppCompatActivity {
     private User user;
     private NotificationList notificationList;
 
-
+    /**
+     * Initializes the activity, sets up UI components, and handles notification logic.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +120,7 @@ public class Choices extends AppCompatActivity {
                                                         Toast.makeText(Choices.this, "Please Select one option", Toast.LENGTH_SHORT).show();
                                                     } else {
 
-                                                        if ((condition1) && (notifications.size() < event.getWaitlistCapacity())) {
+                                                        if ((condition1) && (notifications.size() > event.getWaitlistCapacity())) {
                                                             //make sure within waitlist limit
                                                             Toast.makeText(Choices.this, "Current Waitlist Capacity exceeds Registration Capacity", Toast.LENGTH_SHORT).show();
                                                         } else {
@@ -129,7 +137,20 @@ public class Choices extends AppCompatActivity {
                                                             CRUD.update(current, new UpdateCallback() {
                                                                 @Override
                                                                 public void onUpdateSuccess() {
-                                                                    checkCompletion(remaining.decrementAndGet());
+                                                                    notificationList.addNotification(current);
+                                                                    CRUD.update(notificationList, new UpdateCallback() {
+
+                                                                        @Override
+                                                                        public void onUpdateSuccess() {
+                                                                            checkCompletion(remaining.decrementAndGet());
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onUpdateFailure(Exception e) {
+
+                                                                        }
+                                                                    } );
+
                                                                 }
 
                                                                 @Override
@@ -138,6 +159,7 @@ public class Choices extends AppCompatActivity {
 
                                                                 }
                                                             });
+
                                                         }
                                                     }
                                                     break;
@@ -181,7 +203,20 @@ public class Choices extends AppCompatActivity {
                                                                         @Override
                                                                         public void onUpdateSuccess() {
                                                                             notificationList.addNotification(notify);
-                                                                            checkCompletion(remaining.decrementAndGet());
+
+
+                                                                            CRUD.update(notificationList, new UpdateCallback() {
+
+                                                                                @Override
+                                                                                public void onUpdateSuccess() {
+                                                                                    checkCompletion(remaining.decrementAndGet());
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onUpdateFailure(Exception e) {
+
+                                                                                }
+                                                                            } );
                                                                         }
 
                                                                         @Override
@@ -190,6 +225,7 @@ public class Choices extends AppCompatActivity {
 
                                                                         }
                                                                     });
+
                                                                 }
                                                             }
                                                         }
@@ -219,9 +255,14 @@ public class Choices extends AppCompatActivity {
             }
         });
     }
+
     /**
-     * Checks based from the count of notificationlist, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Checks if all users have been processed and their notifications updated.
+     * Once all notifications are updated, the method updates the notification list
+     * and event in the database and navigates the user back to the {@code EventInfo} screen.
+     *
+     * @param remainingCount The count of users still being processed. When it reaches zero,
+     *                       the notification list and event are updated.
      */
     private void checkCompletion(int remainingCount) {
         if (remainingCount == 0) {

@@ -225,52 +225,5 @@ public class OrganizerHomeTest {
         });
 
     }
-/**
-    @Test
-    public void ViewEvent(){
-        //creates an event
-        String testId = UUID.randomUUID().toString();
 
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicBoolean exists = new AtomicBoolean(false);
-
-
-        CRUD.readStatic(testId, User.class, new ReadCallback<User>() {
-            @Override
-            public void onReadSuccess(User data) {
-
-                if (data != null){
-                    onView(withId(R.id.welcome_home)).perform(click());
-
-                    //getting to the edit page
-                    onView(withId(R.id.profile_spinner_entrant)).perform(click());
-                    onData(anything()).atPosition(1).perform(click());
-                    onView(withId(R.id.organizer_profile_button)).check(matches(isDisplayed()));
-
-                    onView(withId(R.id.create_event)).perform(click());
-
-                    //typing into create event
-                    onView(withId(R.id.event_name)).perform(typeText("Edwards 3rd Birthday Party"));
-                    onView(withId(R.id.event_class_capacity)).perform(typeText("40"));
-                    onView(withId(R.id.event_waitlist_capacity)).perform(typeText("40"));
-                    onView(withId(R.id.event_date)).perform(typeText("10-12-2025"));
-                    onView(withId(R.id.event_time)).perform(typeText("4:00pm"));
-                    onView(withId(R.id.event_instructor)).perform(typeText("Barry"));
-                    onView(withId(R.id.event_description)).perform(typeText("Second Floor"));
-
-
-                    //click confirm
-                    onView(withId(R.id.event_confirm_button)).perform(click());
-                    //see if it was passed--then the event was created
-                    onView(withId(R.id.event_confirm_button)).check(matches(not(isDisplayed())));
-
-                }
-            }
-
-            @Override
-            public void onReadFailure(Exception e) {
-                onView(withId(R.id.welcome_home)).check(matches(isDisplayed()));
-            }
-        });
-    }**/
 }

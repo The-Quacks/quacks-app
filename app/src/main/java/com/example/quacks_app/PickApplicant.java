@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+/**
+ * The {@code PickApplicant} class is responsible for displaying a list of applicants
+ * for an event and allowing the organizer to select or reject them.
+ * Notifications are updated accordingly based on the organizer's decisions.
+ */
 public class PickApplicant extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -39,9 +43,14 @@ public class PickApplicant extends AppCompatActivity {
     private List<Notification> newNotifications = new ArrayList<>();
     private ArrayList<String> applicantListed = new ArrayList<>();
     private NotificationList notification_list;
+    private ApplicantList appList = null;
 
-    /*
-    Selecting applicants from listview
+    /**
+     * Initializes the activity and loads applicants for selection.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down, this contains the most
+     *                           recent data. Otherwise, it is {@code null}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +91,13 @@ public class PickApplicant extends AppCompatActivity {
             Toast.makeText(this, "ApplicantListID not found", Toast.LENGTH_SHORT).show();
             finish();
         }
-
+        ArrayList<Cartable> usernames = new ArrayList<>();
         // Load the applicants
         CRUD.readStatic(applicantListId, ApplicantList.class, new ReadCallback<ApplicantList>() {
             @Override
             public void onReadSuccess(ApplicantList applicantList) {
                 if (applicantList != null) {
+                    appList = applicantList;
 
                     userList.clear();
 
@@ -103,9 +113,11 @@ public class PickApplicant extends AppCompatActivity {
                                     UserProfile profile = user.getUserProfile();
                                     userdisplay = new Cartable(profile.getUserName(), user.getDeviceId(), false, profile);
                                     userdisplay.setField(profile.getUserName());
-                                    userdisplay.setSubfield(user.getDeviceId());
+                                    userdisplay.setSubfield(user.getDocumentId());
                                     userdisplay.setCart(false);
+                                    usernames.add(userdisplay);
                                     userList.add(userdisplay);
+
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
 
@@ -156,11 +168,34 @@ public class PickApplicant extends AppCompatActivity {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int numSelected = 0;
+                int numAlready = 0;
                 if (userList == null || real_user == null || actual_event == null) {
                     Toast.makeText(PickApplicant.this, "Error: Data not initialized", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                for (Notification notif: actual_event.getNotificationList().getNotificationList()){
+                    if (notif.getWaitlistStatus().equals("Accepted")){
+                        numAlready += 1;
+                    }
+                }
+                for (Cartable user : userList){
+                    if (user.Carted()){
+                        for (User current : real_user){
+                            UserProfile profile1 = current.getUserProfile();
+                            if (profile1.getUserName().equals(user.getField())){
+                                numSelected += 1;
+                            }
+
+
+                        }
+                    }
+                }
+                if (actual_event.getRegistrationCapacity() < numSelected + numAlready){
+                    Toast.makeText(PickApplicant.this, "Selected entrants exceeds event limit. Limit: " + actual_event.getRegistrationCapacity(), Toast.LENGTH_LONG).show();
+                    return;
+                }
                 notification_list = actual_event.getNotificationList();
 
                 if (notification_list == null) {
@@ -176,12 +211,11 @@ public class PickApplicant extends AppCompatActivity {
                 AtomicInteger remaining = new AtomicInteger(userList.size());
 
                 for (Cartable user : userList) {
+                    int index = userList.indexOf(user);
                     if (user.Carted()) {
                         for (User current : real_user) {
                             UserProfile profile = current.getUserProfile();
-
-                            if (profile != null && profile.getUserName().equals(user.getField())) {
-
+                            if (profile != null && current.getDeviceId().equals(user.getField())) {
                                 //check if user is in the current notification list
                                 boolean found = false;
                                 for (int i = 0; i < notifications.size(); i++) {
@@ -190,7 +224,6 @@ public class PickApplicant extends AppCompatActivity {
                                         User current_user = notify.getUser();
                                         String first = current_user.getDeviceId();
                                         String second = current.getDeviceId();
-
 
                                         if (second.equals(first)) {
                                             found = true;
@@ -201,7 +234,7 @@ public class PickApplicant extends AppCompatActivity {
                                             notify.setSentStatus("Not Sent");
                                             notify.setWaitlistStatus("Accepted");
                                             notify.setAccepted(false);
-
+                                            notification_list.addNotification(notify);
                                             CRUD.update(notify, new UpdateCallback() {
                                                 @Override
                                                 public void onUpdateSuccess() {
@@ -216,6 +249,20 @@ public class PickApplicant extends AppCompatActivity {
 
                                                 }
                                             });
+
+                                            CRUD.update(notification_list, new UpdateCallback() {
+
+                                                @Override
+                                                public void onUpdateSuccess() {
+
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+
+                                                }
+                                            } );
+
                                             break;
                                         }
                                     }
@@ -233,12 +280,12 @@ public class PickApplicant extends AppCompatActivity {
                                             newer.setNotificationEventId(actual_event.getEventId());
                                             newer.setNotificationListId(notification_list.getNotificationListId());
                                             newer.setSentStatus("Not Sent");
-                                            newer.setWaitlistStatus("Accepted");
+                                            newer.setWaitlistStatus("Declined");
                                             newer.setAccepted(false);
+                                            notification_list.addNotification(newer);
                                             CRUD.update(newer, new UpdateCallback() {
                                                 @Override
                                                 public void onUpdateSuccess() {
-                                                    notification_list.addNotification(newer);
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
 
@@ -247,6 +294,18 @@ public class PickApplicant extends AppCompatActivity {
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
                                             });
+                                            CRUD.update(notification_list, new UpdateCallback() {
+
+                                                @Override
+                                                public void onUpdateSuccess() {
+
+                                                }
+
+                                                @Override
+                                                public void onUpdateFailure(Exception e) {
+
+                                                }
+                                            } );
                                         }
 
                                         @Override
@@ -278,7 +337,7 @@ public class PickApplicant extends AppCompatActivity {
                                                 @Override
                                                 public void onUpdateSuccess() {
                                                     //notification_list.addNotification(notify);
-                                                    Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(PickApplicant.this, "Made IT.", Toast.LENGTH_SHORT).show();
                                                     checkCompletion(remaining.decrementAndGet());
                                                 }
 
@@ -295,7 +354,7 @@ public class PickApplicant extends AppCompatActivity {
                         }
                     } else {
                         checkCompletion(remaining.decrementAndGet());
-                        Toast.makeText(PickApplicant.this, "Couldn't find User", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PickApplicant.this, "Couldn't find User", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -304,8 +363,12 @@ public class PickApplicant extends AppCompatActivity {
 
 
     /**
-     * Checks based from the count of userlist, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Checks if all users in the user list have been processed for notification updates.
+     * If all users have been processed, the method updates the notification list
+     * and the event associated with the notifications in the database.
+     *
+     * @param remainingCount The count of users yet to be processed. When this count reaches 0,
+     *                       the method performs the final database updates.
      */
     private void checkCompletion(int remainingCount) {
         if (remainingCount == 0) {
@@ -340,16 +403,4 @@ public class PickApplicant extends AppCompatActivity {
             });
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-

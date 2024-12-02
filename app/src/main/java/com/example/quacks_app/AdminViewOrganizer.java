@@ -17,10 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-/*
-This is the individual edit and delete screen to view events, can be multipurposed for not just admin
+/**
+ * The {@code AdminViewOrganizer} class represents the screen for viewing, editing, and deleting
+ * various types of data in the Quacks app. It supports handling Events, Users, and Facilities,
+ * providing an interface for admins to manage these entities.
  */
-
 public class AdminViewOrganizer extends AppCompatActivity {
     String title;
     String fieldOne;
@@ -28,6 +29,12 @@ public class AdminViewOrganizer extends AppCompatActivity {
     String fieldThree;
     String fieldFour;
 
+    /**
+     * Deletes a facility and all related data such as associated events and their applicant lists.
+     *
+     * @param realFacility the facility to delete
+     * @param delCall      the callback to handle success or failure of the delete operation
+     */
     public void deleteFacility(Facility realFacility, DeleteCallback delCall){
 
         CRUD.readAllLive(Event.class, new ReadMultipleCallback<Event>() {
@@ -39,6 +46,10 @@ public class AdminViewOrganizer extends AppCompatActivity {
                         if (eventData.getEventPosterPath() != null){
                             CRUD.removeImage(eventData.getEventPosterPath(), delCall);
                         }
+                        if (eventData.getQrCodePath() != null){
+                            CRUD.removeImage(eventData.getQrCodePath(), delCall);
+                        }
+
                         CRUD.delete(appList, ApplicantList.class, delCall);
                         CRUD.delete(eventData.getDocumentId(), Event.class, delCall);
                         CRUD.delete(realFacility.getDocumentId(), Facility.class, delCall);
@@ -55,9 +66,12 @@ public class AdminViewOrganizer extends AppCompatActivity {
         });
     }
 
-
-
-
+    /**
+     * Initializes the activity. Sets up UI components and displays details of the selected entity
+     * (Event, Facility, or User). Also enables delete functionality.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +112,9 @@ public class AdminViewOrganizer extends AppCompatActivity {
                 if (realEvent.getEventPosterPath() != null){
                     CRUD.removeImage(realEvent.getEventPosterPath(), delCall);
                 }
+                if (realEvent.getQrCodePath() != null){
+                    CRUD.removeImage(realEvent.getQrCodePath(), delCall);
+                }
                 CRUD.delete(id, Event.class, delCall);
                 CRUD.delete(realEvent.getApplicantList(), ApplicantList.class, delCall);
             }
@@ -130,6 +147,32 @@ public class AdminViewOrganizer extends AppCompatActivity {
 
                         }
                     });
+                    CRUD.readAllLive(Notification.class, new ReadMultipleCallback<Notification>() {
+                        @Override
+                        public void onReadMultipleSuccess(ArrayList<Notification> data) {
+                            for (Notification notif : data){
+                                if (notif.getUser().getDeviceId().equals(realUser.getDeviceId())){
+                                    CRUD.delete(notif.getDocumentId(), Notification.class, new DeleteCallback() {
+                                        @Override
+                                        public void onDeleteSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onDeleteFailure(Exception e) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onReadMultipleFailure(Exception e) {
+
+                        }
+                    });
+
 
                 }
                 if (realUser.getRoles().contains(Role.ORGANIZER)){
@@ -249,7 +292,6 @@ public class AdminViewOrganizer extends AppCompatActivity {
 
                 }
             });
-
         }
         else if (editEvent instanceof User){
             User specUser = (User) editEvent;
@@ -285,6 +327,5 @@ public class AdminViewOrganizer extends AppCompatActivity {
             available.setText(fieldThree);
             location.setText(fieldFour);
         }
-
     }
 }

@@ -12,6 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code CancelledApplicants} class represents a screen in the Quacks app
+ * that displays a list of applicants who cancelled their acceptance for a specific event.
+ * It allows organizers to view the list and notify applicants if needed.
+ */
 public class CancelledApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -27,12 +32,13 @@ public class CancelledApplicants extends AppCompatActivity {
     private Event event;
     private Button select;
     private Button notify_all;
-    /**
-     * This is the list that holds all accepted applicants
-     *
-     * @param savedInstanceState
-     */
 
+    /**
+     * Initializes the activity, sets up the UI components, retrieves data from intent extras,
+     * and populates the list of cancelled applicants.
+     *
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +136,6 @@ public class CancelledApplicants extends AppCompatActivity {
                                     }
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
-
                             }
 
                             @Override
@@ -198,9 +203,5 @@ public class CancelledApplicants extends AppCompatActivity {
 
             }
         });
-
-
-
-
     }
 }

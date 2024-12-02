@@ -11,17 +11,21 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.ArrayList;
 
-/*
-This is the home screen for Admin, containing the buttons that allow you to navigate
-to different lists. Profiles, Events, Images, Facilities, and QR codes
+/**
+ * The {@code AdminHome} class represents the home screen for admin users in the Quacks app.
+ * It provides navigation buttons for different features such as Profiles, Events, Images,
+ * Facilities, and the ability to switch to the entrant home screen.
  */
-
 public class AdminHome extends AppCompatActivity {
     private User user;
     boolean isFirstSelection = true;
+
+    /**
+     * Initializes the activity. Sets up the UI components and navigation actions for the admin home screen.
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +115,7 @@ public class AdminHome extends AppCompatActivity {
     private ArrayAdapter<String> getStringArrayAdapter() {
         ArrayList<String> items = new ArrayList<>();
         items.add("Entrant Profile");
-        if (user.getRoles().contains(Role.ORGANIZER)) {
+        if (user != null && user.getRoles().contains(Role.ORGANIZER)) {
             items.add("Organizer Profile");
         }
         items.add("Administrator Profile");

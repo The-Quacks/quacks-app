@@ -1,5 +1,6 @@
 package com.example.quacks_app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.ListenerRegistration;
@@ -23,6 +26,7 @@ import java.util.Map;
  * leave that waitlist.
  */
 public class ViewEventsEntrant extends AppCompatActivity {
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +35,23 @@ public class ViewEventsEntrant extends AppCompatActivity {
         ListView eventList = findViewById(R.id.event_list);
         ImageButton home = findViewById(R.id.homeIcon);
 
+        user = (User) getIntent().getSerializableExtra("User");
+
         ArrayList<Event> events = (ArrayList<Event>) getIntent().getSerializableExtra("EventList");
         EventArrayAdapter eventArrayAdapter = new EventArrayAdapter(this, events);
         eventList.setAdapter(eventArrayAdapter);
+
+        ActivityResultLauncher<Intent> activityResultLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+
+                                Intent data = result.getData();
+                                if (data != null) {
+                                    user = (User) data.getSerializableExtra("User");
+                                }
+                            }
+                        });
 
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -41,16 +59,16 @@ public class ViewEventsEntrant extends AppCompatActivity {
                 Event clickedEvent = (Event) adapterView.getItemAtPosition(i);
 
                 Intent intent = new Intent(ViewEventsEntrant.this, EventDescription.class);
-                intent.putExtra("User", getIntent().getSerializableExtra("User"));
+                intent.putExtra("User", user);
                 intent.putExtra("id", clickedEvent.getEventId());
                 intent.putExtra("isRemoving", true);
-                startActivity(intent);
+                activityResultLauncher.launch(intent);
             }
         });
 
         home.setOnClickListener(v -> {
             Intent intent = new Intent(ViewEventsEntrant.this, EntrantHome.class);
-            intent.putExtra("User", getIntent().getSerializableExtra("User"));
+            intent.putExtra("User", user);
             startActivity(intent);
         });
     }

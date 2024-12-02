@@ -161,6 +161,4 @@ public class EditDialogueFragment extends DialogFragment {
          */
         void onProfileUpdated(UserProfile updatedProfile);
     }
-
-
 }

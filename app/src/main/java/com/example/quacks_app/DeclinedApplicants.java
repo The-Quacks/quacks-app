@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code DeclinedApplicants} class displays a list of all declined applicants for a specific event.
+ * It allows organizers to view and manage the declined applicants, as well as send notifications or select further actions.
+ */
 public class DeclinedApplicants extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -29,11 +33,11 @@ public class DeclinedApplicants extends AppCompatActivity {
     private Event event;
 
     /**
-     * This is the list that holds all declined applicants
+     * Initializes the activity, sets up UI components, and displays the list of declined applicants.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState If the activity is being reinitialized after being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,8 +170,6 @@ public class DeclinedApplicants extends AppCompatActivity {
         });
 
 
-
-
         search = findViewById(R.id.declined_app_search);
         homepage = findViewById(R.id.declined_app_house);
         profile = findViewById(R.id.declined_app_person);
@@ -210,6 +212,5 @@ public class DeclinedApplicants extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 }

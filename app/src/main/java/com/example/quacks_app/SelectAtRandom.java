@@ -19,8 +19,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/*
-Selecting a specified number of participants per notification round
+/**
+ * The {@code SelectAtRandom} class represents an activity where the organizer can select a specified number of
+ * applicants at random for an event. Notifications are sent to the selected applicants and updated in the system.
  */
 public class SelectAtRandom extends AppCompatActivity {
     private EditText capacity;
@@ -34,7 +35,11 @@ public class SelectAtRandom extends AppCompatActivity {
     private Facility facility;
     private User user;
 
-
+    /**
+     * Initializes the activity and its UI components. Handles event, facility, and user data validation.
+     *
+     * @param savedInstanceState The saved state of the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +83,14 @@ public class SelectAtRandom extends AppCompatActivity {
 
         capacity.setText(String.valueOf(waitlist_capacity));
 
+        int alreadyAcc = 0;
+        for (Notification notif : event.getNotificationList().getNotificationList()){
+            if (notif.getAccepted()){
+                alreadyAcc += 1;
+            }
+        }
+
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +99,7 @@ public class SelectAtRandom extends AppCompatActivity {
             }
         });
 
+        int finalAlreadyAcc = alreadyAcc;
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,14 +137,15 @@ public class SelectAtRandom extends AppCompatActivity {
 
 
                         // Process applicants
-                        List<String> ids = applicantList.getApplicantIds().subList(0, limit);
+
                         List<String> all_ids = applicantList.getApplicantIds();
                         ArrayList<Notification> notifications = notificationList.getNotificationList();
 
+
                         AtomicInteger remaining = new AtomicInteger(all_ids.size());
+                        AtomicInteger selected = new AtomicInteger(limit-finalAlreadyAcc);
 
                         for (String applicantId : all_ids) {
-                            boolean isAccepted = ids.contains(applicantId);
 
                             for (int i = 0; i < notifications.size(); i++) {
                                 Notification current = notifications.get(i);
@@ -151,14 +166,33 @@ public class SelectAtRandom extends AppCompatActivity {
                                                     current.setApplicantListId(applicantListId);
                                                     current.setNotificationEventId(event.getEventId());
                                                     current.setNotificationListId(notificationList.getNotificationListId());
-                                                    String condition = isAccepted ? "Accepted" : "Declined";
+                                                    String condition;
+                                                    if (checkSelected(selected.decrementAndGet())){
+                                                        condition = "Accepted";
+                                                    }
+                                                    else{
+                                                        condition = "Declined";
+                                                    }
                                                     current.setSentStatus("Not Sent");
                                                     current.setWaitlistStatus(condition);
                                                     current.setAccepted(false);
                                                     CRUD.update(current, new UpdateCallback() {
                                                         @Override
                                                         public void onUpdateSuccess() {
-                                                            checkCompletion(remaining.decrementAndGet());
+                                                            notificationList.addNotification(current);
+                                                            CRUD.update(notificationList, new UpdateCallback() {
+                                                                @Override
+                                                                public void onUpdateSuccess() {
+                                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                                }
+
+                                                                @Override
+                                                                public void onUpdateFailure(Exception e) {
+
+                                                                }
+                                                            });
+
                                                         }
 
                                                         @Override
@@ -191,7 +225,13 @@ public class SelectAtRandom extends AppCompatActivity {
                                                             notify.setApplicantListId(applicantListId);
                                                             notify.setNotificationEventId(event.getEventId());
                                                             notify.setNotificationListId(notificationList.getNotificationListId());
-                                                            String condition = isAccepted ? "Accepted" : "Declined";
+                                                            String condition;
+                                                            if (checkSelected(selected.decrementAndGet())){
+                                                                condition = "Accepted";
+                                                            }
+                                                            else{
+                                                                condition = "Declined";
+                                                            }
                                                             notify.setSentStatus("Not Sent");
                                                             notify.setWaitlistStatus(condition);
                                                             notify.setAccepted(false);
@@ -200,7 +240,19 @@ public class SelectAtRandom extends AppCompatActivity {
                                                                 @Override
                                                                 public void onUpdateSuccess() {
                                                                     notificationList.addNotification(notify);
-                                                                    checkCompletion(remaining.decrementAndGet());
+
+                                                                    CRUD.update(notificationList, new UpdateCallback() {
+                                                                        @Override
+                                                                        public void onUpdateSuccess() {
+                                                                            checkCompletion(remaining.decrementAndGet());
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onUpdateFailure(Exception e) {
+
+                                                                        }
+                                                                    });
+
                                                                 }
 
                                                                 @Override
@@ -241,9 +293,13 @@ public class SelectAtRandom extends AppCompatActivity {
         });
     }
 
+    private boolean checkSelected(int selected){
+        return selected >= 0;
+    }
     /**
-     * Checks based from the count of userlist, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Updates the notification and event list once all users are processed.
+     *
+     * @param remainingCount The remaining number of users to process.
      */
     private void checkCompletion(int remainingCount) {
                 if (remainingCount == 0) {

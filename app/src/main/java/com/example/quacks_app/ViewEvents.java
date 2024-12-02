@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ViewEvents} class handles the display and management of events associated with a specific facility.
+ * Users can view a list of events, navigate to event details, and access related features through bottom navigation buttons.
+ */
 public class ViewEvents extends AppCompatActivity {
     private Facility facility;
     private ArrayList<Event> eventDataList;
@@ -24,6 +28,11 @@ public class ViewEvents extends AppCompatActivity {
     private EventList evented;
     private User user;
 
+    /**
+     * Initializes the activity and sets up the event list, bottom navigation buttons, and event click listeners.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +42,7 @@ public class ViewEvents extends AppCompatActivity {
         if (getIntent().getSerializableExtra("Facility")==null){
             finish();
         }
-        //evented = (EventList) getIntent().getSerializableExtra("EventList");
+
         facility = (Facility) getIntent().getSerializableExtra("Facility");
         user = (User) getIntent().getSerializableExtra("User");
 

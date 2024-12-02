@@ -74,13 +74,6 @@
             android:inputType="text"
             android:text="Location" />
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:ems="30"
-            android:inputType="text"
-            android:text="Description" />
     </LinearLayout>
 
     <Button
