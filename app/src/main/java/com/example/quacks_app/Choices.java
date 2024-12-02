@@ -219,7 +219,10 @@ public class Choices extends AppCompatActivity {
             }
         });
     }
-
+    /**
+     * Checks based from the count of notificationlist, that it has finished setting notifications for each user
+     * @param remainingCount
+     */
     private void checkCompletion(int remainingCount) {
         if (remainingCount == 0) {
             // All users processed

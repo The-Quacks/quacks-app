@@ -130,4 +130,54 @@ public class NotificationCenter extends AppCompatActivity {
             }
         });
     }
+
+
+    /**
+     * Gets the current user object, I used user as a parameter in notification handler so I thought this might be useful
+     */
+    public User getUser(){
+        String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        final User[] user = {null};
+        CRUD.readStatic(androidId, User.class, new ReadCallback<User>() {
+            @Override
+            public void onReadSuccess(User data) {
+                if (data != null) {
+                    user[0] = data;
+
+                }
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+
+            }
+        });
+        return user[0];
+    }
+
+    /**
+     * Gets the current event from notification object, returns event object
+     */
+    public Event getEvent(Notification notification){
+        String eventid = notification.getNotificationEventId();
+        String appliantid = notification.getApplicantListId();
+        final Event[] event = {null};
+        CRUD.readStatic(eventid, Event.class, new ReadCallback<Event>() {
+            @Override
+            public void onReadSuccess(Event data) {
+                if (data != null){
+                    if (data.getApplicantList().equals(appliantid) && eventid.equals(data.getEventId())){
+                        //they are the same event
+                        event[0] = data;
+                    }
+                }
+            }
+
+            @Override
+            public void onReadFailure(Exception e) {
+
+            }
+        });
+        return event[0];
+    }
 }

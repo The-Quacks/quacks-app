@@ -164,7 +164,12 @@ public class NotificationHandler {
         }
     }
 
-    public ArrayList<Notification> queryDatabase(User user) {
+    /**
+     * Based on the user passed it queries for the notifications that are not delivered and addes them to an arraylist
+     * @param user
+     * @return an Arraylist of notifications
+     */
+    public ArrayList<Notification> getNotificationForUser(User user) {
         ArrayList<Notification> user_specified_notifications = new ArrayList<Notification>();
 
         CRUD.readStatic(user.getDeviceId(), User.class, new ReadCallback<User>() {
