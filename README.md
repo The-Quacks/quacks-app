@@ -24,10 +24,13 @@ Geolocation Verification:
 
 ## Requirements
 Android Studio 2024.1.2
+Firebase Blaze subscription
 
 ## Installation
 Clone the repository:
 - git clone https://github.com/your-username/ml-dataset-processor.git](https://github.com/The-Quacks/quacks-app.git
+Create a new project in Firebase and link it to the project:
+- follow the steps for linking an android app in the Firebase console 
 
 ## Usage
 1. Open the project directory from within Android Studio
