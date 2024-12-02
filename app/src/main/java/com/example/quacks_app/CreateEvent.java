@@ -52,6 +52,8 @@ public class CreateEvent extends AppCompatActivity {
     private Date final_date_time;
     private ApplicantList appList;
 
+    private Button delete;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -82,6 +84,8 @@ public class CreateEvent extends AppCompatActivity {
         geolocation = findViewById(R.id.geolocation);
         description = findViewById(R.id.description);
         eventtime = findViewById(R.id.event_time);
+        delete = findViewById(R.id.delete_event);
+        delete.setVisibility(View.GONE);
 
 
         back.setOnClickListener(new View.OnClickListener() {
