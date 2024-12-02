@@ -203,7 +203,6 @@ public class NotificationHandler implements Serializable {
         return notifications;
 
     }
-
     public void sendUnreadNotifications(Context context, ArrayList<Notification> notifications) {
         for (int i = 0; i < notifications.size(); i++) {
             String wStatus = notifications.get(i).getWaitlistStatus();
