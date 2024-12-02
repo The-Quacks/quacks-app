@@ -58,14 +58,14 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
         current = (User) getIntent().getSerializableExtra("User");
         UserProfile profile = current.getUserProfile();
 
-        bussiness_name = findViewById(R.id.Name);
-        location = findViewById(R.id.location);
-        phone_number = findViewById(R.id.contact_info);
-        facility_deets = findViewById(R.id.facility_details);
-        accessibility = findViewById(R.id.accessibility);
-        emailed = findViewById(R.id.email);
-        usernamed = findViewById(R.id.username);
-        password = findViewById(R.id.password);
+        bussiness_name = findViewById(R.id.edit_Name);
+        location = findViewById(R.id.edit_location);
+        phone_number = findViewById(R.id.edit_contact_info);
+        facility_deets = findViewById(R.id.edit_facility_details);
+        accessibility = findViewById(R.id.edit_accessibility);
+        emailed = findViewById(R.id.edit_email);
+        usernamed = findViewById(R.id.edit_username);
+        password = findViewById(R.id.edit_password);
 
         // Setting with prior data
         bussiness_name.setText(new_facility.getName());
@@ -79,7 +79,7 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
 
 
         //on back click nothing is saved
-        back = findViewById(R.id.back_button);
+        back = findViewById(R.id.edit_back_button);
         back.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -88,7 +88,7 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
             }
         });
 
-        confirm = findViewById(R.id.confirm_button);
+        confirm = findViewById(R.id.edit_confirm_button);
         confirm.setOnClickListener(new View.OnClickListener() {
 
             @Override
