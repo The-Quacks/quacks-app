@@ -69,11 +69,17 @@ public class EventDescription extends AppCompatActivity {
         CRUD.readLive(eventId, Event.class, readEventCallback);
 
         back.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("User", currentUser);
+            setResult(RESULT_OK, resultIntent);
             finish();
         });
 
         home.setOnClickListener(v -> {
-            startActivity(new Intent(this, EntrantHome.class));
+            Intent intent = new Intent(EventDescription.this, EntrantHome.class);
+            intent.putExtra("User", currentUser);
+            startActivity(intent);
+            finish();
         });
 
 
