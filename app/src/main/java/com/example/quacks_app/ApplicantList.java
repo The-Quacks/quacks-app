@@ -3,12 +3,6 @@ package com.example.quacks_app;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/*
-This object represents the list of applicants belonging to each activity
-we use this instead of an ArrayList to give us control like setting limits, and drawing applicants
-randomly
- */
-
 /**
  * Represents a list of applicants with functionality to manage and retrieve applicant information.
  */
@@ -118,16 +112,11 @@ public class ApplicantList extends RepoModel implements Serializable {
     }
 
     /**
-     * Draws a specified number of applicants using the lottery system.
+     * Checks if the given user ID is present in the list of applicant IDs.
      *
-     * @param number The number of applicants to draw.
-     * @return An {@code ArrayList} of {@code String} representing the drawn applicant IDs.
+     * @param userId The {@code String} representing the user ID to be checked.
+     * @return {@code true} if the user ID is present in the list, {@code false} otherwise.
      */
-    public ArrayList<String> drawApplicants(int number) {
-        LotterySystem lotterySystem = new LotterySystem();
-        return this.applicantIds; // placeholder
-    }
-
     public boolean contains(String userId) {
         return applicantIds.contains(userId);
     }

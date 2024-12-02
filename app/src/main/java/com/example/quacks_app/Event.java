@@ -1,9 +1,13 @@
 package com.example.quacks_app;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The {@code Event} class represents an event with details such as name, description,
+ * date and time, capacities, and associated applicant and notification lists.
+ * It provides methods to manage event-related data and supports Firebase serialization.
+ */
 public class Event extends RepoModel implements Serializable, Listable {
     private Date dateTime;
     private String eventName;
@@ -24,13 +28,24 @@ public class Event extends RepoModel implements Serializable, Listable {
     private ApplicantList final_list;
     private boolean closed_open;
 
-    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
-        // placeholder
-    }
-
-
+    /**
+     * Default constructor required for Firebase serialization.
+     */
     public Event(){
         // need empty constructor for firebase
+    }
+
+    /**
+     * Constructs an event with specific details.
+     *
+     * @param dateTime      The date and time of the event.
+     * @param description   The description of the event.
+     * @param applicantList The applicant list for the event.
+     * @param facilityId    The identifier for the facility.
+     * @param organizerId   The identifier for the organizer.
+     */
+    public Event(Date dateTime, String description, ApplicantList applicantList, String facilityId, String organizerId) {
+        // placeholder
     }
 
     /**
@@ -42,16 +57,26 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the Geo Location
-     * @ return String geo
+     * @return String geo
      */
     public Boolean getGeo() {
         return this.geoRequired;
     }
 
+    /**
+     * Retrieves the path to the event's poster.
+     *
+     * @return The path to the event's poster.
+     */
     public String getEventPosterPath() {
         return eventPosterPath;
     }
 
+    /**
+     * Sets the path to the event's poster.
+     *
+     * @param posterId The path to the event's poster.
+     */
     public void setEventPosterPath(String posterId) {
         this.eventPosterPath = posterId;
     }
@@ -66,7 +91,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the instructor name
-     * @ return String name
+     * @return String name
      */
     public String getInstructor() {
         return this.instructorName;
@@ -81,7 +106,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the waitlist capacity for the event
-     * @ return int capacity
+     * @return int capacity
      */
     public int getWaitlistCapacity(){
         return this.waitlist_capacity;
@@ -96,7 +121,7 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Gets the registration Capacity
-     * @ return int number
+     * @return int number
      */
     public int getRegistrationCapacity(){
        return this.registration_capacity;
@@ -104,14 +129,13 @@ public class Event extends RepoModel implements Serializable, Listable {
 
     /**
      * Sets the name of the event
-     * @ return none
      */
     public void setEventName(String Name){
         this.eventName = Name;
     }
     /**
      * Gets the name of the event
-     * @ return String name
+     * @return String name
      */
     public String getEventName(){
         return this.eventName;
@@ -210,22 +234,44 @@ public class Event extends RepoModel implements Serializable, Listable {
         this.organizerId = organizerId;
     }
 
+    /**
+     * Retrieves the QR code hash for the event.
+     *
+     * @return The QR code hash.
+     */
     public String getQRCodeHash() {
         return QRCodeHash;
     }
 
+    /**
+     * Sets the QR code hash for the event.
+     *
+     * @param QRCodeHash The QR code hash.
+     */
     public void setQRCodeHash(String QRCodeHash) {
         this.QRCodeHash = QRCodeHash;
     }
 
+    /**
+     * Retrieves the primary display information for the event.
+     * @return A {@code String} containing the description of the event.
+     */
     public String getDisplay() {
         return description;
     }
 
+    /**
+     * Retrieves the secondary display information for the event.
+     * @return An empty {@code String}.
+     */
     public String getSubDisplay() {
         return "";
     }
 
+    /**
+     * Retrieves the unique identifier for the event.
+     * @return A {@code String} containing the unique identifier of the event.
+     */
     public String getEventId() {
         return super.getDocumentId();
     }
@@ -238,12 +284,22 @@ public class Event extends RepoModel implements Serializable, Listable {
         this.qrCodePath = qrCodePath;
     }
 
-    public void setNotificationList(NotificationList list){
-        this.notificationList = list;
-    }
-
+    /**
+     * Retrieves the notification list for the event.
+     *
+     * @return The notification list.
+     */
     public NotificationList getNotificationList(){
         return this.notificationList;
+    }
+
+    /**
+     * Sets the notification list for the event.
+     *
+     * @param list The notification list.
+     */
+    public void setNotificationList(NotificationList list){
+        this.notificationList = list;
     }
 
     /***
@@ -252,6 +308,7 @@ public class Event extends RepoModel implements Serializable, Listable {
     public void setFinal_list(ApplicantList final_list){
         this.final_list = final_list;
     }
+
     /***
      * Sets the final list of applicants when closing registration for event
      */
@@ -263,16 +320,17 @@ public class Event extends RepoModel implements Serializable, Listable {
     }
 
     /**
-     * Opens Registration
-     * @param status
+     * Sets the registration status of the event.
+     *
+     * @param status {@code true} if registration is open; otherwise, {@code false}.
      */
     public void setRegistration(boolean status){
         this.closed_open = status;
     }
 
     /**
-     * Gets whether registration for that event is open
-     * @return
+     * Retrieves the registration status of the event.
+     * @return {@code true} if registration is open; otherwise, {@code false}.
      */
     public boolean getRegistration(){
         return this.closed_open;

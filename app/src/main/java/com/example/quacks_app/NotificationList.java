@@ -26,7 +26,7 @@ public class NotificationList extends RepoModel implements Serializable {
     }
     /**
      * Gets the eventId for the notification list
-     * @ return String id
+     * @return String id
      */
     public String getNotificationEventId(){
         return this.eventId;
@@ -34,7 +34,7 @@ public class NotificationList extends RepoModel implements Serializable {
 
     /**
      * Retrieves the list of notifications
-     * @ return an {@code ArrayList} of {@code String} representing notification
+     * @return an {@code ArrayList} of {@code String} representing notification
      */
     public ArrayList<Notification> getNotificationList(){
         return notifications;

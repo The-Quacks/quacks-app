@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The {@code LastChoice} class allows organizers to finalize their choice on event applicants.
+ * Organizers can accept or decline applicants and notify them of their final status.
+ */
 public class LastChoice extends AppCompatActivity {
     private Button back;
     private Button confirm;
@@ -22,7 +26,11 @@ public class LastChoice extends AppCompatActivity {
     private User user;
     private NotificationList notificationList;
 
-
+    /**
+     * Called when the activity is created. Sets up the user interface and retrieves necessary data.
+     *
+     * @param savedInstanceState The saved instance state bundle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,8 +163,9 @@ public class LastChoice extends AppCompatActivity {
     }
 
     /**
-     * Checks based from the count of notificationList, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Checks if all notifications have been processed and updates the database accordingly.
+     *
+     * @param remainingCount The count of remaining users to process.
      */
     private void checkCompletion(int remainingCount) {
         if (remainingCount == 0) {

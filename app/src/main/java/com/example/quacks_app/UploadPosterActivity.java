@@ -19,9 +19,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+/**
+ * The {@code UploadPosterActivity} class handles the functionality for uploading and saving an event poster.
+ * It allows users to select an image from their device, upload it to Firebase, and associate it with an event.
+ */
 public class UploadPosterActivity extends AppCompatActivity {
-    // ActivityResultLauncher for handling the photo picker
+
+    /**
+     * ActivityResultLauncher for handling the photo picker activity results.
+     */
     private ActivityResultLauncher<Intent> pickImageLauncher;
+
+    /**
+     * Initializes the photo picker launcher to handle image selection and upload.
+     */
     private void initializePickImageLauncher() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -46,6 +57,9 @@ public class UploadPosterActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Saves the updated event, including the poster path, to Firestore.
+     */
     private void saveEventToFirestore(){
         if (event.getEventId() != null) {
             Log.d("SaveEvent", "Saving event with poster path: " + event.getEventPosterPath());
@@ -112,18 +126,14 @@ public class UploadPosterActivity extends AppCompatActivity {
         );
         Button next = findViewById(R.id.next_button_poster);
 
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UploadPosterActivity.this, ViewEvents.class);
-                intent.putExtra("User", user);
-                intent.putExtra("Facility", facility);
-                intent.putExtra("Event", event);
-                startActivity(intent);
-                finish();
-            }
-
-            });
+        next.setOnClickListener(v -> {
+            Intent intent = new Intent(UploadPosterActivity.this, ViewEvents.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Facility", facility);
+            intent.putExtra("Event", event);
+            startActivity(intent);
+            finish();
+        });
     }
 }
 

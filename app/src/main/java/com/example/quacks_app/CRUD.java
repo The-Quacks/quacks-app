@@ -420,6 +420,15 @@ public class CRUD {
                 .addOnFailureListener(callback::onDeleteFailure);
     }
 
+    /**
+     * Deletes all documents in a Firestore collection corresponding to the given class type.
+     * This method retrieves all documents in the collection, deletes them one by one, and
+     * invokes the provided callback to handle success or failure.
+     *
+     * @param <T>       The type of objects in the collection, extending {@link RepoModel}.
+     * @param classType The {@link Class} object representing the type of the collection's objects.
+     * @param callback  A {@link DeleteCallback} to handle success or failure events.
+     */
     public static <T extends RepoModel> void clearColection(Class<T> classType, DeleteCallback callback) {
         CollectionReference colRef = getInstance().collection(classType.getSimpleName());
         colRef.get()

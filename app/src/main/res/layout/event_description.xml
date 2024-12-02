@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,32 +8,154 @@
     android:background="#E4D0D0"
     android:fitsSystemWindows="true">
 
+    <!-- Event Title -->
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text=""
+        android:text="Event Title"
         android:textColor="@color/text"
         android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <!-- Event Start Time Label -->
     <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="350dp"
-        android:layout_height="256dp"
-        android:background="#F5EBEB"
-        android:fontFamily="@font/yaldevi_semibold"
-        android:lineSpacingExtra="8sp"
+        android:id="@+id/eventStartTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Start Time:"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/joinWaitlistButton"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
+        app:layout_constraintTop_toBottomOf="@id/eventTitle"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Event Start Time -->
+    <TextView
+        android:id="@+id/eventStartTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/eventStartTimeLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/eventStartTimeLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Event Description Label -->
+    <TextView
+        android:id="@+id/eventDescriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Description:"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventStartTime"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Event Description -->
+    <TextView
+        android:id="@+id/eventDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="description"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:lineSpacingExtra="4sp"
+        app:layout_constraintStart_toStartOf="@id/eventDescriptionLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventDescriptionLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Facility Label -->
+    <TextView
+        android:id="@+id/eventFacilityLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Facility:"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventDescription"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Facility -->
+    <TextView
+        android:id="@+id/eventFacility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="facility"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/eventFacilityLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventFacilityLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Organizer Label -->
+    <TextView
+        android:id="@+id/eventOrganizerLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Organizer:"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventFacility"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Organizer -->
+    <TextView
+        android:id="@+id/eventOrganizer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Organizer"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/eventOrganizerLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventOrganizerLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Organizer Label -->
+    <TextView
+        android:id="@+id/eventGeoLocationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event GeoLocation Requirement:"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventOrganizer"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Organizer -->
+    <TextView
+        android:id="@+id/eventGeoLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Required"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/eventGeoLocationLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventGeoLocationLabel"
+        android:layout_marginStart="8dp" />
 
     <LinearLayout
         android:id="@+id/bottomNavigationView"

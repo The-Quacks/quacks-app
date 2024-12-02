@@ -20,7 +20,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * The {@code MakeOrganizerProfile} class allows users to create or update an organizer profile
+ * and associated facility information. It performs input validation, geolocation retrieval,
+ * and updates the profile in the database.
+ */
 public class MakeOrganizerProfile extends AppCompatActivity {// or the correct XML layout file
     private Button back;
     private Button confirm;
@@ -46,8 +50,11 @@ public class MakeOrganizerProfile extends AppCompatActivity {// or the correct X
     private int round_8 = 0;
 
     /**
-     * Otherwise known as the Edit Facility/Organizer profile page
-     * @param savedInstanceState
+     * Called when the activity is first created. Sets up the UI components and populates
+     * existing data for the facility and organizer profile if available.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this contains the most recent data. Otherwise, it is {@code null}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

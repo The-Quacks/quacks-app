@@ -143,7 +143,7 @@ public class NotificationCenter extends AppCompatActivity {
     public User getUser(){
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         final User[] user = {null};
-        CRUD.readStatic(androidId, User.class, new ReadCallback<User>() {
+        CRUD.readLive(androidId, User.class, new ReadCallback<User>() {
             @Override
             public void onReadSuccess(User data) {
                 if (data != null) {

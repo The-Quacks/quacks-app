@@ -18,18 +18,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The {@code EventInfo} class displays detailed information about a specific event
+ * and provides options to edit, delete, manage registration, or handle applicants for the event.
+ */
 public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
-    private String applicantList;
-    private EventList eventList;
-    private Facility actual_facility;
-    private User user;
-    private Event event;
+    private String applicantList; // ID of the applicant list for the event
+    private EventList eventList; // List of all events
+    private Facility actual_facility; // The facility where the event is taking place
+    private User user; // The user interacting with this activity
+    private Event event; // The event being displayed
 
+    /**
+     * Initializes the activity, sets up the UI components, and handles user interactions.
+     *
+     * @param savedInstanceState If the activity is reinitialized after previously being shut down,
+     *                           this bundle contains the most recent data. Otherwise, it is {@code null}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_info);
 
+        // Retrieve event, facility, and user data passed from the previous activity
         event = (Event) getIntent().getSerializableExtra("Event");
         if (event == null){
             Toast.makeText(this, "Error: Event data not found.", Toast.LENGTH_SHORT).show();
@@ -59,6 +70,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
         Button edit_event_button = findViewById(R.id.edit_event_button);
         Button applicant_lists_button = findViewById(R.id.applicant_lists);
 
+        // Populate text fields with event data
         String text = event.getDescription();
         geolocation.setChecked(event.getGeo() != null && event.getGeo());
         geolocation.setClickable(false);
@@ -105,7 +117,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
             Log.e("Event Info", "event poster doesn't exist: ");
         }
 
-
+        // Handle button clicks
         open_registration_button.setOnClickListener(view -> {
             //makes an applicant list for that event.
             Intent intent = new Intent(EventInfo.this, OpenRegistration.class);
@@ -129,41 +141,40 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
             dialog.show(getSupportFragmentManager(), "EditDeleteDialog");
         });
 
-
         close_registration_button.setOnClickListener(view -> {
 
-            if (!event.getRegistration()){
-                Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
-            } else{
-                event.setRegistration(false);
-                String app_id = event.getApplicantList();
-                CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
-                    @Override
-                    public void onReadSuccess(ApplicantList data) {
-                        if (data != null){
-                            event.setFinal_list(data);
+                    if (!event.getRegistration()){
+                        Toast.makeText(EventInfo.this, "Event is already closed!", Toast.LENGTH_SHORT).show();
+                    } else{
+                        event.setRegistration(false);
+                        String app_id = event.getApplicantList();
+                        CRUD.readStatic(app_id, ApplicantList.class, new ReadCallback<ApplicantList>() {
+                            @Override
+                            public void onReadSuccess(ApplicantList data) {
+                                if (data != null){
+                                    event.setFinal_list(data);
 
-                            CRUD.update(event, new UpdateCallback() {
-                                @Override
-                                public void onUpdateSuccess() {
-                                    Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                    CRUD.update(event, new UpdateCallback() {
+                                        @Override
+                                        public void onUpdateSuccess() {
+                                            Toast.makeText(EventInfo.this, "Registration is Closed!", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onUpdateFailure(Exception e) {
+                                            Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
+                            }
 
-                                @Override
-                                public void onUpdateFailure(Exception e) {
-                                    Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                            @Override
+                            public void onReadFailure(Exception e) {
+                                Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
-
-                    @Override
-                    public void onReadFailure(Exception e) {
-                        Toast.makeText(EventInfo.this, "Error Closing Registration.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
 
 
                     //            CRUD.delete(event.getDocumentId(), Event.class, new DeleteCallback() {
@@ -181,7 +192,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
                 }
         );
 
-        //This is the bottom of the page directory
+        // This is the bottom of the page directory
         ImageButton homepage = findViewById(R.id.house);
         ImageButton profile = findViewById(R.id.person);
         ImageButton search = findViewById(R.id.search);
@@ -206,6 +217,9 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
 
     }
 
+    /**
+     * Prompts the user to confirm event deletion and performs the deletion if confirmed.
+     */
     private void confirmDeleteEvent() {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Confirm Delete")

@@ -14,17 +14,37 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code ImageAdapter} class is a custom {@code ArrayAdapter} designed to display images
+ * in a ListView or GridView using image IDs to retrieve images from a database.
+ */
 public class ImageAdapter extends ArrayAdapter<String> {
     private Context mContext;
     private ArrayList<String> dataList;
     private int resource;
 
+    /**
+     * Constructs an {@code ImageAdapter} with the specified context, layout resource, and data list.
+     *
+     * @param context  The current context.
+     * @param resource The resource ID for the layout file.
+     * @param dataList An {@code ArrayList} of image IDs to display.
+     */
     public ImageAdapter(@NonNull Context context, int resource, @NonNull ArrayList<String> dataList) {
         super(context, resource, dataList);
         this.mContext = context;
         this.resource = resource;
         this.dataList = dataList;
     }
+
+    /**
+     * Returns a view for each item in the data set.
+     *
+     * @param position    The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent      The parent view that this view will eventually be attached to.
+     * @return A {@code View} corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -49,8 +69,6 @@ public class ImageAdapter extends ArrayAdapter<String> {
 
             }
         });
-
-
 
         return view;
     }

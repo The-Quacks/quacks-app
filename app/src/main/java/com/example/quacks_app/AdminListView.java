@@ -14,30 +14,40 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/*
-This is a general list screen that displays the entire databases entries depending on what the user
-selected on the home screen. All the buttons from the home screen lead to this tab, but display different
-things depending on what they clicked
+/**
+ * The {@code AdminListView} class represents a general-purpose list view screen in the Quacks app.
+ * It displays database entries dynamically based on the type selected by the user on the home screen.
+ * Supported types include Events, Profiles, and Facilities.
  */
-
 public class AdminListView extends AppCompatActivity {
     ListView genList;
     CustomAdapter genAdapter;
     Listable selected = null;
 
+    /**
+     * Initializes the activity. Dynamically populates the list view based on the user-selected type
+     * and sets up navigation and interaction logic.
+     * @param savedInstanceState {@code null} if the activity is being created for the first time.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.admin_list_layout);
+        // Initialize ListView
         genList = findViewById(R.id.gen_list);
 
+        // Retrieve view type from intent extras
         Bundle bundle = getIntent().getExtras();
         String viewType = bundle.getString("viewType");
+
+        // Set the title of the screen based on the view type
         TextView type = findViewById(R.id.listViewType);
         type.setText(viewType);
 
+        // Initialize the home button
         ImageButton home = findViewById(R.id.homeIcon);
 
+        // Temporary lists for displaying and querying data
         ArrayList<Listable> testarr = new ArrayList<>();
         ArrayList<Listable> queryList = new ArrayList<>();
 
@@ -113,11 +123,8 @@ public class AdminListView extends AppCompatActivity {
 
         });
 
-
         home.setOnClickListener(view -> {
             finish();
         });
-
-
     }
 }
