@@ -108,10 +108,6 @@ public class EntrantHome extends AppCompatActivity {
 //            startActivity(new Intent(EntrantHome.this, Waitlist.class));
 //        });
 
-//        notifications.setOnClickListener(view -> {
-//            startActivity(new Intent(EntrantHome.this, Notifications.class));
-//        });
-
         scanQRCode.setOnClickListener(view -> {
             GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
                     .setBarcodeFormats(Barcode.FORMAT_QR_CODE, Barcode.FORMAT_AZTEC)
@@ -129,6 +125,13 @@ public class EntrantHome extends AppCompatActivity {
                     .addOnCanceledListener(this::finish)
                     .addOnFailureListener(e -> {
                     });
+        });
+
+        notifications.setOnClickListener(v -> {
+            Intent intent = new Intent(EntrantHome.this, NotificationCenter.class);
+            intent.putExtra("User", user);
+            intent.putExtra("Notif_Permissions", nHandler.appEnabled);
+            startActivity(intent);
         });
     }
     /**
@@ -196,6 +199,8 @@ public class EntrantHome extends AppCompatActivity {
                     alert.show();
                 });
                 resultSnackbar.show();
+                nHandler.appEnabled = true;
+                nHandler.phoneEnabled = true;
                 // If denied, from now on show Snackbar that says "Notifications Disabled", with option to change permissions.
             } else {
                 resultSnackbar = Snackbar.make(this, this.findViewById(R.id.notificationsButton).getRootView(), "Notifications Disabled", Snackbar.LENGTH_LONG);
@@ -204,6 +209,8 @@ public class EntrantHome extends AppCompatActivity {
                     alert.show();
                 });
                 resultSnackbar.show();
+                nHandler.appEnabled = false;
+                nHandler.phoneEnabled = false;
             }
         }
     }
