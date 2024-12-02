@@ -55,6 +55,10 @@ public class CreateEvent extends AppCompatActivity {
     private Date final_date_time;
     private ApplicantList appList;
 
+    private Button delete;
+    private Button updatePoster;
+
+
     /**
      * Initializes the activity, sets up UI components, and handles event creation.
      *
@@ -66,14 +70,6 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
-
-        // Find the buttons
-        Button updatePosterButton = findViewById(R.id.UpdatePoster);
-        Button deleteEventButton = findViewById(R.id.event_delete_event);
-
-        // Hide the buttons
-        updatePosterButton.setVisibility(View.GONE);
-        deleteEventButton.setVisibility(View.GONE);
 
         back = findViewById(R.id.event_back_button);
         confirm = findViewById(R.id.event_confirm_button);
@@ -98,6 +94,11 @@ public class CreateEvent extends AppCompatActivity {
         geolocation = findViewById(R.id.event_geolocation);
         description = findViewById(R.id.event_description);
         eventtime = findViewById(R.id.event_time);
+        delete = findViewById(R.id.event_delete_event);
+        updatePoster = findViewById(R.id.UpdatePoster);
+        delete.setVisibility(View.GONE);
+        updatePoster.setVisibility(View.GONE);
+
 
 
         back.setOnClickListener(new View.OnClickListener() {

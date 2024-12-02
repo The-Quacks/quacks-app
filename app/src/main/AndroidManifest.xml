@@ -2,14 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -35,13 +34,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".OrganizerHomepage"
-            android:exported="true" />
+            android:exported="true"/>
         <activity
             android:name=".EventDescription"
             android:exported="true" />
@@ -50,72 +49,73 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+        </activity>
         <activity
             android:name=".AdminImageListView"
-            android:exported="true" />
+            android:exported="true"/>
+
         <activity
             android:name=".EntrantHome"
             android:exported="true" />
         <activity
             android:name=".AdminHome"
-            android:exported="true"></activity>
-        <activity
-            android:name=".CreateFacility"
+            android:exported="true">
+
+        </activity>
+        <activity android:name=".CreateFacility"
             android:exported="true" />
-        <activity
-            android:name=".CreateEvent"
+
+        <activity android:name=".CreateEvent"
             android:exported="true" />
-        <activity
-            android:name=".ViewEvents"
+
+        <activity android:name=".ViewEvents"
             android:exported="true" />
-        <activity
-            android:name=".ViewOrganizer"
+
+        <activity android:name=".ViewOrganizer"
             android:exported="true" />
-        <activity
-            android:name=".MakeOrganizerProfile"
+
+        <activity android:name=".MakeOrganizerProfile"
             android:exported="true" />
-        <activity
-            android:name=".QRCodeGeneratorActivity"
+
+        <activity android:name=".QRCodeGeneratorActivity"
             android:exported="true" />
-        <activity
-            android:name=".UploadPosterActivity"
+
+        <activity android:name=".UploadPosterActivity"
             android:exported="true" />
-        <activity
-            android:name=".EventInfo"
+
+        <activity android:name=".EventInfo"
             android:exported="true" />
-        <activity
-            android:name=".EditEvent"
+
+        <activity android:name=".EditEvent"
             android:exported="true" />
-        <activity
-            android:name=".OpenRegistration"
+
+        <activity android:name=".OpenRegistration"
             android:exported="true" />
-        <activity
-            android:name=".ConfirmAndNotify"
+
+        <activity android:name=".ConfirmAndNotify"
             android:exported="true" />
-        <activity
-            android:name=".NotifyOptions"
+
+        <activity android:name=".NotifyOptions"
             android:exported="true" />
-        <activity
-            android:name=".PickApplicant"
+
+        <activity android:name=".PickApplicant"
             android:exported="true" />
-        <activity
-            android:name=".ApplicantOptions"
+        <activity android:name=".ApplicantOptions"
             android:exported="true" />
-        <activity
-            android:name=".ViewEventsEntrant"
+
+        <activity android:name=".ViewEventsEntrant"
             android:exported="true" />
-        <activity
-            android:name=".AllApplicants"
+
+
+        <activity android:name=".AllApplicants"
             android:exported="true" />
-        <activity
-            android:name=".DeclinedApplicants"
+
+        <activity android:name=".DeclinedApplicants"
             android:exported="true" />
-        <activity
-            android:name=".AcceptedApplicants"
+        <activity android:name=".AcceptedApplicants"
             android:exported="true" />
-        <activity
-            android:name=".SelectAtRandom"
+        <activity android:name=".SelectAtRandom"
             android:exported="true" />
         <activity android:name=".Choices"
             android:exported="true" />
@@ -127,9 +127,10 @@
             android:exported="true" />
         <activity android:name=".EntrantsMapActivity"
             android:exported="true" />
-        <activity
-            android:name=".SelectMapEvent"
-            android:exported="true" />
+        <activity android:name=".SelectMapEvent"
+            android:exported="true"/>
+        <activity android:name=".NotificationCenter"
+            android:exported="true"/>
 
         <meta-data
             android:name="preloaded_fonts"

@@ -48,7 +48,6 @@ public class WelcomeEntrant extends AppCompatActivity {
                 Intent intent = new Intent(WelcomeEntrant.this, EntrantHome.class);
                 intent.putExtra("User", user);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -57,7 +56,6 @@ public class WelcomeEntrant extends AppCompatActivity {
                 Intent intent = new Intent(WelcomeEntrant.this, EntrantHome.class);
                 intent.putExtra("User", user);
                 startActivity(intent);
-                finish();
             }
         });
 
