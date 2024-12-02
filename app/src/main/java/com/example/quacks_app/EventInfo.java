@@ -17,19 +17,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * The EventInfo class displays detailed information about a specific event and
+ * provides options to edit, delete, or manage the event's applicants.
+ */
 public class EventInfo extends AppCompatActivity implements EditDeleteEventFragment.EditDeleteDialogListener{
-    private String applicantList;
-    private EventList eventList;
-    private Facility actual_facility;
-    private User user;
-    private Event event;
+    private String applicantList; // ID of the applicant list for the event
+    private EventList eventList; // List of all events
+    private Facility actual_facility; // The facility where the event is taking place
+    private User user; // The user interacting with this activity
+    private Event event; // The event being displayed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_info);
 
+        // Retrieve event, facility, and user data passed from the previous activity
         event = (Event) getIntent().getSerializableExtra("Event");
         if (event == null){
             Toast.makeText(this, "Error: Event data not found.", Toast.LENGTH_SHORT).show();
@@ -59,6 +63,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
         Button edit_event_button = findViewById(R.id.edit_event_button);
         Button applicant_lists_button = findViewById(R.id.applicant_lists);
 
+        // Populate text fields with event data
         String text = event.getDescription();
         geolocation.setChecked(event.getGeo() != null && event.getGeo());
         geolocation.setClickable(false);
@@ -105,7 +110,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
             Log.e("Event Info", "event poster doesn't exist: ");
         }
 
-
+        // Handle button clicks
         open_registration_button.setOnClickListener(view -> {
             //makes an applicant list for that event.
             Intent intent = new Intent(EventInfo.this, OpenRegistration.class);
@@ -128,7 +133,6 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
             EditDeleteEventFragment dialog = new EditDeleteEventFragment();
             dialog.show(getSupportFragmentManager(), "EditDeleteDialog");
         });
-
 
         close_registration_button.setOnClickListener(view -> {
 
@@ -181,7 +185,7 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
                 }
         );
 
-        //This is the bottom of the page directory
+        // This is the bottom of the page directory
         ImageButton homepage = findViewById(R.id.house);
         ImageButton profile = findViewById(R.id.person);
         ImageButton search = findViewById(R.id.search);
@@ -206,6 +210,9 @@ public class EventInfo extends AppCompatActivity implements EditDeleteEventFragm
 
     }
 
+    /**
+     * Prompts the user to confirm event deletion and performs the deletion if confirmed.
+     */
     private void confirmDeleteEvent() {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Confirm Delete")

@@ -33,6 +33,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The {@code EditEvent} class allows organizers to edit the details of an existing event.
+ * It provides functionality to update event information, validate input fields,
+ * and upload a new event poster to Firebase.
+ */
 public class EditEvent extends AppCompatActivity {
     private LocalDate start_date;
     private EditText event_name;
@@ -62,6 +67,13 @@ public class EditEvent extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private static final int STORAGE_PERMISSION_CODE = 101;
 
+    /**
+     * Called when the activity is starting.
+     * Initializes the UI elements and sets the current event data to the input fields.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     * being shut down, this contains the data it most recently supplied. Otherwise, it is null.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

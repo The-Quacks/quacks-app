@@ -59,6 +59,15 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
 
+        // Find the buttons
+        Button updatePosterButton = findViewById(R.id.UpdatePoster);
+        Button deleteEventButton = findViewById(R.id.delete_event);
+
+        // Hide the buttons
+        updatePosterButton.setVisibility(View.GONE);
+        deleteEventButton.setVisibility(View.GONE);
+
+
         back = findViewById(R.id.back_button);
         confirm = findViewById(R.id.confirm_button);
         if (getIntent().getSerializableExtra("Facility") == null) {

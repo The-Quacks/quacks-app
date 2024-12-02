@@ -122,6 +122,9 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
         }
     }
 
+    /**
+     * Initializes the ActivityResultLauncher to handle image selection from the gallery.
+     */
     private void initializePickImageLauncher() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

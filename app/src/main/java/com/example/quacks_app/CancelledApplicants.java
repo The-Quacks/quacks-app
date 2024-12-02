@@ -130,7 +130,6 @@ public class CancelledApplicants extends AppCompatActivity {
                                     }
                                 }
                                 applicantArrayAdapter.notifyDataSetChanged();
-
                             }
 
                             @Override
