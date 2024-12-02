@@ -1,25 +1,41 @@
 package com.example.quacks_app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents a collection of facilities with functionality to create, update, and delete facilities.
+ */
 public class Facilities implements Serializable {
     private ArrayList<Facility> facilityDataList;
 
-    public void createNew(){
-        facilityDataList = new ArrayList<Facility>();
+    /**
+     * Initializes a new list of facilities.
+     */
+    public void createNew() {
+        facilityDataList = new ArrayList<>();
     }
 
-    public void updateFacilities(Facility facility){
-        if (facility != null){
+    /**
+     * Updates the list of facilities by adding a new facility.
+     *
+     * @param facility The {@code Facility} object to be added.
+     *                 If {@code null}, the operation will be ignored.
+     */
+    public void updateFacilities(Facility facility) {
+        if (facility != null) {
             facilityDataList.add(facility);
         }
     }
 
-    public void deleteFacility(Facility facility){
-        if (facility != null){
+    /**
+     * Removes a facility from the list.
+     *
+     * @param facility The {@code Facility} object to be removed.
+     *                 If {@code null} or not present in the list, the operation will be ignored.
+     */
+    public void deleteFacility(Facility facility) {
+        if (facility != null) {
             facilityDataList.remove(facility);
         }
     }

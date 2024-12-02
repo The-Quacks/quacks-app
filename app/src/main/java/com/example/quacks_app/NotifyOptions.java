@@ -8,6 +8,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * The {@code NotifyOptions} class provides a user interface for event organizers
+ * to choose how to notify applicants about an event. Organizers can either randomly select
+ * applicants or manually pick them from the list.
+ */
 public class NotifyOptions extends AppCompatActivity {
     private Button pool_applicants;
     private Button select_applicants;
@@ -17,8 +22,11 @@ public class NotifyOptions extends AppCompatActivity {
     private Facility facility;
 
     /**
-     * Notification Page can see pick by pool or select participants
-     * @param savedInstanceState
+     * Called when the activity is first created. Initializes UI components
+     * and sets up navigation between different notification options.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this contains the most recent data. Otherwise, it is {@code null}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

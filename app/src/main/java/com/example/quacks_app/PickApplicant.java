@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+/**
+ * The {@code PickApplicant} class is responsible for displaying a list of applicants
+ * for an event and allowing the organizer to select or reject them.
+ * Notifications are updated accordingly based on the organizer's decisions.
+ */
 public class PickApplicant extends AppCompatActivity {
     private ListView applicantListView;
     private Cartable userdisplay;
@@ -41,8 +45,12 @@ public class PickApplicant extends AppCompatActivity {
     private NotificationList notification_list;
     private ApplicantList appList = null;
 
-    /*
-    Selecting applicants from listview
+    /**
+     * Initializes the activity and loads applicants for selection.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down, this contains the most
+     *                           recent data. Otherwise, it is {@code null}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -329,8 +337,12 @@ public class PickApplicant extends AppCompatActivity {
 
 
     /**
-     * Checks based from the count of userlist, that it has finished setting notifications for each user
-     * @param remainingCount
+     * Checks if all users in the user list have been processed for notification updates.
+     * If all users have been processed, the method updates the notification list
+     * and the event associated with the notifications in the database.
+     *
+     * @param remainingCount The count of users yet to be processed. When this count reaches 0,
+     *                       the method performs the final database updates.
      */
     private void checkCompletion(int remainingCount) {
         if (remainingCount == 0) {
@@ -365,16 +377,4 @@ public class PickApplicant extends AppCompatActivity {
             });
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-

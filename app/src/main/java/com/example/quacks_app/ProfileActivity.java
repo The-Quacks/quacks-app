@@ -22,6 +22,8 @@ import androidx.core.content.ContextCompat;
 
 /**
  * ProfileActivity handles the display, editing, and management of the user's profile.
+ * It allows the user to view and update their personal information, upload or remove their profile picture,
+ * and manage their associated facility.
  */
 public class ProfileActivity extends AppCompatActivity implements EditDialogueFragment.OnProfileUpdatedListener{
 
@@ -40,7 +42,9 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     private Facility facility;
 
     /**
-     * Initializes the activity and sets up Firebase, UI elements, and event listeners.
+     * Initializes the activity, sets up UI elements, and registers event listeners.
+     *
+     * @param savedInstanceState The previously saved state of the activity.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +115,10 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     }
 
     /**
-     * Updates the UI dynamically based on the user's facility and role status.
+     * Updates the UI based on the user's profile and facility information.
+     * Hides the Create Facility button if the facility already exists or the user is an organizer.
+     *
+     * @param createFacilityButton The button to toggle visibility for facility creation.
      */
     private void updateUI(Button createFacilityButton) {
         // Hide Create Facility button if facility exists or the user is an organizer
@@ -151,7 +158,8 @@ public class ProfileActivity extends AppCompatActivity implements EditDialogueFr
     }
 
     /**
-     * Loads the user profile from Firestore and updates the UI.
+     * Loads the user's profile data from Firestore and updates the UI elements.
+     * Displays the profile picture and other user details if available.
      */
     private void loadUserProfile() {
         user = (User) getIntent().getSerializableExtra("User");

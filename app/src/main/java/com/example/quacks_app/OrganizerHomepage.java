@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The {@code OrganizerHomepage} class serves as the main dashboard for organizers.
+ * Organizers can navigate to their profile, view or create events, and access entrant mappings.
+ */
 public class OrganizerHomepage extends AppCompatActivity {
     private FirebaseFirestore db;
     private Button profile;
@@ -32,10 +35,11 @@ public class OrganizerHomepage extends AppCompatActivity {
     boolean isFirstSelection = true;
 
     /**
-     * This is the Organizer Homepage: they can choose out of the four options
-     * Edit Profile, View Events, Create Events, Entrant Map
+     * Initializes the activity and sets up the organizer homepage UI.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this contains the most recent data. Otherwise, it is {@code null}.
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +153,11 @@ public class OrganizerHomepage extends AppCompatActivity {
         });
     }
 
-    // Initialize the spinner adapter with selectable profiles
+    /**
+     * Prepares the spinner adapter with selectable profile options.
+     *
+     * @return An {@code ArrayAdapter} containing the selectable profile options.
+     */
     private ArrayAdapter<String> getStringArrayAdapter() {
         ArrayList<String> items = new ArrayList<>();
         items.add("Entrant Profile");
@@ -164,10 +172,11 @@ public class OrganizerHomepage extends AppCompatActivity {
     }
 
     /**
-     * This gets the organizer profile back from the create event page.
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Handles the result from the Create Facility activity.
+     *
+     * @param requestCode The request code used to start the activity.
+     * @param resultCode  The result code returned by the activity.
+     * @param data        An {@code Intent} containing the returned data.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,5 +191,4 @@ public class OrganizerHomepage extends AppCompatActivity {
             }
         }
     }
-
 }
