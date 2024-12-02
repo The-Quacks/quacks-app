@@ -9,14 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/switch_activity_entrant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/icons8_switch_50" />
-
     <TextView
         android:id="@+id/welcomeTitleEntrant"
         android:layout_width="wrap_content"
@@ -184,6 +176,15 @@
             android:scaleType="fitXY"
             android:src="@drawable/icon_home" />
     </LinearLayout>
+
+    <Spinner
+        android:id="@+id/profile_spinner_entrant"
+        android:layout_width="220dp"
+        android:layout_height="33dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

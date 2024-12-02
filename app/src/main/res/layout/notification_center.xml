@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0E0E0"
+    android:padding="16dp"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/notificationFalseTitle"
+        android:layout_width="380dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="Notifications Blocked!"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/notificationFalseText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/notificationFalseText"
+        android:layout_width="247dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="To see your acceptance status for your events, please visit the Waitlist tab on the homepage."
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/notificationFalseText2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/notificationFalseText2"
+        android:layout_width="244dp"
+        android:layout_height="216dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="To change your app notification permissions, use the switch toggle found here. Your phone will only notify you if notifications are allowed both here and on your device. To change your phone notification permissions for the app, please modify them in your device's Settings app."
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/notificationFalseText3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/notificationFalseText3"
+        android:layout_width="240dp"
+        android:layout_height="37dp"
+        android:layout_marginBottom="200dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="(Requires app restart)"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/notificationTrueTitle"
+        android:layout_width="380dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="Notification Center"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appNotifsSwitch" />
+
+    <ListView
+        android:id="@+id/notif_list"
+        android:layout_width="400dp"
+        android:layout_height="520dp"
+        android:background="@color/base"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/round_admin_button"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_home" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/notificationSettingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#f5ebeb"
+        android:fontFamily="@font/yaldevi_semibold"
+        android:text="Settings"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notificationFalseText3"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <Switch
+        android:id="@+id/appNotifsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="In-App Notifications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
