@@ -24,9 +24,8 @@ import java.util.Map;
 
 /**
  * The {@code WelcomeEntrant} class is the first page users should see when they open the app.
- * It has a button to go to the entrant home page, in which case the user is assumed to have the
- * entrant role, and a button to create a facility, which means that the user has the organizer
- * role.
+ * It has a button to go to the entrant home page, and a button to create a facility, which gives
+ * the user the organizer role.
  */
 
 public class WelcomeEntrant extends AppCompatActivity {
@@ -152,9 +151,5 @@ public class WelcomeEntrant extends AppCompatActivity {
         Map<String, Object> deviceId = new HashMap<>();
         deviceId.put("deviceId", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         CRUD.readQueryStatic(deviceId, User.class, readMultipleCallback);
-
-//        createFacility.setOnClickListener(view -> {
-//            Go to create facility page
-//        }
     }
 }

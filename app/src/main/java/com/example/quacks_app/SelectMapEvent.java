@@ -17,6 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is the activity when an organizer presses Entrant Map on their homepage.
+ * It is a list of created events, similar to in the View Events activity.
+ * When an event is selected here, it opens a map and shows the entrants as markers.
+ */
 public class SelectMapEvent extends AppCompatActivity {
     private ImageButton homepage;
     private ImageButton profile;
